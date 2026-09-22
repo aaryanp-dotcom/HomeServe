@@ -2,26 +2,524 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ═══════════════════════════════════════════════════════════════════
+   HOMESERVE AI — DESIGN SYSTEM
+   Philosophy: Calm. Architectural. Premium. Photography leads.
+   ═══════════════════════════════════════════════════════════════════ */
 
-@media (prefers-color-scheme: dark) {
+/* ── CSS Custom Properties ────────────────────────────────────────── */
+@layer base {
+  /* Grid/flex children default to min-width:auto, so one long unbroken line stretches the whole column past the
+     viewport on phones. Letting grid items shrink is the standard fix and never affects auto-sized tracks. */
+  .grid > * { min-width: 0; }
+
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: light;
+    /* Semantic surface tokens — BLUEPRINT: warm paper page, white sheets */
+    --bg:               42 27% 91%;
+    --bg-subtle:        42 30% 94%;
+    --bg-muted:         42 24% 88%;
+    --surface:          0 0% 100%;
+    --surface-raised:   0 0% 100%;
+    --surface-overlay:  0 0% 100%;
+
+    /* Border tokens */
+    --border:           42 14% 80%;
+    --border-subtle:    42 14% 86%;
+    --border-strong:    0 0% 7%;
+
+    /* Text tokens */
+    --text-primary:     0 0% 7%;
+    --text-secondary:   40 6% 30%;
+    --text-tertiary:    40 5% 38%;
+    --text-disabled:    40 4% 62%;
+    --text-inverse:     0 0% 100%;
+
+    /* Brand accent — safety orange */
+    --accent:           14 100% 54%;
+    --accent-hover:     14 90% 46%;
+    --accent-subtle:    14 100% 95%;
+    --accent-fg:        0 0% 100%;
+
+    /* Status */
+    --success:          142 72% 29%;
+    --success-subtle:   142 72% 94%;
+    --warning:          38 92% 42%;
+    --warning-subtle:   38 92% 94%;
+    --danger:           346 84% 46%;
+    --danger-subtle:    346 84% 96%;
+
+    /* Shadows */
+    --shadow-color:     0 0% 7%;
+
+    /* Radii — near-square */
+    --radius-sm:        0.125rem;
+    --radius:           0.125rem;
+    --radius-lg:        0.1875rem;
+    --radius-xl:        0.1875rem;
+    --radius-2xl:       0.25rem;
+
+    /* Layout */
+    --nav-height:       3.75rem;
+    --sidebar-width:    15rem;
+    --content-max:      75rem;
+  }
+
+  .dark {
+    --bg:               220 20% 7%;
+    --bg-subtle:        220 20% 9%;
+    --bg-muted:         220 18% 11%;
+    --surface:          220 20% 9%;
+    --surface-raised:   220 18% 12%;
+    --surface-overlay:  220 16% 14%;
+
+    --border:           220 16% 18%;
+    --border-subtle:    220 16% 15%;
+    --border-strong:    220 14% 26%;
+
+    --text-primary:     220 14% 96%;
+    --text-secondary:   220 10% 72%;
+    --text-tertiary:    220 8% 52%;
+    --text-disabled:    220 6% 36%;
+
+    --accent:           228 86% 62%;
+    --accent-hover:     228 86% 68%;
+    --accent-subtle:    228 60% 14%;
+
+    --success:          142 60% 48%;
+    --success-subtle:   142 40% 12%;
+    --warning:          38 80% 56%;
+    --warning-subtle:   38 60% 12%;
+    --danger:           346 74% 62%;
+    --danger-subtle:    346 50% 12%;
+
+    --shadow-color:     220 30% 4%;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Reset & Base ──────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    @apply scroll-smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "rlig" 1;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgb(255 77 23 / 0.14);
+  }
+
+  body {
+    background-color: hsl(var(--bg));
+    color: hsl(var(--text-primary));
+    @apply font-sans text-base leading-relaxed;
+    min-height: 100vh;
+    min-height: 100dvh; /* iOS Safari: 100vh ignores the collapsing address bar */
+    overflow-wrap: break-word;
+  }
+
+  /* Faster taps and no double-tap zoom on interactive elements (iOS Safari, Android Chrome). */
+  a, button, [role="button"], summary, label, select,
+  input[type="checkbox"], input[type="radio"], input[type="submit"], input[type="button"] {
+    touch-action: manipulation;
+  }
+
+  /* Native date/time inputs: consistent height and alignment across Safari, Chrome and Firefox. */
+  input[type="date"], input[type="time"], input[type="datetime-local"], input[type="month"] {
+    -webkit-appearance: none;
+    appearance: none;
+    min-height: 2.75rem;
+  }
+  input::-webkit-date-and-time-value { text-align: left; min-height: 1.5em; }
+  input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  /* Larger native check/radio hit area on touch screens. */
+  @media (pointer: coarse) {
+    input[type="checkbox"], input[type="radio"] { width: 1.25rem !important; height: 1.25rem !important; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    color: hsl(var(--text-primary));
+    @apply font-display font-bold;
+    letter-spacing: -0.03em;
+  }
+
+  h1 { @apply text-5xl leading-tight tracking-tighter; }
+  h2 { @apply text-4xl leading-tight tracking-tight; }
+  h3 { @apply text-3xl leading-snug tracking-snug; }
+  h4 { @apply text-2xl leading-snug; }
+  h5 { @apply text-xl leading-snug; }
+  h6 { @apply text-lg leading-snug; }
+
+  p { color: hsl(var(--text-secondary)); @apply leading-relaxed; }
+
+  /* Base heading/paragraph colours must not override colour set on a dark or
+     coloured container (e.g. <div class="bg-cobalt-500 text-white">). Elements
+     that set their own text colour utility are unaffected; size utilities such
+     as text-sm do not count as a colour. */
+  [class~="text-white"] :is(h1, h2, h3, h4, h5, h6, p):not([class*="text-white"]):not([class*="text-black"]):not([class*="text-stone-"]):not([class*="text-cobalt-"]):not([class*="text-navy-"]):not([class*="text-ink-"]):not([class*="text-cream-"]):not([class*="text-brass-"]):not([class*="text-sage-"]):not([class*="text-amber-"]):not([class*="text-rose-"]):not([class*="text-red-"]):not([class*="text-emerald-"]):not([class*="text-["]):not([class*="text-primary"]):not([class*="text-secondary"]):not([class*="text-tertiary"]):not([class*="text-accent"]) {
+    color: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img, video {
+    @apply max-w-full;
+  }
+
+  /* Focus */
+  :focus-visible {
+    @apply outline-none;
+    box-shadow: 0 0 0 2px hsl(var(--bg)), 0 0 0 4px hsl(var(--accent));
+    border-radius: var(--radius-sm);
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: hsl(var(--accent));
+    color: #fff;
+  }
+
+  /* Scrollbar — webkit */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border-strong));
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--text-disabled));
+  }
 }
 
+/* ── Component Utilities ───────────────────────────────────────────── */
+@layer components {
+
+  /* ── Form fields ── 16px on touch stops iOS/iPadOS Safari zooming in on focus; 14px on desktop. */
+  .field {
+    display: block;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid rgb(17 17 17 / 0.25);
+    border-radius: 0;
+    background-color: #fff;
+    color: #111;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field::placeholder { color: #6F6959; opacity: 1; }
+  .field:hover:not(:disabled) { border-color: rgb(17 17 17 / 0.5); }
+  .field:focus { outline: none; border-color: #111; box-shadow: 0 0 0 3px rgb(255 77 23 / 0.35); }
+  .field:disabled { cursor: not-allowed; background-color: #EEEAE1; opacity: 0.6; }
+  .field-error, .field-error:hover:not(:disabled) { border-color: #be123c; }
+  .field-error:focus { border-color: #be123c; box-shadow: 0 0 0 3px rgb(190 18 60 / 0.25); }
+  select.field {
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236F6959' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+  }
+  textarea.field { min-height: 6rem; padding-top: 0.625rem; padding-bottom: 0.625rem; }
+  /* Compact only for a real mouse on a wide screen: iPads are ≥1024px wide but touch, and would zoom on focus. */
+  @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+    .field { font-size: 0.875rem; min-height: 2.5rem; }
+  }
+
+  /* ── Panels & page furniture (one vocabulary for every screen) ── */
+  .panel        { @apply border border-ink-900/15 bg-white; }
+  .panel-strong { @apply border-2 border-ink-900 bg-white; }
+  .panel-tint   { @apply border border-ink-900/15 bg-paper-50; }
+  /* Reassurance surfaces: empty states, "you're on track" CTAs, warranty/support notices. Everywhere
+     else on the site is sharp-cornered and hard-shadowed on purpose (it reads as precise, documentary —
+     right for quotations, schedules, specs). These specific moments are where a homeowner needs to feel
+     looked after rather than issued a drawing, so they get a rounded, no-offset-shadow, warmer treatment
+     instead. Keep this list short — it's a deliberate exception, not a second design system. */
+  .panel-warm   { @apply rounded-soft border border-ink-900/10 bg-white shadow-soft; }
+  .eyebrow      { @apply font-mono text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-ink-900/60; }
+  .panel-title  { @apply font-mono text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-ink-900/60; }
+  .page-title   { @apply font-display text-[1.9rem] font-bold leading-[1.05] tracking-[-0.03em] text-ink-900 sm:text-[2.4rem]; }
+  .page-lede    { @apply mt-1.5 max-w-2xl text-sm text-stone-500; }
+  /* position:relative makes the scroller the containing block for absolutely positioned cell content (sr-only text,
+     stretched links); otherwise those escape the clip and widen the whole page on phones. */
+  .table-scroll, [role="region"][tabindex="0"] { position: relative; overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  /* One table look everywhere: mono column heads, ids/amounts never wrap mid-token. */
+  .table-scroll th { white-space: nowrap; font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgb(17 17 17 / 0.6); background: #F7F4ED; border-bottom: 2px solid #111; }
+  .table-scroll td .font-mono, .table-scroll td[class*="font-semibold"], .table-scroll td.font-semibold { white-space: nowrap; }
+  .table-scroll tbody tr:hover { background-color: #F7F4ED; }
+  .table-scroll:focus-visible, [role="region"][tabindex="0"]:focus-visible { outline: 3px solid #C22F05; outline-offset: 2px; }
+
+  /* ── Containers ── */
+  .container-site {
+    @apply w-full max-w-[1280px] mx-auto px-6 lg:px-10;
+  }
+  .container-narrow {
+    @apply w-full max-w-3xl mx-auto px-6;
+  }
+  .container-wide {
+    @apply w-full max-w-[1440px] mx-auto px-6 lg:px-12;
+  }
+
+  /* ── Surfaces ── */
+  .surface {
+    background-color: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+  }
+  .surface-raised {
+    background-color: hsl(var(--surface-raised));
+    @apply shadow-card;
+    border-radius: var(--radius-lg);
+  }
+
+  /* ── Cards ── */
+  .card {
+    background-color: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius-xl);
+    @apply transition-all duration-200 ease-smooth;
+  }
+  .card-interactive {
+    @apply card cursor-pointer;
+  }
+  .card-interactive:hover {
+    border-color: hsl(var(--border-strong));
+    @apply shadow-card-hover -translate-y-0.5;
+  }
+
+  /* ── Photo card — photography leads ── */
+  .photo-card {
+    @apply relative overflow-hidden rounded-2xl;
+    background-color: hsl(var(--bg-muted));
+  }
+  .photo-card img {
+    @apply w-full h-full object-cover transition-transform duration-500 ease-smooth;
+  }
+  .photo-card:hover img {
+    transform: scale(1.04);
+  }
+
+  /* ── Text utilities ── */
+  .text-primary   { color: hsl(var(--text-primary)); }
+  .text-secondary { color: hsl(var(--text-secondary)); }
+  .text-tertiary  { color: hsl(var(--text-tertiary)); }
+  .text-accent    { color: hsl(var(--accent)); }
+
+  .label {
+    @apply font-mono text-[0.6875rem] font-medium uppercase;
+    letter-spacing: 0.14em;
+    color: hsl(var(--text-tertiary));
+  }
+
+  .display-text {
+    @apply font-semibold tracking-tighter;
+    color: hsl(var(--text-primary));
+  }
+
+  /* ── Dividers ── */
+  .divider {
+    border-top: 1px solid hsl(var(--border-subtle));
+  }
+
+  /* ── Glass morphism — sparingly ── */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+  .dark .glass {
+    background: rgba(15, 18, 28, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* ── Skeleton ── */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--bg-muted)) 0%,
+      hsl(var(--bg-subtle)) 50%,
+      hsl(var(--bg-muted)) 100%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer rounded-lg;
+  }
+
+  /* ── Badges ── */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-medium rounded-full;
+  }
+  .badge-default {
+    @apply badge;
+    background-color: hsl(var(--bg-muted));
+    color: hsl(var(--text-secondary));
+  }
+  .badge-accent {
+    @apply badge;
+    background-color: hsl(var(--accent-subtle));
+    color: hsl(var(--accent));
+  }
+  .badge-success {
+    @apply badge;
+    background-color: hsl(var(--success-subtle));
+    color: hsl(var(--success));
+  }
+  .badge-warning {
+    @apply badge;
+    background-color: hsl(var(--warning-subtle));
+    color: hsl(var(--warning));
+  }
+  .badge-danger {
+    @apply badge;
+    background-color: hsl(var(--danger-subtle));
+    color: hsl(var(--danger));
+  }
+
+  /* ── Section spacing ── */
+  .section { @apply py-20 lg:py-28; }
+  .section-sm { @apply py-12 lg:py-16; }
+  .section-lg { @apply py-28 lg:py-36; }
+
+  /* ── Gradient text ── */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--text-primary)) 0%, hsl(var(--accent)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Noise overlay ── */
+  .noise::after {
+    content: '';
+    @apply absolute inset-0 pointer-events-none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    border-radius: inherit;
+  }
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────── */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+
+  /* Blueprint graph-paper backgrounds */
+  .bg-blueprint {
+    background-color: #EEEAE1;
+    background-image:
+      linear-gradient(rgba(17, 17, 17, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17, 17, 17, 0.07) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
+  .bg-blueprint-dark {
+    background-color: #0B0B0A;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .bg-blueprint-orange {
+    background-color: #FF4D17;
+    background-image:
+      linear-gradient(rgba(17, 17, 17, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17, 17, 17, 0.12) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  /* Architectural section-hatch fills */
+  .bg-hatch {
+    background-image: repeating-linear-gradient(-45deg, rgba(17,17,17,0.55) 0 1px, transparent 1px 7px);
+  }
+  .bg-hatch-light {
+    background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.35) 0 1px, transparent 1px 7px);
+  }
+  .font-display-tight { letter-spacing: -0.045em; font-variation-settings: "wdth" 92; }
+
+
+  /* Smooth page scroll */
+  .scroll-smooth { scroll-behavior: smooth; }
+
+  /* Interaction affordances */
+  .interactive {
+    @apply transition-all duration-200 ease-smooth cursor-pointer select-none;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-200 ease-smooth;
+  }
+  .hover-lift:hover { transform: translateY(-2px); }
+
+  /* Text balance */
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  /* Clamp utilities */
+  .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+  .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+
+  /* Stagger animation delays */
+  .stagger-1  { animation-delay: 50ms; }
+  .stagger-2  { animation-delay: 100ms; }
+  .stagger-3  { animation-delay: 150ms; }
+  .stagger-4  { animation-delay: 200ms; }
+  .stagger-5  { animation-delay: 250ms; }
+  .stagger-6  { animation-delay: 300ms; }
+
+  /* Fill mode */
+  .fill-both { animation-fill-mode: both; }
+
+  /* No scrollbar */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Safe area padding (mobile) */
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+}
+
+/* ── Print styles for quotation PDF ──────────────────────────────── */
+@media print {
+  body * { visibility: hidden; }
+  #quotation-document, #quotation-document * { visibility: visible; }
+  #quotation-document {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 2rem;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  .print\:hidden { display: none !important; }
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+}
+
+/* ── Touch targets ── WCAG 2.5.5 / Apple HIG: 44px for anything tapped on a coarse pointer. */
+@media (pointer: coarse) {
+  footer a { display: inline-flex; align-items: center; min-height: 44px; }
+  footer li { line-height: 1; }
 }
