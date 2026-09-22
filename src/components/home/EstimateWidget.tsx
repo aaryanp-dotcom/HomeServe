@@ -18,8 +18,9 @@ const SCOPES = [
   { key: 'Flooring', label: 'Flooring' },
 ] as const
 
-/** Square segmented control; the ink block glides between options. */
-function Segmented<T extends string>({
+/** Square segmented control; the ink block glides between options. Shared with EstimateCalculator
+ *  (the full /estimate page) so the two calculators don't visually drift apart from each other. */
+export function Segmented<T extends string>({
   id, value, options, onChange, disabled, render,
 }: {
   id: string

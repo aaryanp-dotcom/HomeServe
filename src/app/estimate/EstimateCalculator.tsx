@@ -8,6 +8,7 @@ import {
   ChevronDown, ChevronUp, Info,
 } from 'lucide-react'
 import { SizeInput } from '@/components/size/SizeInput'
+import { Segmented } from '@/components/home/EstimateWidget'
 import { ESTIMATOR_SCOPE_TO_LEAD, NCR_CITIES, QUALITY_TIERS, SERVICE_BASE, calcEstimate, formatINR, type QualityTier } from '@/lib/estimate'
 import { DEFAULT_SIZE, computeSize, encodeSize, formatSqft, sizePayload, type SizeValue } from '@/lib/size'
 
@@ -118,41 +119,33 @@ export default function EstimateCalculator({ initial }: { initial?: InitialEstim
 
             {/* Size */}
             <div>
-              <label className="block text-sm font-semibold text-stone-700 mb-2">Home size</label>
+              <p className="panel-title mb-2">01 · Home size</p>
               <SizeInput value={size} onChange={setSize} />
             </div>
 
             {/* Quality */}
             <div>
-              <label className="block text-sm font-semibold text-stone-700 mb-1">Finish Quality</label>
+              <p className="panel-title mb-2">02 · Finish quality</p>
               <p className="text-xs text-stone-400 mb-2">Essential ≈ ₹800–1200/sqft · Standard ≈ ₹1200–2000 · Premium ≈ ₹2000–3000 · Luxury ≈ ₹3000+</p>
-              <div className="grid grid-cols-2 gap-2">
-                {QUALITY_TIERS.map((q) => (
-                  <button key={q} onClick={() => setQuality(q)}
-                    className={`py-2.5 text-sm font-medium border transition-all ${
-                      quality === q ? 'bg-cobalt-500 text-white border-cobalt-500' : 'bg-white text-stone-600 border-stone-200 hover:border-stone-400'
-                    }`}
-                  >{q}</button>
-                ))}
-              </div>
+              <Segmented id="est-quality" value={quality} options={QUALITY_TIERS} onChange={setQuality} />
             </div>
 
             {/* Services */}
             <div>
-              <label className="block text-sm font-semibold text-stone-700 mb-2">Scope of Work</label>
-              <div className="space-y-2">
+              <p className="panel-title mb-2">03 · What are you renovating?</p>
+              <div className="space-y-1.5">
                 {Object.keys(SERVICE_BASE).map((key) => (
                   <button key={key} onClick={() => toggleService(key)}
-                    className={`w-full flex items-center gap-3 p-3 border text-left transition-all ${
-                      selected.includes(key) ? 'border-cobalt-300 bg-cobalt-50' : 'border-ink-900/15 bg-white hover:border-ink-900/50'
+                    className={`w-full flex items-center gap-3 p-3 border-2 text-left transition-all coarse:min-h-11 ${
+                      selected.includes(key) ? 'border-ink-900 bg-paper-100' : 'border-ink-900/15 bg-white hover:border-ink-900/50'
                     }`}
                   >
                     <div className={`h-8 w-8 flex items-center justify-center shrink-0 ${
-                      selected.includes(key) ? 'bg-cobalt-500 text-white' : 'bg-stone-100 text-stone-500'
+                      selected.includes(key) ? 'bg-ink-900 text-white' : 'bg-stone-100 text-stone-500'
                     }`}>
                       {SERVICE_ICONS[key]}
                     </div>
-                    <span className={`text-sm font-medium ${selected.includes(key) ? 'text-cobalt-700' : 'text-stone-700'}`}>{key}</span>
+                    <span className={`text-sm font-medium ${selected.includes(key) ? 'text-ink-900' : 'text-stone-700'}`}>{key}</span>
                     {selected.includes(key) && <CheckCircle size={15} className="ml-auto text-cobalt-500 shrink-0" />}
                   </button>
                 ))}
@@ -171,7 +164,7 @@ export default function EstimateCalculator({ initial }: { initial?: InitialEstim
                 </div>
 
                 {selected.length === 0 || needsSize ? (
-                  <p className="text-stone-400 text-sm mt-4">{selected.length === 0 ? 'Select at least one scope of work to see an estimate.' : 'Enter your home size on the left to see an estimate.'}</p>
+                  <p className="text-stone-400 text-sm mt-4">{selected.length === 0 ? 'Choose what you’re renovating to see an estimate.' : 'Enter your home size on the left to see an estimate.'}</p>
                 ) : (
                   <>
                     <div className="mt-4 mb-5">
