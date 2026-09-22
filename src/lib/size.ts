@@ -79,7 +79,16 @@ export function computeSize(v: SizeValue): SizeResult {
   let areaSqft = 0
 
   if (v.mode === 'bhk_preset') {
-    areaSqft = BHK_SIZES[v.bhk]?.sqft ?? 0
+    // The BHK grid picks a typical starting size, but a flat's actual carpet area rarely matches
+    // the typical number exactly — `area` doubles as an optional override here (same field the
+    // total_area mode uses), so switching to a separate mode isn't the only way to enter it.
+    if (v.area.trim() !== '') {
+      const n = num(v.area)
+      if (!(n > 0)) errors.push('Enter a valid area')
+      else areaSqft = round(toSqft(n, v.areaUnit), 1)
+    } else {
+      areaSqft = BHK_SIZES[v.bhk]?.sqft ?? 0
+    }
   } else if (v.mode === 'total_area') {
     const n = num(v.area)
     if (v.area.trim() !== '') {
@@ -124,7 +133,10 @@ export const formatBoth = (sqft: number) => `${formatSqft(sqft)} (${Math.round(s
 
 export function encodeSize(v: SizeValue): string {
   const p = new URLSearchParams({ mode: v.mode })
-  if (v.mode === 'bhk_preset') p.set('bhk', v.bhk)
+  if (v.mode === 'bhk_preset') {
+    p.set('bhk', v.bhk)
+    if (v.area.trim() !== '') { p.set('area', v.area); p.set('au', v.areaUnit) }
+  }
   if (v.mode === 'total_area') { p.set('area', v.area); p.set('au', v.areaUnit) }
   if (v.mode === 'room_wise') {
     p.set('du', v.dimUnit)
@@ -138,7 +150,10 @@ export function decodeSize(sp: Record<string, string | string[] | undefined>): S
   const mode = g('mode')
   if (mode !== 'bhk_preset' && mode !== 'total_area' && mode !== 'room_wise') return null
   const v: SizeValue = { ...DEFAULT_SIZE, mode }
-  if (mode === 'bhk_preset') { const b = g('bhk'); if (b && BHK_SIZES[b]) v.bhk = b }
+  if (mode === 'bhk_preset') {
+    const b = g('bhk'); if (b && BHK_SIZES[b]) v.bhk = b
+    const a = g('area'); if (a) { v.area = a.slice(0, 10); v.areaUnit = g('au') === 'sqm' ? 'sqm' : 'sqft' }
+  }
   if (mode === 'total_area') { v.area = (g('area') ?? '').slice(0, 10); v.areaUnit = g('au') === 'sqm' ? 'sqm' : 'sqft' }
   if (mode === 'room_wise') {
     v.dimUnit = g('du') === 'm' ? 'm' : 'ft'

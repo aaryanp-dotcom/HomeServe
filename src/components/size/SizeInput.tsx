@@ -101,25 +101,42 @@ export function SizeInput({ value, onChange, modes = ['bhk_preset', 'total_area'
 
       {/* ── Flat type ── */}
       {value.mode === 'bhk_preset' && (
-        <div className={cn('grid gap-1.5', compact ? 'grid-cols-5' : 'grid-cols-3 sm:grid-cols-5')}>
-          {Object.entries(BHK_SIZES).map(([k, v]) => {
-            const on = value.bhk === k
-            return (
-              <button
-                key={k}
-                type="button"
-                onClick={() => set({ bhk: k })}
-                aria-pressed={on}
-                className={cn(
-                  'border-2 border-ink-900 px-1 py-2 text-center transition-colors coarse:min-h-11',
-                  on ? 'bg-ink-900 text-white' : 'bg-white text-ink-900 hover:bg-paper-100',
-                )}
-              >
-                <span className="block text-xs font-bold">{k}</span>
-                {!compact && <span className={cn('block font-mono text-[0.6875rem] uppercase', on ? 'text-white/60' : 'text-ink-900/60')}>{v.label.replace('~', '')}</span>}
-              </button>
-            )
-          })}
+        <div className="space-y-2">
+          <div className={cn('grid gap-1.5', compact ? 'grid-cols-5' : 'grid-cols-3 sm:grid-cols-5')}>
+            {Object.entries(BHK_SIZES).map(([k, v]) => {
+              const on = value.bhk === k
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => set({ bhk: k, area: '' })}
+                  aria-pressed={on}
+                  className={cn(
+                    'border-2 border-ink-900 px-1 py-2 text-center transition-colors coarse:min-h-11',
+                    on ? 'bg-ink-900 text-white' : 'bg-white text-ink-900 hover:bg-paper-100',
+                  )}
+                >
+                  <span className="block text-xs font-bold">{k}</span>
+                  {!compact && <span className={cn('block font-mono text-[0.6875rem] uppercase', on ? 'text-white/60' : 'text-ink-900/60')}>{v.label.replace('~', '')}</span>}
+                </button>
+              )
+            })}
+          </div>
+          {/* A flat's actual carpet area rarely matches the typical number exactly — this overrides
+              it without switching away from the flat-type context (bhk stays selected either way). */}
+          <div className="relative">
+            <input
+              inputMode="decimal"
+              aria-label="Exact area (optional)"
+              value={value.area}
+              onChange={(e) => set({ area: cleanNumber(e.target.value) })}
+              placeholder={`Know the exact size? Typically ${BHK_SIZES[value.bhk]?.sqft.toLocaleString('en-IN') ?? ''}`}
+              className={cn(fieldCls, 'pr-14 text-xs sm:text-sm')}
+            />
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[0.6875rem] uppercase tracking-wider text-ink-900/60">
+              {value.areaUnit === 'sqft' ? 'sq ft' : 'sq m'}
+            </span>
+          </div>
         </div>
       )}
 
@@ -248,7 +265,11 @@ export function SizeInput({ value, onChange, modes = ['bhk_preset', 'total_area'
           <p className="text-sm text-ink-900">
             <span className="font-mono text-[0.6875rem] uppercase tracking-wider text-ink-900/60">Total · </span>
             <strong className="font-bold">{formatBoth(total)}</strong>
-            {value.mode === 'bhk_preset' && <span className="ml-1.5 text-xs text-ink-900/60">typical for a {value.bhk}</span>}
+            {value.mode === 'bhk_preset' && (
+              <span className="ml-1.5 text-xs text-ink-900/60">
+                {value.area.trim() !== '' ? `for a ${value.bhk}` : `typical for a ${value.bhk}`}
+              </span>
+            )}
             {value.mode === 'room_wise' && <span className="ml-1.5 text-xs text-ink-900/60">carpet area of {result.rooms.length} room{result.rooms.length === 1 ? '' : 's'} (excludes walls &amp; passages)</span>}
           </p>
         ) : (
