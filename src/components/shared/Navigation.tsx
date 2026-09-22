@@ -13,6 +13,8 @@ import {
 import { Button, Avatar } from '@/components/ui/shared'
 import { AnimatePresence, motion } from 'framer-motion'
 import { TitleBlock } from '@/components/arch/TitleBlock'
+import { useSessionUser } from '@/lib/supabase/useSessionUser'
+import { ROLE_HOME } from '@/lib/auth/redirect'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -106,7 +108,7 @@ function hasDarkHero(pathname: string) {
 
 // ── Marketing Nav (landing page) ──────────────────────────────────────────────
 
-export function MarketingNav({ user }: { user?: { name?: string; email?: string; avatar?: string } | null }) {
+export function MarketingNav({ user: userProp }: { user?: { name?: string; email?: string; avatar?: string; role?: string } | null }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeMenu, setActiveMenu] = useState<string | null>(null)
@@ -114,6 +116,14 @@ export function MarketingNav({ user }: { user?: { name?: string; email?: string;
   const pathname = usePathname()
   const overDark = hasDarkHero(pathname)
   const solid = scrolled || !overDark
+
+  // Marketing pages are mostly static (SSG) for SEO, so there's no server-fetched user available at
+  // render time on most of them. A page that already knows the user can still pass it in explicitly
+  // (including `null` to force signed-out without a client check); everywhere else we resolve the real
+  // session client-side so the nav is never wrong just because the page under it happens to be static.
+  const { user: sessionUser } = useSessionUser()
+  const user = userProp !== undefined ? userProp : sessionUser
+  const dashboardHref = ROLE_HOME[user?.role ?? ''] ?? '/homeowner/dashboard'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
@@ -282,7 +292,7 @@ export function MarketingNav({ user }: { user?: { name?: string; email?: string;
                   <Bell size={17} />
                   <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500" />
                 </button>
-                <Link href="/homeowner/dashboard">
+                <Link href={dashboardHref}>
                   <Avatar name={user.name ?? 'User'} src={user.avatar} size="sm" className="cursor-pointer" />
                 </Link>
               </>
@@ -366,12 +376,23 @@ export function MarketingNav({ user }: { user?: { name?: string; email?: string;
               </div>
             ))}
             <div className="pt-3 border-t border-stone-100 flex flex-col gap-2">
-              <Link href="/login">
-                <Button variant="outline" fullWidth>Sign in</Button>
-              </Link>
-              <Link href="/get-started">
-                <Button fullWidth>Start Your Renovation</Button>
-              </Link>
+              {user ? (
+                <Link href={dashboardHref}>
+                  <Button variant="outline" fullWidth className="justify-start gap-2.5">
+                    <Avatar name={user.name ?? 'User'} src={user.avatar} size="sm" />
+                    {user.name ?? 'My dashboard'}
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="outline" fullWidth>Sign in</Button>
+                  </Link>
+                  <Link href="/get-started">
+                    <Button fullWidth>Start Your Renovation</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>
