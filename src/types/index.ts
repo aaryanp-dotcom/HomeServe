@@ -184,6 +184,7 @@ export type NotificationEvent =
   | 'membership_renewal_reminder'
   | 'membership_expiry_notice'
   | 'warranty_update'
+  | 'technician_visit_assigned'
 
 export interface NotificationLog {
   id: string

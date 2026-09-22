@@ -8,13 +8,92 @@ import {
   Menu, X, ChevronDown, Bell,
   Wrench, Paintbrush, Hammer, Zap, Home, Droplets,
   TreePine, Sofa, Layers, ArrowRight,
-  LogOut,
+  LogOut, User as UserIcon,
 } from 'lucide-react'
 import { Button, Avatar } from '@/components/ui/shared'
 import { AnimatePresence, motion } from 'framer-motion'
 import { TitleBlock } from '@/components/arch/TitleBlock'
 import { useSessionUser } from '@/lib/supabase/useSessionUser'
-import { ROLE_HOME } from '@/lib/auth/redirect'
+import { ROLE_HOME, ROLE_PROFILE, ROLE_NOTIFICATIONS } from '@/lib/auth/redirect'
+
+// ── Account menu (avatar → profile / sign out) ─────────────────────────────────
+// Shared by MarketingNav and AppTopBar so "click the avatar" behaves the same
+// everywhere a session is shown: it's a real menu, not a decorative image.
+
+function UserMenu({
+  user,
+  profileHref,
+}: {
+  user: { name?: string; email?: string; avatar?: string }
+  profileHref: string
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('mousedown', onClick)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onClick)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [])
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Account menu"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="flex cursor-pointer items-center"
+      >
+        <Avatar name={user.name ?? 'User'} src={user.avatar} size="sm" />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            role="menu"
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full z-50 mt-2 w-56 border-2 border-ink-900 bg-white shadow-hard"
+          >
+            {(user.name || user.email) && (
+              <div className="border-b border-ink-900/10 px-4 py-3">
+                {user.name && <p className="truncate text-sm font-semibold text-ink-900">{user.name}</p>}
+                {user.email && <p className="truncate text-xs text-stone-500">{user.email}</p>}
+              </div>
+            )}
+            <Link
+              href={profileHref}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-stone-700 transition-colors hover:bg-stone-50"
+            >
+              <UserIcon size={15} /> My profile
+            </Link>
+            <form action="/api/auth/signout" method="post">
+              <button
+                type="submit"
+                role="menuitem"
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-rose-600 transition-colors hover:bg-rose-50"
+              >
+                <LogOut size={15} /> Sign out
+              </button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -124,6 +203,8 @@ export function MarketingNav({ user: userProp }: { user?: { name?: string; email
   const { user: sessionUser } = useSessionUser()
   const user = userProp !== undefined ? userProp : sessionUser
   const dashboardHref = ROLE_HOME[user?.role ?? ''] ?? '/homeowner/dashboard'
+  const profileHref = ROLE_PROFILE[user?.role ?? ''] ?? '/homeowner/profile'
+  const notificationsHref = ROLE_NOTIFICATIONS[user?.role ?? '']
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
@@ -280,21 +361,32 @@ export function MarketingNav({ user: userProp }: { user?: { name?: string; email
           <div className="flex items-center gap-2">
             {user ? (
               <>
-                <button
+                {notificationsHref && (
+                  <Link
+                    href={notificationsHref}
+                    className={cn(
+                      'hidden lg:flex items-center justify-center h-9 w-9 transition-all duration-150',
+                      solid
+                        ? 'text-stone-500 hover:text-stone-900 hover:bg-stone-100'
+                        : 'text-white/70 hover:text-white hover:bg-white/10',
+                    )}
+                    aria-label="Notifications"
+                  >
+                    <Bell size={17} />
+                  </Link>
+                )}
+                <Link
+                  href={dashboardHref}
                   className={cn(
-                    'hidden lg:flex items-center justify-center h-9 w-9 transition-all duration-150 relative',
+                    'hidden lg:inline-flex items-center whitespace-nowrap px-1.5 py-2 font-mono text-[0.75rem] uppercase tracking-[0.06em] font-medium transition-all duration-150 xl:px-3 xl:tracking-[0.1em]',
                     solid
-                      ? 'text-stone-500 hover:text-stone-900 hover:bg-stone-100'
-                      : 'text-white/70 hover:text-white hover:bg-white/10',
+                      ? 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+                      : 'text-white/80 hover:text-white hover:bg-white/10',
                   )}
-                  aria-label="Notifications"
                 >
-                  <Bell size={17} />
-                  <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500" />
-                </button>
-                <Link href={dashboardHref}>
-                  <Avatar name={user.name ?? 'User'} src={user.avatar} size="sm" className="cursor-pointer" />
+                  Dashboard
                 </Link>
+                <UserMenu user={user} profileHref={profileHref} />
               </>
             ) : (
               <>
@@ -377,12 +469,31 @@ export function MarketingNav({ user: userProp }: { user?: { name?: string; email
             ))}
             <div className="pt-3 border-t border-stone-100 flex flex-col gap-2">
               {user ? (
-                <Link href={dashboardHref}>
-                  <Button variant="outline" fullWidth className="justify-start gap-2.5">
-                    <Avatar name={user.name ?? 'User'} src={user.avatar} size="sm" />
-                    {user.name ?? 'My dashboard'}
-                  </Button>
-                </Link>
+                <>
+                  <Link href={dashboardHref}>
+                    <Button variant="outline" fullWidth className="justify-start gap-2.5">
+                      <Avatar name={user.name ?? 'User'} src={user.avatar} size="sm" />
+                      {user.name ?? 'Dashboard'}
+                    </Button>
+                  </Link>
+                  {notificationsHref && (
+                    <Link href={notificationsHref}>
+                      <Button variant="outline" fullWidth className="justify-start gap-2.5">
+                        <Bell size={15} /> Notifications
+                      </Button>
+                    </Link>
+                  )}
+                  <Link href={profileHref}>
+                    <Button variant="outline" fullWidth className="justify-start gap-2.5">
+                      <UserIcon size={15} /> My profile
+                    </Button>
+                  </Link>
+                  <form action="/api/auth/signout" method="post">
+                    <Button type="submit" variant="outline" fullWidth className="justify-start gap-2.5 text-rose-700 border-rose-200 hover:bg-rose-50">
+                      <LogOut size={15} /> Sign out
+                    </Button>
+                  </form>
+                </>
               ) : (
                 <>
                   <Link href="/login">
@@ -596,12 +707,15 @@ export function AppTopBar({
   title,
   actions,
   user,
+  profileHref = '/homeowner/profile',
   notificationsHref,
   unreadCount = 0,
 }: {
   title?: string
   actions?: React.ReactNode
   user?: { name: string; avatar?: string }
+  /** Where the account menu's "My profile" link goes — pass the caller's own portal profile page. */
+  profileHref?: string
   notificationsHref?: string
   /** Number of unread notifications; the badge is hidden when 0. */
   unreadCount?: number
@@ -634,7 +748,7 @@ export function AppTopBar({
                 )}
               </Link>
             )}
-            <Avatar name={user.name} src={user.avatar} size="sm" className="cursor-pointer" />
+            <UserMenu user={user} profileHref={profileHref} />
           </div>
         )}
       </div>

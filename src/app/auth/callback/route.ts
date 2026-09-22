@@ -36,11 +36,14 @@ export async function GET(request: NextRequest) {
         .single()
 
       if (!profile) {
-        // Public sign-up (including Google) only ever creates homeowners
+        // Public sign-up (including Google) only ever creates homeowners. Google's OAuth profile
+        // carries a name and photo but never a phone number, so that stays blank until the person
+        // fills it in themselves on their profile page.
         await supabase.from('user_profiles').insert({
           user_id: data.user.id,
           full_name: data.user.user_metadata?.full_name ?? data.user.email?.split('@')[0] ?? 'User',
           email: data.user.email,
+          avatar_url: data.user.user_metadata?.avatar_url ?? data.user.user_metadata?.picture ?? null,
           role: 'homeowner',
         })
         return NextResponse.redirect(`${origin}${safeNext(next, 'homeowner')}`)

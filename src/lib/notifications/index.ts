@@ -122,6 +122,21 @@ const EMAIL_TEMPLATES: Record<string, (data: Record<string, string>) => EmailPay
       <a href="${process.env.NEXT_PUBLIC_APP_URL}/contractor/jobs/${data.booking_id}" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">View Job Details</a>
     `, 'New Job Assigned'),
   }),
+
+  technician_visit_assigned: (data) => ({
+    to: data.email,
+    subject: `New visit assigned – ${data.request_number} | HomeServe`,
+    html: baseEmailLayout(`
+      <h2 style="color:#111827;margin:0 0 16px;">You have a new visit! 🔧</h2>
+      <p style="color:#374151;margin:0 0 20px;">Hi <strong>${data.name}</strong>, you've been assigned a maintenance visit.</p>
+      <table style="width:100%;border:1px solid #e5e7eb;border-radius:8px;border-collapse:collapse;margin:0 0 20px;">
+        <tr style="background:#f9fafb;"><td style="padding:12px 16px;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb;width:40%;">Request</td><td style="padding:12px 16px;color:#111827;border-bottom:1px solid #e5e7eb;">${data.request_number}</td></tr>
+        <tr><td style="padding:12px 16px;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb;">Service</td><td style="padding:12px 16px;color:#111827;border-bottom:1px solid #e5e7eb;">${data.service_name}</td></tr>
+        <tr style="background:#f9fafb;"><td style="padding:12px 16px;font-weight:600;color:#374151;">Date & Time</td><td style="padding:12px 16px;color:#111827;">${data.scheduled_date} · ${data.time_window}</td></tr>
+      </table>
+      <a href="${process.env.NEXT_PUBLIC_APP_URL}/contractor/visits/${data.visit_id}" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">View Visit Details</a>
+    `, 'New Visit Assigned'),
+  }),
 }
 
 // ============================================================
@@ -137,6 +152,7 @@ const SMS_TEMPLATES: Record<string, (data: Record<string, string>) => string> = 
   payment_received: (d) => `HomeServe: Payment of Rs.${d.amount} received for booking ${d.booking_number}. Thank you!`,
   payment_failed: (d) => `HomeServe: Your payment of Rs.${d.amount} for booking ${d.booking_number} was unsuccessful. Please retry: ${process.env.NEXT_PUBLIC_APP_URL}/homeowner/payments`,
   booking_assigned_contractor: (d) => `HomeServe: New job ${d.booking_number} assigned to you. ${d.service_name} on ${d.scheduled_date}. View: ${process.env.NEXT_PUBLIC_APP_URL}/contractor/jobs/${d.booking_id}`,
+  technician_visit_assigned: (d) => `HomeServe: New visit ${d.request_number} assigned to you. ${d.service_name} on ${d.scheduled_date}, ${d.time_window}. View: ${process.env.NEXT_PUBLIC_APP_URL}/contractor/visits/${d.visit_id}`,
 }
 
 // ============================================================
@@ -200,7 +216,7 @@ interface SendNotificationParams {
   userId: string
   bookingId?: string
   /** Non-booking subject (maintenance request, membership …) recorded on the log row. */
-  reference?: { type: 'maintenance_request' | 'membership' | 'project'; id: string }
+  reference?: { type: 'maintenance_request' | 'maintenance_visit' | 'membership' | 'project'; id: string }
   data: Record<string, string>
   channels: Array<'email' | 'sms' | 'whatsapp'>
   email?: string

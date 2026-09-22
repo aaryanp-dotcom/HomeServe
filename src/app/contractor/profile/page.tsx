@@ -6,6 +6,7 @@ import { Avatar } from '@/components/ui/shared'
 import { Button } from '@/components/ui/button'
 import { PageHeader, Panel } from '@/components/ui/layout'
 import ContractorProfileForm from './ContractorProfileForm'
+import { ChangePasswordForm } from '@/components/account/ChangePasswordForm'
 
 export const metadata: Metadata = { title: 'My profile' }
 
@@ -46,6 +47,8 @@ export default async function ContractorProfilePage() {
         } : null}
         email={user.email ?? ''}
       />
+
+      <ChangePasswordForm />
 
       <Panel title="Session">
         <form action="/api/auth/signout" method="POST">

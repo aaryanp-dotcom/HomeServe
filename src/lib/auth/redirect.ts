@@ -7,6 +7,19 @@ export const ROLE_HOME: Record<string, string> = {
 
 const PORTAL: Record<string, string> = { homeowner: '/homeowner', contractor: '/contractor', admin: '/admin' }
 
+/** Where a signed-in user of each role manages their own account details. */
+export const ROLE_PROFILE: Record<string, string> = {
+  homeowner: '/homeowner/profile',
+  contractor: '/contractor/profile',
+  admin: '/admin/profile',
+}
+
+/** Roles with an in-app notification feed. Admin has none yet — they work off the list pages directly. */
+export const ROLE_NOTIFICATIONS: Record<string, string> = {
+  homeowner: '/homeowner/notifications',
+  contractor: '/contractor/notifications',
+}
+
 /**
  * Only follow a `redirect` / `next` value that is a same-site path inside the user's own portal (or a
  * public page). Anything else — another origin, protocol-relative URLs, another role's portal — falls

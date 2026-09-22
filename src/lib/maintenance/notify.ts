@@ -14,7 +14,7 @@ export async function notifyCustomer(
   userId: string,
   event: NotificationEvent,
   data: Record<string, string>,
-  opts: { reference?: { type: 'maintenance_request' | 'membership' | 'project'; id: string }; sms?: boolean } = {},
+  opts: { reference?: { type: 'maintenance_request' | 'maintenance_visit' | 'membership' | 'project'; id: string }; sms?: boolean } = {},
 ) {
   try {
     const c = await contactFor(admin, userId)
@@ -30,6 +30,22 @@ export async function notifyCustomer(
   } catch (err) {
     console.error(`[maintenance] notification ${event} failed`, err)
   }
+}
+
+/**
+ * Send a maintenance notification to the technician assigned to a visit. Same delivery
+ * mechanics as notifyCustomer (email today; SMS once Twilio is configured) — a technician
+ * has no other reliable way to learn about a new assignment than this and the in-app feed
+ * it also populates via notification_logs.
+ */
+export async function notifyTechnician(
+  admin: SupabaseClient,
+  technicianId: string,
+  event: NotificationEvent,
+  data: Record<string, string>,
+  opts: { reference?: { type: 'maintenance_request' | 'maintenance_visit' | 'membership' | 'project'; id: string } } = {},
+) {
+  return notifyCustomer(admin, technicianId, event, data, opts)
 }
 
 /** Append an audit / communication row to a request. */

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/maintenance/auth'
 import { adminActionSchema } from '@/lib/maintenance/schemas'
-import { addRequestEvent, notifyCustomer } from '@/lib/maintenance/notify'
+import { addRequestEvent, notifyCustomer, notifyTechnician } from '@/lib/maintenance/notify'
 import { ADMIN_TRANSITIONS, REQUEST_STATUS, slotLabel, type RequestStatus } from '@/lib/maintenance/config'
 import { rupees, fmtDate } from '@/lib/maintenance/format'
 
@@ -120,6 +120,11 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       void notifyCustomer(admin, r.user_id, 'maintenance_visit_scheduled', {
         ...base, scheduled_date: fmtDate(act.scheduled_date), time_window: slotLabel(act.time_window).toLowerCase(),
       }, { reference: ref, sms: true })
+      if (act.technician_id) {
+        void notifyTechnician(admin, act.technician_id, 'technician_visit_assigned', {
+          ...base, visit_id: visit.id, scheduled_date: fmtDate(act.scheduled_date), time_window: slotLabel(act.time_window),
+        }, { reference: { type: 'maintenance_visit', id: visit.id } })
+      }
       return NextResponse.json({ ok: true, visit_id: visit.id })
     }
 
@@ -134,10 +139,15 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     }
 
     case 'technician': {
-      const { data: v } = await admin.from('maintenance_visits').select('id').eq('id', act.visit_id).eq('request_id', r.id).maybeSingle()
+      const { data: v } = await admin.from('maintenance_visits').select('id, scheduled_date, time_window').eq('id', act.visit_id).eq('request_id', r.id).maybeSingle()
       if (!v) return NextResponse.json({ error: 'Visit not found' }, { status: 404 })
       await admin.from('maintenance_visits').update({ technician_id: act.technician_id }).eq('id', v.id)
       await addRequestEvent(admin, { request_id: r.id, actor_id: user.id, actor_role: 'homeserve', event_type: 'visit', body: act.technician_id ? 'Visit assigned to a technician' : 'Visit unassigned', metadata: { visit_id: v.id, technician_id: act.technician_id } })
+      if (act.technician_id) {
+        void notifyTechnician(admin, act.technician_id, 'technician_visit_assigned', {
+          ...base, visit_id: v.id, scheduled_date: fmtDate(v.scheduled_date), time_window: slotLabel(v.time_window),
+        }, { reference: { type: 'maintenance_visit', id: v.id } })
+      }
       return NextResponse.json({ ok: true })
     }
 

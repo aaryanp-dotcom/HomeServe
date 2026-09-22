@@ -6,6 +6,7 @@ import { CalendarDays, CheckCircle, TrendingUp } from 'lucide-react'
 import { StatCard } from '@/components/ui/shared'
 import { Button } from '@/components/ui/button'
 import ProfileForm from './ProfileForm'
+import { ChangePasswordForm } from '@/components/account/ChangePasswordForm'
 
 export const metadata: Metadata = { title: 'My Profile' }
 
@@ -81,6 +82,8 @@ export default async function HomeownerProfilePage() {
           </p>
         </div>
       </div>
+
+      <ChangePasswordForm />
 
       {/* Sign out */}
       <form action="/api/auth/signout" method="POST">

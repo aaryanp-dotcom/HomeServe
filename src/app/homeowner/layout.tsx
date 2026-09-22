@@ -79,6 +79,7 @@ export default async function HomeownerLayout({ children }: { children: React.Re
       <div className="flex-1 flex flex-col min-w-0">
         <AppTopBar
           user={{ name: profile?.full_name ?? 'Homeowner', avatar: profile?.avatar_url }}
+          profileHref="/homeowner/profile"
           notificationsHref="/homeowner/notifications"
           unreadCount={unread}
         />
