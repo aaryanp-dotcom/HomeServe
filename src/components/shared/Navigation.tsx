@@ -226,7 +226,11 @@ export function MarketingNav({ user: userProp }: { user?: { name?: string; email
   return (
     <header
       className={cn(
-        'fixed top-0 inset-x-0 z-50 transition-all duration-300',
+        // `isolate` keeps this header's blur in its own stacking context — Safari has a known bug
+        // where a fixed backdrop-blur element bleeds into other animated (transform/opacity) elements
+        // further down the page, washing out their backgrounds so light text on a dark bar goes
+        // near-invisible. Isolating the blurred element is the standard fix.
+        'fixed top-0 inset-x-0 z-50 isolate transition-all duration-300',
         solid
           ? 'bg-paper-100/95 backdrop-blur-md border-b-2 border-ink-900'
           : 'bg-transparent',
@@ -437,7 +441,12 @@ export function MarketingNav({ user: userProp }: { user?: { name?: string; email
 
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-ink-900/15 bg-white animate-fade-down">
+        // This drawer renders inside the fixed header itself, not as its own full-screen overlay,
+        // so without its own scroll container the header (and everything after the logo row) simply
+        // grows past the viewport — on a phone, once nav items + every service under "Services" add
+        // up to more than one screen's height, the bottom of the list (Services included) is stuck
+        // with nothing to scroll: the page behind can still scroll, the fixed header can't.
+        <div className="lg:hidden max-h-[calc(100dvh-3.75rem)] overflow-y-auto overscroll-contain border-t border-ink-900/15 bg-white animate-fade-down">
           <nav className="container-site py-4 space-y-1">
             {NAV_ITEMS.map((item) => (
               <div key={item.label}>
@@ -628,7 +637,7 @@ export function AppSidebar({ items, user, onSignOut }: AppSidebarProps) {
       </aside>
 
       {/* Mobile bottom navigation */}
-      <nav aria-label="Portal shortcuts" className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-ink-900 bg-ink-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
+      <nav aria-label="Portal shortcuts" className="fixed inset-x-0 bottom-0 z-40 isolate border-t-2 border-ink-900 bg-ink-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
         <div className="flex items-stretch justify-around px-1">
           {primary.map((item) => {
             const active = isActive(item.href)
@@ -663,14 +672,19 @@ export function AppSidebar({ items, user, onSignOut }: AppSidebarProps) {
           <>
             <motion.button
               aria-label="Close menu"
-              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 isolate bg-black/50 backdrop-blur-sm lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMoreOpen(false)}
             />
             <motion.div
-              className="fixed inset-x-3 bottom-[5.25rem] z-50 border border-white/10 bg-ink-900 p-2 shadow-2xl lg:hidden"
+              // Anchored to the bottom and grows upward with no cap — a role with enough overflow
+              // items (admin now has 8) can push this off the top of a short phone screen with
+              // nothing to scroll it back into view, same class of bug as the main drawer above.
+              // max-h keeps it shrink-wrapped to content as before for roles with few items, and
+              // caps + scrolls instead of overflowing for roles with many.
+              className="fixed inset-x-3 bottom-[5.25rem] z-50 max-h-[min(70dvh,28rem)] overflow-y-auto overscroll-contain border border-white/10 bg-ink-900 p-2 shadow-2xl lg:hidden"
               initial={{ opacity: 0, y: 24, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 24, scale: 0.97 }}
@@ -721,7 +735,7 @@ export function AppTopBar({
   unreadCount?: number
 }) {
   return (
-    <header className="sticky top-0 z-30 flex h-[4.5rem] shrink-0 items-center justify-between border-b-2 border-ink-900 bg-paper-100/90 px-5 backdrop-blur-md sm:px-8">
+    <header className="sticky top-0 z-30 isolate flex h-[4.5rem] shrink-0 items-center justify-between border-b-2 border-ink-900 bg-paper-100/90 px-5 backdrop-blur-md sm:px-8">
       <div className="flex items-center gap-4">
         <Link href="/" aria-label="HomeServe home" className="flex min-h-11 min-w-11 items-center gap-2 lg:hidden">
           <div className="flex h-8 w-8 items-center justify-center bg-cobalt-500">

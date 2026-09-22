@@ -100,7 +100,7 @@ export default function ThemeDetailClient({ slug }: { slug: string }) {
       </div>
 
       {/* ── STICKY NAV ── */}
-      <div ref={navRef} className={`sticky top-0 z-30 transition-all ${navSticky ? 'bg-white/95 backdrop-blur-md border-b border-stone-100' : 'bg-white border-b border-stone-100'}`}>
+      <div ref={navRef} className={`sticky top-0 z-30 isolate transition-all ${navSticky ? 'bg-white/95 backdrop-blur-md border-b border-stone-100' : 'bg-white border-b border-stone-100'}`}>
         <div className="container-wide">
           <div className="flex items-center gap-0 overflow-x-auto no-scrollbar">
             {TABS.map(tab => (
@@ -369,7 +369,7 @@ export default function ThemeDetailClient({ slug }: { slug: string }) {
       )}
 
       {/* ── STICKY BOTTOM CTA ── */}
-      <div className="sticky bottom-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-100 shadow-xl">
+      <div className="sticky bottom-0 z-40 isolate bg-white/95 backdrop-blur-md border-t border-stone-100 shadow-xl">
         <div className="container-site py-3 flex items-center justify-between gap-4">
           <div className="hidden md:block">
             <p className="text-sm font-semibold text-stone-900">{theme.name}</p>

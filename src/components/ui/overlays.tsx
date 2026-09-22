@@ -47,7 +47,7 @@ export function Modal({ open, onClose, title, description, children, size = 'md'
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in-0 duration-200"
+        className="absolute inset-0 isolate bg-black/50 backdrop-blur-sm animate-in fade-in-0 duration-200"
         onClick={onClose}
       />
       {/* Panel */}
@@ -338,7 +338,7 @@ export function Drawer({ open, onClose, title, side = 'right', children, width =
     <div className="fixed inset-0 z-50 flex">
       <div
         className={cn(
-          'absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in-0 duration-200',
+          'absolute inset-0 isolate bg-black/50 backdrop-blur-sm animate-in fade-in-0 duration-200',
           side === 'right' ? 'mr-auto' : 'ml-auto'
         )}
         onClick={onClose}

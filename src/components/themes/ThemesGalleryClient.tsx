@@ -144,7 +144,7 @@ export default function ThemesGalleryClient({ saveCounts = {} }: { saveCounts?: 
       </div>
 
       {/* ── FILTER BAR ── */}
-      <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-stone-100 shadow-xs">
+      <div className="sticky top-0 z-30 isolate bg-white/90 backdrop-blur-md border-b border-stone-100 shadow-xs">
         <div className="container-wide">
           <div className="flex items-center gap-2 py-3.5 overflow-x-auto no-scrollbar">
             {FILTER_PILLS.map(pill => (
@@ -245,7 +245,7 @@ export default function ThemesGalleryClient({ saveCounts = {} }: { saveCounts?: 
       </section>
 
       {/* ── STICKY CTA ── */}
-      <div className="sticky bottom-0 z-40 bg-stone-900/95 backdrop-blur-md border-t border-stone-800">
+      <div className="sticky bottom-0 z-40 isolate bg-stone-900/95 backdrop-blur-md border-t border-stone-800">
         <div className="container-site py-3 flex items-center justify-between gap-4">
           <p className="text-white text-sm hidden md:block">
             Ready to transform your home?

@@ -114,9 +114,9 @@ export function Hero() {
         {/* Drawing sheet */}
         <motion.figure
           {...fade(0.3)}
-          className="relative mx-auto w-full max-w-[46rem] self-center border-2 border-ink-900 bg-white shadow-hard"
+          className="relative isolate mx-auto w-full max-w-[46rem] self-center border-2 border-ink-900 bg-white shadow-hard"
         >
-          <div className="flex items-center justify-between border-b-2 border-ink-900 bg-ink-900 px-4 py-2.5 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-paper-100">
+          <div className="isolate flex items-center justify-between border-b-2 border-ink-900 bg-ink-900 px-4 py-2.5 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-paper-100">
             <span>Sheet A-01 · Ground floor plan</span>
             <span className="text-paper-100/60">Existing → Proposed</span>
           </div>
