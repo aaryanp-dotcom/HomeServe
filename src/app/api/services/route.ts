@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { z } from 'zod'
 import { SERVICE_CATEGORIES } from '@/types'
@@ -44,13 +43,10 @@ export async function GET(request: NextRequest) {
 
 // POST /api/services — admin creates a new service
 export async function POST(request: NextRequest) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const adminSupabase = createAdminClient()
-  const { data: profile } = await adminSupabase.from('user_profiles').select('role').eq('user_id', user.id).single()
-  if (profile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const { requireAdminApi } = await import('@/lib/api-auth')
+  const auth = await requireAdminApi()
+  if (!auth.ok) return auth.response
+  const { admin: adminSupabase } = auth
 
   const bodyRaw = await request.json().catch(() => null)
   const parsed = createServiceSchema.safeParse(bodyRaw)

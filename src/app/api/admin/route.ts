@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/admin'
-import { createClient } from '@/lib/supabase/server'
+import { requireAdminApi } from '@/lib/api-auth'
 import { createRazorpayOrder, calculateMilestoneAmounts } from '@/lib/razorpay'
 import { sendNotification } from '@/lib/notifications'
 import { formatCurrency, formatDate } from '@/lib/utils'
@@ -11,23 +10,12 @@ import { formatCurrency, formatDate } from '@/lib/utils'
  */
 export async function POST(req: Request) {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const auth = await requireAdminApi()
+    if (!auth.ok) return auth.response
+    const { admin: adminSupabase } = auth
 
-    // Verify admin role
-    const adminSupabase = createAdminClient()
-    const { data: profile } = await adminSupabase
-      .from('user_profiles')
-      .select('role')
-      .eq('user_id', user.id)
-      .single()
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
-    const { booking_id, contractor_id } = await req.json()
+    const body = await req.json()
+    const { booking_id, contractor_id } = body
     if (!booking_id || !contractor_id) {
       return NextResponse.json({ error: 'booking_id and contractor_id are required' }, { status: 400 })
     }
@@ -106,14 +94,13 @@ export async function POST(req: Request) {
  */
 export async function PUT(req: Request) {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // Both admin (MFA-verified) and contractor roles allowed here
+    const { requireAuthApi } = await import('@/lib/api-auth')
+    const auth = await requireAuthApi()
+    if (!auth.ok) return auth.response
+    const { userId, role, admin: adminSupabase } = auth
 
-    const adminSupabase = createAdminClient()
-    const { data: profile } = await adminSupabase.from('user_profiles').select('role').eq('user_id', user.id).single()
-
-    if (!['admin', 'contractor'].includes(profile?.role ?? '')) {
+    if (!['admin', 'contractor'].includes(role)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -129,7 +116,7 @@ export async function PUT(req: Request) {
     if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
 
     // If contractor, verify they are assigned to this booking
-    if (profile?.role === 'contractor' && booking.contractor_id !== user.id) {
+    if (role === 'contractor' && booking.contractor_id !== userId) {
       return NextResponse.json({ error: 'Forbidden. You are not assigned to this booking.' }, { status: 403 })
     }
 

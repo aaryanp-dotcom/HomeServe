@@ -21,11 +21,29 @@ export async function requireUser(): Promise<Auth> {
   return { ok: true, user, admin, role: profile?.role ?? 'homeowner' }
 }
 
-/** Server-side admin gate. Never rely on the route being hidden in the UI. */
+/**
+ * Server-side admin gate with MFA enforcement.
+ *
+ * Requires:
+ *   1. User is authenticated (aal1 or aal2)
+ *   2. User has role = 'admin' in user_profiles (verified server-side, not from client state)
+ *   3. Session has passed TOTP challenge (aal2) — prevents admin API access if
+ *      the admin is logged in but has not completed MFA this session.
+ *
+ * Never rely on the route being hidden in the UI.
+ */
 export async function requireAdmin(): Promise<Auth> {
   const a = await requireUser()
   if (!a.ok) return a
   if (a.role !== 'admin') return deny(403, 'Forbidden')
+
+  // MFA check: the session must be at Authenticator Assurance Level 2
+  const supabase = await createClient()
+  const { data: mfaData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+  if (mfaData?.currentLevel !== 'aal2') {
+    return deny(403, 'MFA verification required. Please complete two-factor authentication.')
+  }
+
   return a
 }
 

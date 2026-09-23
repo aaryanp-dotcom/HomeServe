@@ -123,6 +123,24 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(correctPath, request.url))
   }
 
+  // Admin MFA enforcement. This has to live here rather than in admin/layout.tsx —
+  // that layout wraps /admin/mfa/setup and /admin/mfa/verify too (they're nested
+  // under /admin/*, and a layout can't exclude its own child routes), so a redirect
+  // there would send the setup page back to itself in an infinite loop. Middleware
+  // has the real pathname, so it can exclude the MFA pages from the check while
+  // still gating every other /admin/* route.
+  if (profile.role === 'admin' && !pathname.startsWith('/admin/mfa')) {
+    const { data: mfaData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    const { data: factors } = await supabase.auth.mfa.listFactors()
+    const hasVerifiedFactor = (factors?.totp ?? []).length > 0
+    if (!hasVerifiedFactor) {
+      return NextResponse.redirect(new URL('/admin/mfa/setup', request.url))
+    }
+    if (mfaData?.currentLevel !== 'aal2') {
+      return NextResponse.redirect(new URL('/admin/mfa/verify', request.url))
+    }
+  }
+
   return supabaseResponse
 }
 

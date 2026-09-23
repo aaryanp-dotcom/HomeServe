@@ -24,7 +24,7 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
 
   if (!profile) return NextResponse.json({ error: 'Profile not found' }, { status: 403 })
 
-  const query = adminSupabase
+  let query = adminSupabase
     .from('bookings')
     .select(`
       *,
@@ -36,11 +36,11 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
     `)
     .eq('id', id)
 
-  // Scope by role
+  // Scope by role — must reassign; query builder is immutable
   if (profile.role === 'homeowner') {
-    query.eq('homeowner_id', user.id)
+    query = query.eq('homeowner_id', user.id)
   } else if (profile.role === 'contractor') {
-    query.eq('contractor_id', user.id)
+    query = query.eq('contractor_id', user.id)
   }
   // admin sees all
 

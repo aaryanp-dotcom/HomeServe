@@ -1,23 +1,13 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { requireAdminApi } from '@/lib/api-auth'
 import { adminTicketActionSchema } from '@/lib/support/schemas'
 import { notifyCustomerOfReply } from '@/lib/support/notify'
 import type { SupportTicket } from '@/lib/support/types'
 
-async function requireAdmin() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
-  const admin = createAdminClient()
-  const { data: profile } = await admin.from('user_profiles').select('role').eq('user_id', user.id).single()
-  return profile?.role === 'admin' ? { user, admin } : null
-}
-
 export async function POST(request: Request, { params }: { params: { id: string } }) {
-  const ctx = await requireAdmin()
-  if (!ctx) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  const { admin } = ctx
+  const auth = await requireAdminApi()
+  if (!auth.ok) return auth.response
+  const { admin } = auth
 
   const parsed = adminTicketActionSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) return NextResponse.json({ error: 'Validation failed', issues: parsed.error.issues }, { status: 400 })

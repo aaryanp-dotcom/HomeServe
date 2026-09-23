@@ -12,7 +12,7 @@ import { PageEnter } from '@/components/motion/PageEnter'
 import { SheetStrip } from '@/components/arch/SheetStrip'
 
 async function getUser() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -31,6 +31,16 @@ async function getUser() {
     .eq('user_id', user.id)
     .single()
   if (profile?.role !== 'admin') redirect('/homeowner/dashboard')
+
+  // MFA enforcement lives in middleware.ts, not here. This layout wraps every
+  // route under /admin/*, including /admin/mfa/setup and /admin/mfa/verify
+  // themselves (Next.js layouts apply to all nested segments — there's no way
+  // for a layout to exclude its own child routes). A redirect-if-not-verified
+  // check here would redirect the MFA setup page to itself, since it can't
+  // tell "I'm already on the escape-hatch page" apart from any other admin
+  // page. Middleware has the actual request pathname and can exclude
+  // /admin/mfa from the check, so that's where this belongs.
+
   return { user, profile }
 }
 

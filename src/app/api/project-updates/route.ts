@@ -41,13 +41,10 @@ export async function GET(req: NextRequest) {
 
 // POST /api/project-updates — admin only
 export async function POST(req: NextRequest) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const admin = createAdminClient()
-  const { data: profile } = await admin.from('user_profiles').select('role').eq('user_id', user.id).single()
-  if (profile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const { requireAdminApi } = await import('@/lib/api-auth')
+  const auth = await requireAdminApi()
+  if (!auth.ok) return auth.response
+  const { userId, admin } = auth
 
   const body = await req.json()
   const { booking_id, category, title, description, photo_urls, is_public } = body
@@ -60,7 +57,7 @@ export async function POST(req: NextRequest) {
     description: description ?? null,
     photo_urls: photo_urls ?? [],
     is_public: is_public !== false,
-    created_by: user.id,
+    created_by: userId,
   }).select().single()
 
   if (error) {

@@ -1,39 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-
-async function getAdminSupabase() {
-  const cookieStore = cookies()
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return cookieStore.getAll() },
-        setAll(cs: { name: string; value: string; options?: Record<string, unknown> }[]) {
-          cs.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
-        },
-      },
-    },
-  )
-}
+import { requireAdminApi, requireAuthApi } from '@/lib/api-auth'
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params
-  const supabase = await getAdminSupabase()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('role')
-    .eq('user_id', user.id)
-    .single()
-  if (profile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const auth = await requireAdminApi()
+  if (!auth.ok) return auth.response
+  const { admin: supabase } = auth
 
   const body = await req.json()
   const allowedFields = ['status', 'admin_notes', 'assigned_to', 'contacted_at', 'won_at', 'lost_at', 'lost_reason']
@@ -60,22 +35,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params
-  const supabase = await getAdminSupabase()
+  const auth = await requireAuthApi()
+  if (!auth.ok) return auth.response
+  const { userId, role, admin: supabase } = auth
 
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  // FIND-06 fix: enforce role-based ownership.
-  // Admins may read any lead. Non-admins may only read their own submission
-  // (i.e. where user_id matches — records submitted by unauthenticated visitors
-  // have user_id = NULL and are never readable by end-users here).
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('role')
-    .eq('user_id', user.id)
-    .single()
-
-  const isAdmin = profile?.role === 'admin'
+  const isAdmin = role === 'admin'
 
   let query = supabase
     .from('renovation_requests')
@@ -84,7 +48,7 @@ export async function GET(
 
   if (!isAdmin) {
     // Scope to the authenticated user's own submissions only.
-    query = query.eq('user_id', user.id)
+    query = query.eq('user_id', userId)
   }
 
   const { data, error } = await query.single()
