@@ -86,7 +86,19 @@ export function serviceJsonLd(opts: { name: string; description: string; path: s
   }
 }
 
-/** Renders a JSON-LD block. Server components only — the JSON is fixed at render time, no user input. */
+/**
+ * Renders a JSON-LD structured-data block.
+ *
+ * **Server components only** — the JSON is fixed at render time.
+ *
+ * ⚠️  SECURITY WARNING (FIND-11): This component uses `dangerouslySetInnerHTML`.
+ * The `data` argument MUST be constructed exclusively from server-side constants
+ * and server-fetched values. NEVER pass any user-controlled string (e.g. a review
+ * body, a booking description, a message text, or any field that originates from
+ * user input) into this component. Doing so would create a stored XSS vector.
+ * If sanitisation is ever needed, use a library such as `sanitize-html` or
+ * `DOMPurify` (server-side) before passing the value here.
+ */
 export function JsonLd({ data }: { data: object | object[] }) {
   return (
     <script

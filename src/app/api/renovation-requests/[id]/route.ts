@@ -64,11 +64,29 @@ export async function GET(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data, error } = await supabase
+  // FIND-06 fix: enforce role-based ownership.
+  // Admins may read any lead. Non-admins may only read their own submission
+  // (i.e. where user_id matches — records submitted by unauthenticated visitors
+  // have user_id = NULL and are never readable by end-users here).
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role')
+    .eq('user_id', user.id)
+    .single()
+
+  const isAdmin = profile?.role === 'admin'
+
+  let query = supabase
     .from('renovation_requests')
     .select('*')
     .eq('id', id)
-    .single()
+
+  if (!isAdmin) {
+    // Scope to the authenticated user's own submissions only.
+    query = query.eq('user_id', user.id)
+  }
+
+  const { data, error } = await query.single()
 
   if (error || !data) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 

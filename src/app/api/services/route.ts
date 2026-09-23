@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { z } from 'zod'
+import { SERVICE_CATEGORIES } from '@/types'
+
+// FIND-10: Explicit Zod schema — validates all fields before touching the DB.
+// Uses the canonical SERVICE_CATEGORIES enum from @/types to stay in sync with
+// the rest of the codebase and the database constraint.
+const createServiceSchema = z.object({
+  name: z.string().min(1).max(200),
+  category: z.enum(SERVICE_CATEGORIES),
+  description: z.string().max(2000).optional().default(''),
+  base_price: z.number().positive(),
+  price_unit: z.enum(['fixed', 'per_sqft', 'per_hour']).optional().default('fixed'),
+  min_duration_hours: z.number().int().positive().optional().default(1),
+  max_duration_hours: z.number().int().positive().optional().default(4),
+})
 
 // GET /api/services — list all active services, optionally filtered by category
 export async function GET(request: NextRequest) {
@@ -34,16 +49,17 @@ export async function POST(request: NextRequest) {
   const { data: profile } = await adminSupabase.from('user_profiles').select('role').eq('user_id', user.id).single()
   if (profile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const body = await request.json()
-  const { name, category, description, base_price, price_unit, min_duration_hours, max_duration_hours } = body
-
-  if (!name || !category || !base_price) {
-    return NextResponse.json({ error: 'name, category, and base_price are required' }, { status: 400 })
+  const bodyRaw = await request.json().catch(() => null)
+  const parsed = createServiceSchema.safeParse(bodyRaw)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Validation failed', issues: parsed.error.issues }, { status: 400 })
   }
+
+  const { name, category, description, base_price, price_unit, min_duration_hours, max_duration_hours } = parsed.data
 
   const { data, error } = await adminSupabase
     .from('services')
-    .insert({ name, category, description: description ?? '', base_price, price_unit: price_unit ?? 'fixed', min_duration_hours: min_duration_hours ?? 1, max_duration_hours: max_duration_hours ?? 4, is_active: true })
+    .insert({ name, category, description, base_price, price_unit, min_duration_hours, max_duration_hours, is_active: true })
     .select()
     .single()
 

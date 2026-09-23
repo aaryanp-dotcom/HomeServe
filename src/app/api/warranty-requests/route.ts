@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,16 +9,38 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
     const body = await req.json()
-    const { issue_category, description, preferred_visit_time } = body
+    const { issue_category, description, preferred_visit_time, booking_id } = body
 
     if (!issue_category || !description) {
       return NextResponse.json({ error: 'issue_category and description are required' }, { status: 400 })
+    }
+
+    // FIND-08: Defence-in-depth ownership check.
+    // When a booking_id is provided, verify at the application layer (not just RLS)
+    // that the booking belongs to the authenticated user before allowing the insert.
+    // This prevents a scenario where a relaxed RLS policy would allow a user to
+    // associate a warranty request with another user's booking.
+    if (booking_id) {
+      const admin = createAdminClient()
+      const { data: booking } = await admin
+        .from('bookings')
+        .select('id, homeowner_id')
+        .eq('id', booking_id)
+        .single()
+
+      if (!booking) {
+        return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
+      }
+      if (booking.homeowner_id !== user.id) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
     }
 
     const { data, error } = await supabase
       .from('warranty_requests')
       .insert({
         user_id: user.id,
+        booking_id: booking_id || null,
         issue_category,
         description,
         preferred_visit_time: preferred_visit_time || null,
