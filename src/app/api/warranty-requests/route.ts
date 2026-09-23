@@ -50,13 +50,13 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error('warranty_requests insert error', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      console.error('warranty_requests insert error', error.code, error.hint)
+      return NextResponse.json({ error: 'Could not save warranty request' }, { status: 500 })
     }
 
     return NextResponse.json(data, { status: 201 })
   } catch (err) {
-    console.error('warranty-requests POST error', err)
+    console.error('warranty-requests POST error', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -85,11 +85,14 @@ export async function GET() {
 
     const { data, error } = await query
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) {
+      console.error('warranty-requests GET error', error.code, error.hint)
+      return NextResponse.json({ error: 'Could not load warranty requests' }, { status: 500 })
+    }
 
     return NextResponse.json(data ?? [])
   } catch (err) {
-    console.error('warranty-requests GET error', err)
+    console.error('warranty-requests GET error', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

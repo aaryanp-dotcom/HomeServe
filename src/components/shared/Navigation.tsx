@@ -823,6 +823,7 @@ export function Footer({ showCta = true }: { showCta?: boolean }) {
       heading: 'Legal',
       links: [
         { label: 'Privacy Policy', href: '/privacy' },
+        { label: 'Your Privacy Rights', href: '/privacy/rights' },
         { label: 'Terms of Service', href: '/terms' },
         { label: 'Cancellation & Refund', href: '/refund-policy' },
       ],

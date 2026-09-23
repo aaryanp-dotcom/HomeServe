@@ -74,7 +74,7 @@ export async function POST(
     .single()
 
   if (bookingErr || !booking) {
-    console.error('booking insert error', bookingErr)
+    console.error('booking insert error', bookingErr?.code, bookingErr?.hint)
     return NextResponse.json({ error: 'Failed to create project record' }, { status: 500 })
   }
 

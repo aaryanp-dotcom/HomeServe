@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { AuthShell, AuthAlert } from '@/components/auth/AuthShell'
 import { GoogleSignInButton, AuthDivider } from '@/components/auth/GoogleSignInButton'
+import { PrivacyNotice } from '@/components/privacy/PrivacyNotice'
 
 /**
  * Public sign-up creates a homeowner account and nothing else. There is no role choice: HomeServe's
@@ -26,6 +27,7 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [sentTo, setSentTo] = useState<string | null>(null)
   const [resent, setResent] = useState(false)
+  const [privacyAccepted, setPrivacyAccepted] = useState(false)
 
   const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
@@ -39,6 +41,7 @@ export default function SignupPage() {
     if (name.trim().length < 2) { setError('Please enter your full name.'); return }
     if (phone && !/^[6-9]\d{9}$/.test(phone)) { setError('Enter a 10-digit Indian mobile number, or leave it blank.'); return }
     if (password.length < 8) { setError('Choose a password of at least 8 characters.'); return }
+    if (!privacyAccepted) { setError('Please read and accept the Privacy Policy to continue.'); return }
     setLoading(true)
     try {
       const { data, error: authError } = await supabase.auth.signUp({
@@ -88,7 +91,7 @@ export default function SignupPage() {
           value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} placeholder="10-digit mobile" hint="Used only for updates about your projects and visits." />
         <div>
           <Input label="Password" type={showPw ? 'text' : 'password'} name="password" autoComplete="new-password" minLength={8}
-            value={password} onChange={(e) => setPassword(e.target.value)} required hint="At least 8 characters."
+              value={password} onChange={(e) => setPassword(e.target.value)} required hint="At least 8 characters (used only to sign you in)."
             rightElement={
               <button type="button" onClick={() => setShowPw((p) => !p)} aria-label={showPw ? 'Hide password' : 'Show password'} aria-pressed={showPw}
                 className="pointer-events-auto -mr-2 flex h-10 w-10 items-center justify-center text-stone-600 hover:text-ink-900">
@@ -102,11 +105,19 @@ export default function SignupPage() {
             </div>
           )}
         </div>
-        <Button type="submit" size="lg" fullWidth loading={loading}>Create account</Button>
+        <PrivacyNotice
+          accepted={privacyAccepted}
+          onAcceptChange={setPrivacyAccepted}
+          context="signup"
+        />
+        <Button type="submit" size="lg" fullWidth loading={loading} disabled={!privacyAccepted}>Create account</Button>
       </form>
       <div className="mt-6 space-y-6">
         <AuthDivider />
-        <GoogleSignInButton />
+        <GoogleSignInButton disabled={!privacyAccepted} />
+        {!privacyAccepted && (
+          <p className="-mt-3 text-center text-xs text-stone-500">Accept the privacy notice above to continue with Google.</p>
+        )}
       </div>
     </AuthShell>
   )

@@ -126,6 +126,6 @@ export async function notifyMaintenancePayment(admin: SupabaseClient, r: Mainten
       }, { reference: { type: 'maintenance_request', id: r.request_id } })
     }
   } catch (err) {
-    console.error('[maintenance] payment notification failed', err)
+    console.error('[maintenance] payment notification failed', err instanceof Error ? err.message : 'unknown')
   }
 }

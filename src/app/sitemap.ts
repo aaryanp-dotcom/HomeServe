@@ -15,7 +15,7 @@ const STATIC_ROUTES = [
 
 // Low-priority, rarely-changing legal pages — listed separately so they don't skew priority/frequency
 // defaults for the pages above.
-const LEGAL_ROUTES = ['/privacy', '/terms', '/refund-policy']
+const LEGAL_ROUTES = ['/privacy', '/privacy/rights', '/terms', '/refund-policy']
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl()

@@ -99,7 +99,7 @@ export default async function HomeownerDashboard() {
     supabase.from('maintenance_subscriptions').select('id, plan_snapshot, end_date').eq('user_id', user.id).in('status', ['active', 'upcoming']).order('end_date', { ascending: true }).limit(1).maybeSingle(),
   ])
 
-  if (bookingsRes.error) console.error('[homeowner/dashboard] bookings query failed', bookingsRes.error)
+  if (bookingsRes.error) console.error('[homeowner/dashboard] bookings query failed', bookingsRes.error.code, bookingsRes.error.hint)
 
   const bookings = (bookingsRes.data ?? []) as unknown as BookingRow[]
   const active = bookings.filter((b) => !CLOSED.includes(b.status))

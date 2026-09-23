@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
           { onConflict: 'booking_id,homeowner_id' },
         ).select().single()
       if (error) {
-        console.error('[reviews/create]', error)
+        console.error('[reviews/create]', error.code, error.hint)
         return NextResponse.json({ error: 'Failed to save review' }, { status: 500 })
       }
       // Legacy: keep an assigned professional's aggregate current so the contractor portal still works.
@@ -62,12 +62,12 @@ export async function POST(request: NextRequest) {
         { onConflict: 'maintenance_request_id,homeowner_id' },
       ).select().single()
     if (error) {
-      console.error('[reviews/create]', error)
+      console.error('[reviews/create]', error.code, error.hint)
       return NextResponse.json({ error: 'Failed to save review' }, { status: 500 })
     }
     return NextResponse.json({ success: true, review }, { status: 201 })
   } catch (err) {
-    console.error('[reviews/create]', err)
+    console.error('[reviews/create]', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -28,7 +28,7 @@ export async function notifyCustomer(
       phone: c.phone,
     })
   } catch (err) {
-    console.error(`[maintenance] notification ${event} failed`, err)
+    console.error(`[maintenance] notification ${event} failed`, err instanceof Error ? err.message : 'unknown')
   }
 }
 

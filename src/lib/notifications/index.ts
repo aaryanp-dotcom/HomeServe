@@ -182,7 +182,7 @@ export async function sendRawEmail(to: string | string[], subject: string, html:
     from: `${process.env.RESEND_FROM_NAME ?? 'HomeServe'} <${process.env.RESEND_FROM_EMAIL ?? 'noreply@homeserve.ai'}>`,
     to, subject, html,
   })
-  if (error) console.error('[notifications] sendRawEmail failed:', error.message)
+  if (error) console.error('[notifications] sendRawEmail failed:', error.name ?? 'unknown')
 }
 
 async function sendSMS(to: string, message: string) {
@@ -266,7 +266,8 @@ export async function sendNotification(params: SendNotificationParams) {
       }
     } catch (err) {
       error = err instanceof Error ? err.message : 'Unknown error'
-      console.error(`[notifications] ${channel} failed for ${params.event}:`, error)
+      // Redact PII from logs — do not echo back email/phone in error output.
+      console.error(`[notifications] ${channel} failed for ${params.event}: ${error}`)
     }
 
     // Log to database

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { CATEGORY_LABEL, type TicketCategory } from '@/lib/support/types'
+import { PrivacyNotice } from '@/components/privacy/PrivacyNotice'
 
 interface Props {
   defaultName?: string
@@ -13,6 +14,8 @@ interface Props {
   /** 'dashboard' additionally requires the signed-in customer to have an active or past service —
    *  the server enforces this regardless of what's passed here, this just picks the right error copy. */
   source?: 'contact_form' | 'dashboard'
+  /** Whether to show the DPDP privacy notice/consent checkbox. Default true for contact_form, false for dashboard (user already consented at signup). */
+  showPrivacyNotice?: boolean
   /** Called after a successful submit, with the new ticket's number and id. Omit to just show an
    *  inline "message sent" state in place of the form. */
   onSuccess?: (result: { ticketNumber: string; id: string }) => void
@@ -20,7 +23,7 @@ interface Props {
 
 const CATEGORIES = Object.keys(CATEGORY_LABEL) as TicketCategory[]
 
-export function TicketForm({ defaultName = '', defaultEmail = '', defaultPhone = '', defaultCategory = 'general', source = 'contact_form', onSuccess }: Props) {
+export function TicketForm({ defaultName = '', defaultEmail = '', defaultPhone = '', defaultCategory = 'general', source = 'contact_form', showPrivacyNotice, onSuccess }: Props) {
   const [name, setName] = useState(defaultName)
   const [email, setEmail] = useState(defaultEmail)
   const [phone, setPhone] = useState(defaultPhone)
@@ -31,6 +34,8 @@ export function TicketForm({ defaultName = '', defaultEmail = '', defaultPhone =
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sentNumber, setSentNumber] = useState<string | null>(null)
+  const needsPrivacyNotice = showPrivacyNotice ?? (source === 'contact_form')
+  const [privacyAccepted, setPrivacyAccepted] = useState(!needsPrivacyNotice)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -86,7 +91,14 @@ export function TicketForm({ defaultName = '', defaultEmail = '', defaultPhone =
         <label htmlFor="tf-message" className="text-sm font-medium text-ink-800">Message</label>
         <textarea id="tf-message" value={message} onChange={(e) => setMessage(e.target.value)} required rows={5} className="field" placeholder="Tell us what's going on — as much detail as helps." />
       </div>
-      <Button type="submit" size="lg" fullWidth loading={loading}>Send message</Button>
+      {needsPrivacyNotice && (
+        <PrivacyNotice
+          accepted={privacyAccepted}
+          onAcceptChange={setPrivacyAccepted}
+          context="contact_form"
+        />
+      )}
+      <Button type="submit" size="lg" fullWidth loading={loading} disabled={!privacyAccepted}>Send message</Button>
     </form>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { PrivacyNotice } from '@/components/privacy/PrivacyNotice'
 import { SizeInput } from '@/components/size/SizeInput'
 import { DEFAULT_SIZE, computeSize, formatBoth, sizePayload, type SizeValue } from '@/lib/size'
 import {
@@ -114,6 +115,7 @@ export default function RenovationRequestForm({ defaultTheme, initial }: Props) 
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [privacyAccepted, setPrivacyAccepted] = useState(false)
 
   // Size is optional: start on "Total area" (empty) so nothing is sent unless the visitor enters it.
   const [size, setSize] = useState<SizeValue>(initial?.size ?? { ...DEFAULT_SIZE, mode: 'total_area' })
@@ -493,6 +495,13 @@ export default function RenovationRequestForm({ defaultTheme, initial }: Props) 
                 </div>
               </div>
 
+              {/* Privacy Notice — shown on final step before submission */}
+              <PrivacyNotice
+                accepted={privacyAccepted}
+                onAcceptChange={setPrivacyAccepted}
+                context="lead_form"
+              />
+
               {/* Summary */}
               <div className="p-4 bg-stone-50 border border-ink-900/15 space-y-1.5">
                 <p className="panel-title mb-2">Your request summary</p>
@@ -535,7 +544,7 @@ export default function RenovationRequestForm({ defaultTheme, initial }: Props) 
             ) : (
               <button
                 onClick={handleSubmit}
-                disabled={!canProceed() || submitting}
+                disabled={!canProceed() || submitting || !privacyAccepted}
                 className="coarse:min-h-11 flex items-center gap-2 px-6 py-2.5 text-sm font-semibold bg-ink-900 text-white hover:bg-cobalt-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {submitting ? 'Submitting…' : 'Submit Renovation Request'}

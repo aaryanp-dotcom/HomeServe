@@ -153,7 +153,15 @@ export default function AdminProjectUpdates({ bookingId }: { bookingId: string }
               placeholder="https://..."
               className="field w-full font-mono"
             />
-            <p className="text-[11px] text-stone-400 mt-1">Paste Supabase storage public URLs, one per line</p>
+            {/* DPDP-04: Property photos are personal data. Use private/authenticated
+                storage buckets and signed URLs rather than public URLs. Public URLs
+                allow unauthenticated access to the customer's property photos.
+                TODO (Supabase configuration): Move project-updates bucket to private
+                and replace this field with a signed-URL generator. */}
+            <p className="text-[11px] text-amber-600 mt-1 font-medium">
+              ⚠ Privacy: only use authenticated storage URLs. Avoid public bucket URLs for customer property photos.
+            </p>
+            <p className="text-[11px] text-stone-400 mt-0.5">Paste Supabase storage URLs, one per line</p>
           </div>
           <button type="submit" disabled={saving}
             className="coarse:min-h-11 flex items-center gap-2 px-4 py-2 bg-ink-900 text-white text-xs font-semibold hover:bg-cobalt-600 disabled:opacity-50 transition-colors"

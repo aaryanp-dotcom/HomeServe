@@ -4,7 +4,7 @@ import { LegalPage } from '@/components/legal/LegalPage'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'How HomeServe collects, uses and protects your personal information.',
+  description: 'How HomeServe collects, uses and protects your personal information under the Digital Personal Data Protection Act, 2023.',
   alternates: { canonical: '/privacy' },
   openGraph: { title: 'Privacy Policy — HomeServe', description: 'How HomeServe collects, uses and protects your personal information.', url: '/privacy' },
 }
@@ -87,16 +87,26 @@ export default function PrivacyPolicyPage() {
         with us and to respond quickly if something goes wrong.
       </p>
 
-      <h2>7. Your rights</h2>
-      <p>You can:</p>
+      <h2>7. Your rights (Data Principal rights under the DPDP Act, 2023)</h2>
+      <p>
+        As a Data Principal under the Digital Personal Data Protection Act, 2023, you have the right to:
+      </p>
       <ul>
-        <li>See and update most of your account details directly from your dashboard.</li>
-        <li>Ask us what personal information we hold about you.</li>
-        <li>Ask us to correct information that is wrong.</li>
-        <li>Ask us to delete your account and associated personal information, subject to what we are legally required to retain.</li>
-        <li>Withdraw consent to non-essential communications at any time.</li>
+        <li><strong>Access</strong> — ask us what personal information we hold about you; most of it is already visible in your dashboard.</li>
+        <li><strong>Correction</strong> — ask us to correct information that is wrong.</li>
+        <li><strong>Erasure</strong> — ask us to delete your account and associated personal information, subject to what we are legally required to retain for tax, accounting, or contractual purposes.</li>
+        <li><strong>Withdrawal of consent</strong> — withdraw consent to non-essential communications at any time. Withdrawal does not affect the lawfulness of prior processing.</li>
+        <li><strong>Grievance redressal</strong> — raise a complaint with our Grievance Officer if you believe we have mishandled your data.</li>
       </ul>
-      <p>To exercise any of these, use the contact details at the bottom of this page.</p>
+      <p>
+        Full details of how to exercise each right are on our{' '}
+        <Link href="/privacy/rights" className="underline-offset-2 hover:underline">Privacy Rights page</Link>.
+        For quick access: signed-in customers can use a{' '}
+        <Link href="/homeowner/support/new" className="underline-offset-2 hover:underline">support ticket</Link>;
+        everyone can use the <Link href="/contact" className="underline-offset-2 hover:underline">contact form</Link>
+        {' '}or email{' '}
+        <a href="mailto:privacy@homeserve.in" className="underline-offset-2 hover:underline">privacy@homeserve.in</a>.
+      </p>
 
       <h2>8. Children</h2>
       <p>Our services are for adults entering into a service agreement with us. We do not knowingly collect information from anyone under 18.</p>
@@ -106,10 +116,29 @@ export default function PrivacyPolicyPage() {
 
       <h2>10. Grievance officer</h2>
       <p>
-        In line with Indian data protection requirements, questions or complaints about how we handle your personal
-        information can be raised through the <Link href="/contact">contact form</Link> or, if you have an account,
-        by <Link href="/homeowner/support/new">raising a support ticket</Link> addressed to our Grievance Officer.
-        We aim to acknowledge grievances within a reasonable time and resolve them promptly.
+        In line with the Digital Personal Data Protection Act, 2023, questions or complaints about how we handle your
+        personal data can be directed to our Grievance Officer. We aim to acknowledge grievances within 48 hours and
+        resolve them within 30 days.
+      </p>
+      <ul>
+        <li>
+          <strong>Email:</strong>{' '}
+          <a href="mailto:privacy@homeserve.in" className="underline-offset-2 hover:underline">privacy@homeserve.in</a>
+          {' '}(dedicated privacy/grievance mailbox)
+        </li>
+        <li>
+          <strong>Signed-in customers:</strong>{' '}
+          <Link href="/homeowner/support/new">raise a support ticket</Link> with subject &ldquo;Privacy Grievance&rdquo;
+        </li>
+        <li>
+          <strong>Anyone else:</strong>{' '}
+          <Link href="/contact">contact form</Link>
+        </li>
+      </ul>
+      <p className="text-sm text-stone-500">
+        <strong>DPDP Act, 2023 — compliance note:</strong> The Act is partially in force. Certain provisions
+        (including the formal Data Protection Board mechanism) are subject to further rules yet to be notified.
+        We are committed to compliance and will update our practices as those provisions come into effect.
       </p>
     </LegalPage>
   )

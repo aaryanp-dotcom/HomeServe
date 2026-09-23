@@ -22,7 +22,7 @@ function GoogleMark() {
  * clear message rather than a broken redirect. The button and callback wiring are ready for the moment
  * it's turned on — no further code changes needed then.
  */
-export function GoogleSignInButton({ next }: { next?: string | null }) {
+export function GoogleSignInButton({ next, disabled }: { next?: string | null; disabled?: boolean }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -45,7 +45,7 @@ export function GoogleSignInButton({ next }: { next?: string | null }) {
 
   return (
     <div>
-      <Button type="button" variant="secondary" size="lg" fullWidth loading={loading} leftIcon={!loading ? <GoogleMark /> : undefined} onClick={handleClick}>
+      <Button type="button" variant="secondary" size="lg" fullWidth loading={loading} disabled={disabled} leftIcon={!loading ? <GoogleMark /> : undefined} onClick={handleClick}>
         Continue with Google
       </Button>
       {error && <div className="mt-3"><AuthAlert tone="error">{error}</AuthAlert></div>}

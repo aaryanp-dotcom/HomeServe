@@ -95,7 +95,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, booking })
 
   } catch (err) {
-    console.error('[admin/assign-contractor]', err)
+    console.error('[admin/assign-contractor]', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -119,6 +119,20 @@ export async function PUT(req: Request) {
 
     const { booking_id, milestone_number, notes } = await req.json()
 
+    // Fetch booking first to verify permissions
+    const { data: booking } = await adminSupabase
+      .from('bookings')
+      .select('*, service:services(name)')
+      .eq('id', booking_id)
+      .single()
+
+    if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
+
+    // If contractor, verify they are assigned to this booking
+    if (profile?.role === 'contractor' && booking.contractor_id !== user.id) {
+      return NextResponse.json({ error: 'Forbidden. You are not assigned to this booking.' }, { status: 403 })
+    }
+
     // Mark milestone as completed
     const { data: milestone } = await adminSupabase
       .from('milestones')
@@ -129,15 +143,6 @@ export async function PUT(req: Request) {
       .single()
 
     if (!milestone) return NextResponse.json({ error: 'Milestone not found' }, { status: 404 })
-
-    // Fetch booking
-    const { data: booking } = await adminSupabase
-      .from('bookings')
-      .select('*, service:services(name)')
-      .eq('id', booking_id)
-      .single()
-
-    if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
 
     // Create Razorpay order for this milestone payment
     const amounts = calculateMilestoneAmounts(booking.total_amount)
@@ -196,7 +201,7 @@ export async function PUT(req: Request) {
     })
 
   } catch (err) {
-    console.error('[admin/milestone-next]', err)
+    console.error('[admin/milestone-next]', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

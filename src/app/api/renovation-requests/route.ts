@@ -81,7 +81,8 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Supabase error creating renovation request:', error)
+      // Log only the error code/hint — not the full row which may echo back PII fields.
+      console.error('Supabase error creating renovation request:', error.code, error.hint)
       return NextResponse.json({ error: 'Failed to save request. Please try again.' }, { status: 500 })
     }
 
@@ -91,7 +92,7 @@ export async function POST(req: NextRequest) {
       requestNumber: data.request_number,
     })
   } catch (err) {
-    console.error('Error creating renovation request:', err)
+    console.error('Error creating renovation request:', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -127,7 +128,12 @@ export async function GET(req: NextRequest) {
 
   const url = new URL(req.url)
   const status = url.searchParams.get('status')
-  const limit = parseInt(url.searchParams.get('limit') ?? '50')
+  let limit = parseInt(url.searchParams.get('limit') ?? '50')
+  if (isNaN(limit) || limit <= 0) {
+    limit = 50
+  } else if (limit > 100) {
+    limit = 100 // Defensive cap to prevent resource exhaustion
+  }
 
   let query = supabase
     .from('renovation_requests')
@@ -142,7 +148,8 @@ export async function GET(req: NextRequest) {
   const { data, error } = await query
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[renovation-requests/list]', error.code, error.hint)
+    return NextResponse.json({ error: 'Failed to load requests' }, { status: 500 })
   }
 
   return NextResponse.json({ requests: data })

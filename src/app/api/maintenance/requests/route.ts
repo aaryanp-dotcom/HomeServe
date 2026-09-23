@@ -79,7 +79,7 @@ export async function POST(req: Request) {
     .select('id, request_number')
     .single()
   if (error || !created) {
-    console.error('[maintenance/requests] insert', error)
+    console.error('[maintenance/requests] insert', error?.code, error?.hint)
     return NextResponse.json({ error: 'Could not create the request' }, { status: 500 })
   }
 

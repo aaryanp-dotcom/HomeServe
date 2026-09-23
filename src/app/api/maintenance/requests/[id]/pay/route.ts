@@ -36,7 +36,7 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     return NextResponse.json({ success: true, razorpay })
   } catch (err) {
     if (err instanceof PaymentsNotConfigured) return NextResponse.json({ error: err.message }, { status: 503 })
-    console.error('[maintenance/pay]', err)
+    console.error('[maintenance/pay]', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Could not start the payment' }, { status: 500 })
   }
 }

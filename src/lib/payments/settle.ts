@@ -61,6 +61,6 @@ export async function notifyHomeowner(
       phone: profile?.phone ?? '',
     })
   } catch (err) {
-    console.error('[payments] notification failed', err)
+    console.error('[payments] notification failed', err instanceof Error ? err.message : 'unknown')
   }
 }

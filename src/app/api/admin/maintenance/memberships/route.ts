@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     user_id: v.user_id, plan_id: plan.id, property_id: v.property_id, status: 'pending_payment',
     plan_snapshot: snapshotOf(plan), price_paid: price, created_by: user.id,
   }).select('id').single()
-  if (error || !sub) { console.error('[admin/memberships] insert', error); return NextResponse.json({ error: 'Could not create the membership' }, { status: 500 }) }
+  if (error || !sub) { console.error('[admin/memberships] insert', error?.code, error?.hint); return NextResponse.json({ error: 'Could not create the membership' }, { status: 500 }) }
 
   if (v.mode === 'offline') {
     const orderId = `offline_${randomUUID()}`

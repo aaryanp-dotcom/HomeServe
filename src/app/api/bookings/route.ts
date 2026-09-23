@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       .single()
 
     if (bookingError || !booking) {
-      console.error('[bookings/create]', bookingError)
+      console.error('[bookings/create]', bookingError?.code, bookingError?.hint)
       return NextResponse.json({ error: 'Failed to create booking' }, { status: 500 })
     }
 
@@ -143,7 +143,7 @@ export async function POST(req: Request) {
     }, { status: 201 })
 
   } catch (err) {
-    console.error('[bookings/create]', err)
+    console.error('[bookings/create]', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -186,7 +186,7 @@ export async function GET(_req: Request) {
 
     return NextResponse.json({ bookings: data })
   } catch (err) {
-    console.error('[bookings/list]', err)
+    console.error('[bookings/list]', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

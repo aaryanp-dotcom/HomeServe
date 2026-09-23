@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     status: v.confirm ? 'confirmed' : 'requested', confirmed_at: v.confirm ? new Date().toISOString() : null,
   }).select('id, request_number').single()
   if (error || !created) {
-    console.error('[admin/maintenance/requests] insert', error)
+    console.error('[admin/maintenance/requests] insert', error?.code, error?.hint)
     return NextResponse.json({ error: 'Could not create the request' }, { status: 500 })
   }
 

@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       price_paid: plan.annual_price, created_by: user.id,
     }).select('id').single()
     if (error || !created) {
-      console.error('[memberships] insert', error)
+      console.error('[memberships] insert', error?.code, error?.hint)
       return NextResponse.json({ error: 'Could not start the membership' }, { status: 500 })
     }
     subId = created.id
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, subscription_id: subId, razorpay })
   } catch (err) {
     if (err instanceof PaymentsNotConfigured) return NextResponse.json({ error: err.message }, { status: 503 })
-    console.error('[memberships] order', err)
+    console.error('[memberships] order', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Could not start the payment' }, { status: 500 })
   }
 }

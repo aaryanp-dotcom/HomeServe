@@ -36,7 +36,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     user_id: r.user_id, kind: 'request_charge', request_id: r.id, razorpay_order_id: orderId, amount, status: 'created',
     method: 'offline', reference: parsed.data.reference, recorded_by: user.id, description: `Service request ${r.request_number} (offline)`,
   })
-  if (error) { console.error('[admin/payment] insert', error); return NextResponse.json({ error: 'Could not record the payment' }, { status: 500 }) }
+  if (error) { console.error('[admin/payment] insert', error.code, error.hint); return NextResponse.json({ error: 'Could not record the payment' }, { status: 500 }) }
 
   const result = await settleMaintenancePayment(admin, orderId, null)
   if (!result.ok) return NextResponse.json({ error: result.error ?? 'Could not settle the payment' }, { status: 500 })

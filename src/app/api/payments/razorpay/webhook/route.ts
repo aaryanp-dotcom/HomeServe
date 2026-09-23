@@ -66,7 +66,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ received: true, ignored: type })
   } catch (err) {
-    console.error('[webhook]', err)
+    console.error('[webhook]', err instanceof Error ? err.message : 'unknown')
     // 500 makes Razorpay retry, which is safe because every operation is idempotent.
     return NextResponse.json({ error: 'Webhook error' }, { status: 500 })
   }

@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       paid_amount: result.paid_amount,
     })
   } catch (err) {
-    console.error('[payments]', err)
+    console.error('[payments]', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

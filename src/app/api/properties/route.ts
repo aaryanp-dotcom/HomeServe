@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     .select('*')
     .single()
   if (error) {
-    console.error('[properties] insert', error)
+    console.error('[properties] insert', error.code, error.hint)
     return NextResponse.json({ error: 'Could not save the property' }, { status: 500 })
   }
   return NextResponse.json({ property: data }, { status: 201 })
