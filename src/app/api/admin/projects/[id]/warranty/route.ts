@@ -28,7 +28,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   const facts = { handover_date: v.handover_date ?? null, warranty_months: v.warranty_months ?? null, warranty_terms: v.warranty_terms ?? null }
   const { error } = await admin.from('bookings').update(facts).eq('id', params.id)
   if (error) {
-    console.error('[admin/warranty]', error)
+    console.error('[admin/warranty]', error.code, error.hint)
     return NextResponse.json({ error: 'Could not save the warranty details' }, { status: 500 })
   }
 

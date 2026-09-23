@@ -62,7 +62,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const path = `${r.id}/${randomUUID()}.${ext}`
     const { error: upErr } = await admin.storage.from('maintenance-media').upload(path, buf, { contentType: f.type, upsert: false })
     if (upErr) {
-      console.error('[maintenance/media] upload', upErr)
+      console.error('[maintenance/media] upload', upErr.message)
       return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
     }
     const { error: rowErr } = await admin.from('maintenance_request_media').insert({
@@ -70,7 +70,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     })
     if (rowErr) {
       await admin.storage.from('maintenance-media').remove([path])
-      console.error('[maintenance/media] row', rowErr)
+      console.error('[maintenance/media] row', rowErr.code, rowErr.hint)
       return NextResponse.json({ error: 'Could not save the photo' }, { status: 500 })
     }
     saved.push(path)

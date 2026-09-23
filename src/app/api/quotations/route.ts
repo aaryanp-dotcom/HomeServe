@@ -55,7 +55,10 @@ export async function POST(req: NextRequest) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[quotations/create]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not create the quotation' }, { status: 500 })
+  }
 
   // Update the renovation_request status if linked
   if (body.request_id && body.status === 'sent') {

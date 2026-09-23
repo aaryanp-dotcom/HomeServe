@@ -32,7 +32,10 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
   }
 
   const { data, error } = await adminSupabase.from('services').update(updates).eq('id', id).select().single()
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[services/update]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not update the service' }, { status: 500 })
+  }
   return NextResponse.json({ service: data })
 }
 
@@ -48,6 +51,9 @@ export async function DELETE(_req: NextRequest, { params }: RouteContext) {
   if (profile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const { error } = await adminSupabase.from('services').update({ is_active: false }).eq('id', id)
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[services/delete]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not deactivate the service' }, { status: 500 })
+  }
   return NextResponse.json({ success: true })
 }

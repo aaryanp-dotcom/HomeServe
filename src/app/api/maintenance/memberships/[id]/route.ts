@@ -73,7 +73,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     plan_snapshot: snapshotOf(plan), price_paid: plan.annual_price, renewed_from_id: sub.id, created_by: user.id,
   }).select('id').single()
   if (error || !created) {
-    console.error('[memberships] renew insert', error)
+    console.error('[memberships] renew insert', error?.code, error?.hint)
     return NextResponse.json({ error: 'Could not start the renewal' }, { status: 500 })
   }
 
@@ -87,7 +87,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     // Do not leave an unpayable renewal blocking the next attempt.
     await admin.from('maintenance_subscriptions').update({ status: 'cancelled', cancelled_at: new Date().toISOString(), cancellation_reason: 'Payment could not be started' }).eq('id', created.id)
     if (err instanceof PaymentsNotConfigured) return NextResponse.json({ error: err.message }, { status: 503 })
-    console.error('[memberships] renew order', err)
+    console.error('[memberships] renew order', err instanceof Error ? err.message : 'unknown')
     return NextResponse.json({ error: 'Could not start the payment' }, { status: 500 })
   }
 }

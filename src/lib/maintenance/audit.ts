@@ -10,5 +10,5 @@ export async function logAdmin(
     actor_id: actorId, action: a.action, entity_type: a.entity_type, entity_id: a.entity_id ?? null,
     summary: a.summary, details: a.details ?? {},
   })
-  if (error) console.error('[audit] insert failed', error)
+  if (error) console.error('[audit] insert failed', error.code, error.hint)
 }

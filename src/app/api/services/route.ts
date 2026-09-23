@@ -34,7 +34,10 @@ export async function GET(request: NextRequest) {
   if (search) query = query.ilike('name', `%${search}%`)
 
   const { data, error } = await query
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[services/list]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not load services' }, { status: 500 })
+  }
 
   return NextResponse.json({ services: data ?? [] })
 }
@@ -63,6 +66,9 @@ export async function POST(request: NextRequest) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[services/create]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not create the service' }, { status: 500 })
+  }
   return NextResponse.json({ service: data }, { status: 201 })
 }

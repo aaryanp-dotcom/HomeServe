@@ -15,7 +15,7 @@ export async function getThemeSaveCounts(): Promise<Record<string, number>> {
     for (const row of data as { theme_slug: string; saves: number }[]) counts[row.theme_slug] = Number(row.saves)
     return counts
   } catch (err) {
-    console.error('[themes] getThemeSaveCounts failed', err)
+    console.error('[themes] getThemeSaveCounts failed', err instanceof Error ? err.message : 'unknown')
     return {}
   }
 }
@@ -25,7 +25,7 @@ export async function getThemeSaveCount(slug: string): Promise<number> {
     const { data, error } = await createAdminClient().rpc('theme_save_count', { p_slug: slug })
     return error || data == null ? 0 : Number(data)
   } catch (err) {
-    console.error('[themes] getThemeSaveCount failed', err)
+    console.error('[themes] getThemeSaveCount failed', err instanceof Error ? err.message : 'unknown')
     return 0
   }
 }

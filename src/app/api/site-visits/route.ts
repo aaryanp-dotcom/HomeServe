@@ -44,7 +44,10 @@ export async function POST(req: NextRequest) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[site-visits/create]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not schedule the visit' }, { status: 500 })
+  }
 
   // Also update the renovation_request status to site_visit_scheduled
   await supabase

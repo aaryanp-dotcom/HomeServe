@@ -32,7 +32,10 @@ export async function GET(req: NextRequest) {
   }
 
   const { data, error } = await query
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[project-updates/list]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not load updates' }, { status: 500 })
+  }
   return NextResponse.json(data)
 }
 
@@ -60,6 +63,9 @@ export async function POST(req: NextRequest) {
     created_by: user.id,
   }).select().single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[project-updates/create]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not save the update' }, { status: 500 })
+  }
   return NextResponse.json(data, { status: 201 })
 }

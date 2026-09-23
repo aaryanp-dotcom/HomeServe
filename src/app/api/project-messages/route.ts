@@ -29,7 +29,10 @@ export async function GET(req: NextRequest) {
     .eq('booking_id', bookingId)
     .order('created_at', { ascending: true })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[project-messages/list]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not load messages' }, { status: 500 })
+  }
 
   // Mark messages as read for the current reader
   if (!isAdmin) {
@@ -84,6 +87,9 @@ export async function POST(req: NextRequest) {
     is_read: false,
   }).select().single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[project-messages/create]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not send the message' }, { status: 500 })
+  }
   return NextResponse.json(data, { status: 201 })
 }

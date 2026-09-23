@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
   const { data: rolled, error: rollErr } = await admin.rpc('roll_memberships')
   if (rollErr) {
-    console.error('[cron/memberships] roll', rollErr)
+    console.error('[cron/memberships] roll', rollErr.code, rollErr.hint)
     return NextResponse.json({ error: 'Rollover failed' }, { status: 500 })
   }
 

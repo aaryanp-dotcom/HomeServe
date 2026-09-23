@@ -16,7 +16,10 @@ export async function GET() {
     .order('sent_at', { ascending: false })
     .limit(100)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[notifications/list]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not load notifications' }, { status: 500 })
+  }
   return NextResponse.json({ notifications: data ?? [] })
 }
 
@@ -34,6 +37,9 @@ export async function POST() {
     .eq('user_id', user.id)
     .is('read_at', null)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[notifications/mark-read]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not update notifications' }, { status: 500 })
+  }
   return NextResponse.json({ success: true })
 }

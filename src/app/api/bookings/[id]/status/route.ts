@@ -54,7 +54,10 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (status === 'completed') updates.completed_at = new Date().toISOString()
 
   const { data, error } = await adminSupabase.from('bookings').update(updates).eq('id', id).select().single()
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[bookings/status]', error.code, error.hint)
+    return NextResponse.json({ error: 'Could not update the booking' }, { status: 500 })
+  }
 
   return NextResponse.json({ booking: data })
 }

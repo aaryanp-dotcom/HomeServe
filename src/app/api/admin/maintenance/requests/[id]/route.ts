@@ -167,7 +167,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
       const { data: calc, error: rpcErr } = await admin.rpc('recalculate_request_charges', { p_request_id: r.id, p_actor: user.id })
       if (rpcErr || !calc?.ok) {
-        console.error('[admin/maintenance] recalc', rpcErr, calc)
+        console.error('[admin/maintenance] recalc', rpcErr?.code, rpcErr?.hint, calc?.error)
         return NextResponse.json({ error: calc?.error ?? 'Could not calculate charges' }, { status: 500 })
       }
       if (act.waive && Number(calc.amount_due) > 0) {

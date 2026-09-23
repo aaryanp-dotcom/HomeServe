@@ -27,6 +27,10 @@ const RATE_LIMITED_ROUTES: { prefix: string; exact?: boolean; limit: number; win
   { prefix: '/api/maintenance/memberships', limit: 10, windowMs: 10 * 60_000 },
   { prefix: '/api/warranty-requests',   limit: 10, windowMs: 10 * 60_000 },
   { prefix: '/api/reviews',             limit: 10, windowMs: 10 * 60_000 },
+  // Anonymous by design (no login — see the route's own comment), so nothing here stops a
+  // script from spamming fresh device ids to inflate a theme's save count. Low stakes (a
+  // vanity counter, not real data), but cheap to throttle while we're here.
+  { prefix: '/api/themes',              limit: 20, windowMs: 10 * 60_000 },
 ]
 
 export async function middleware(request: NextRequest) {

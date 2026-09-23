@@ -74,5 +74,5 @@ export async function addRequestEvent(
     visible_to_customer: e.visible_to_customer ?? true,
     metadata: e.metadata ?? {},
   })
-  if (error) console.error('[maintenance] event insert failed', error)
+  if (error) console.error('[maintenance] event insert failed', error.code, error.hint)
 }

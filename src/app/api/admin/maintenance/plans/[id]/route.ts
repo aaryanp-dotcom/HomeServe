@@ -35,7 +35,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     eligibility_notes: v.eligibility_notes ?? null,
   }).eq('id', params.id).select('id').maybeSingle()
   if (error) {
-    console.error('[admin/maintenance/plans]', error)
+    console.error('[admin/maintenance/plans]', error.code, error.hint)
     return NextResponse.json({ error: 'Could not save the plan' }, { status: 500 })
   }
   if (!data) return NextResponse.json({ error: 'Plan not found' }, { status: 404 })

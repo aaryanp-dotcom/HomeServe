@@ -51,7 +51,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (d.markCompleted) { update.status = 'completed'; update.completed_at = new Date().toISOString() }
 
   const { data, error } = await supabase.from('site_visits').update(update).eq('id', id).select().single()
-  if (error) return NextResponse.json({ error: error.message }, { status: error.code === 'PGRST116' ? 404 : 500 })
+  if (error) {
+    console.error('[site-visits/update]', error.code, error.hint)
+    return NextResponse.json({ error: error.code === 'PGRST116' ? 'Site visit not found' : 'Could not save the measurement' }, { status: error.code === 'PGRST116' ? 404 : 500 })
+  }
 
   // A completed visit moves the lead forward (only from the earlier pipeline stages).
   if (d.markCompleted) {

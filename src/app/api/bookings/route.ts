@@ -182,7 +182,10 @@ export async function GET(_req: Request) {
     // admin gets all
 
     const { data, error } = await query
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) {
+      console.error('[bookings/list]', error.code, error.hint)
+      return NextResponse.json({ error: 'Could not load bookings' }, { status: 500 })
+    }
 
     return NextResponse.json({ bookings: data })
   } catch (err) {

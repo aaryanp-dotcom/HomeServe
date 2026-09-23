@@ -27,7 +27,7 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     }
     try { await refundRazorpayPayment(p.razorpay_payment_id, Number(p.amount)) }
     catch (err) {
-      console.error('[admin/refund] razorpay', err)
+      console.error('[admin/refund] razorpay', err instanceof Error ? err.message : 'unknown')
       return NextResponse.json({ error: 'Razorpay could not process the refund. Check the payment in the Razorpay dashboard.' }, { status: 502 })
     }
   }

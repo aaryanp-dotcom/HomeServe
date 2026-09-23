@@ -20,7 +20,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     price_note: v.price_note ?? null,
   }).eq('id', params.id).select('id').maybeSingle()
   if (error) {
-    console.error('[admin/maintenance/services]', error)
+    console.error('[admin/maintenance/services]', error.code, error.hint)
     return NextResponse.json({ error: 'Could not save the service' }, { status: 500 })
   }
   if (!data) return NextResponse.json({ error: 'Service not found' }, { status: 404 })
