@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { rateLimit, clientIp } from '@/lib/rate-limit'
 
 // Route → required role mapping
 const ROLE_ROUTES: Record<string, string[]> = {
@@ -8,7 +9,50 @@ const ROLE_ROUTES: Record<string, string[]> = {
   '/contractor': ['contractor', 'admin'],
 }
 
+// POST endpoints that create records and are worth throttling per IP — public lead/contact
+// forms get the tightest limits since they need no auth at all; authenticated creation
+// endpoints (bookings, payments, service requests) get more room since a real user may
+// legitimately retry a few times. See lib/rate-limit.ts for what this can and can't protect.
+const RATE_LIMITED_ROUTES: { prefix: string; exact?: boolean; limit: number; windowMs: number }[] = [
+  { prefix: '/api/renovation-requests', limit: 5,  windowMs: 10 * 60_000 },
+  { prefix: '/api/support/tickets',     limit: 8,  windowMs: 10 * 60_000 },
+  { prefix: '/api/site-visits',         limit: 10, windowMs: 10 * 60_000 },
+  { prefix: '/api/bookings',            limit: 15, windowMs: 10 * 60_000 },
+  // Deliberately NOT '/api/payments' as a prefix — that would also throttle
+  // /api/payments/razorpay/webhook, which Razorpay's own servers call (not a human abuser).
+  // Dropping legitimate webhook deliveries under load would leave payments unsettled.
+  { prefix: '/api/payments', exact: true, limit: 15, windowMs: 10 * 60_000 },
+  { prefix: '/api/payments/milestone',  limit: 15, windowMs: 10 * 60_000 },
+  { prefix: '/api/maintenance/requests', limit: 10, windowMs: 10 * 60_000 },
+  { prefix: '/api/maintenance/memberships', limit: 10, windowMs: 10 * 60_000 },
+  { prefix: '/api/warranty-requests',   limit: 10, windowMs: 10 * 60_000 },
+  { prefix: '/api/reviews',             limit: 10, windowMs: 10 * 60_000 },
+]
+
 export async function middleware(request: NextRequest) {
+  if (request.method === 'POST') {
+    const pathname = request.nextUrl.pathname
+    const route = RATE_LIMITED_ROUTES.find((r) =>
+      r.exact ? pathname === r.prefix : pathname === r.prefix || pathname.startsWith(r.prefix + '/'),
+    )
+    if (route) {
+      const result = rateLimit(`${route.prefix}:${clientIp(request)}`, route.limit, route.windowMs)
+      if (!result.ok) {
+        return NextResponse.json(
+          { error: 'Too many requests. Please wait a moment and try again.' },
+          {
+            status: 429,
+            headers: {
+              'Retry-After': String(Math.ceil((result.resetAt - Date.now()) / 1000)),
+              'X-RateLimit-Limit': String(result.limit),
+              'X-RateLimit-Remaining': '0',
+            },
+          },
+        )
+      }
+    }
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
