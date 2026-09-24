@@ -26,8 +26,12 @@ export default function ThemeCard({ theme, size = 'md', saveCount = 0 }: Props) 
     setSaved(next);
     setCount((c) => Math.max(0, c + (next ? 1 : -1)));
     const serverCount = await toggleThemeSave(theme.slug, next);
-    if (serverCount != null) setCount(serverCount);
-    else setSaved(!next); // request failed — undo the optimistic flip
+    if (serverCount != null) {
+      setCount(serverCount);
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('hs_saved_updated'));
+    } else {
+      setSaved(!next); // request failed — undo the optimistic flip
+    }
     setPending(false);
   }
 

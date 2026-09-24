@@ -170,6 +170,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   { label: 'Designs', href: '/themes' },
   { label: 'Projects', href: '/projects' },
+  { label: 'Blog & Guides', href: '/blog' },
   { label: 'Cost Calculator', href: '/estimate' },
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'Maintenance', href: '/maintenance' },
@@ -800,10 +801,12 @@ export function Footer({ showCta = true }: { showCta?: boolean }) {
       ],
     },
     {
-      heading: 'Company',
+      heading: 'Company & Content',
       links: [
         { label: 'About Us', href: '/about' },
         { label: 'Our Projects', href: '/projects' },
+        { label: 'Design Themes', href: '/themes' },
+        { label: 'Blog & Guides', href: '/blog' },
         { label: 'How It Works', href: '/how-it-works' },
         { label: 'Contact Us', href: '/contact' },
         { label: 'FAQs', href: '/faqs' },

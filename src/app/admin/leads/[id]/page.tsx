@@ -193,6 +193,12 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
               ))}
             </div>
             {lead.scope_other && <p className="text-sm text-stone-600">{lead.scope_other}</p>}
+            {lead.inspiration_theme && (
+              <div className="mt-2 pt-2 border-t border-stone-100">
+                <p className="text-xs text-stone-400 mb-1">Saved design inspiration</p>
+                <p className="text-sm text-stone-700">{lead.inspiration_theme}</p>
+              </div>
+            )}
             {lead.notes && (
               <div className="mt-2 pt-2 border-t border-stone-100">
                 <p className="text-xs text-stone-400 mb-1">Customer notes</p>

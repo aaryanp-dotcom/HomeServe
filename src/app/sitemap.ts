@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { siteUrl } from '@/lib/seo'
 import { getAllServiceSlugs } from '@/lib/services/data'
 import { THEMES } from '@/lib/themes/data'
+import { getAllBlogPosts } from '@/lib/blog/data'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 const NCR_CITY_SLUGS = ['delhi', 'noida', 'greater-noida', 'ghaziabad', 'gurugram', 'faridabad']
@@ -9,7 +10,7 @@ const NCR_CITY_SLUGS = ['delhi', 'noida', 'greater-noida', 'ghaziabad', 'gurugra
 // Everything a homeowner can reach without signing in. Anything under /homeowner, /admin, /contractor,
 // /api or /auth is excluded here and blocked in robots.ts — it's either behind a login or transactional.
 const STATIC_ROUTES = [
-  '', '/get-started', '/estimate', '/projects', '/services', '/themes', '/how-it-works',
+  '', '/get-started', '/estimate', '/projects', '/services', '/themes', '/blog', '/how-it-works',
   '/about', '/contact', '/faqs', '/maintenance', '/maintenance/plans', '/login', '/signup',
 ]
 
@@ -36,6 +37,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   for (const theme of THEMES) {
     entries.push({ url: `${base}/themes/${theme.slug}`, changeFrequency: 'monthly', priority: 0.6 })
+  }
+  for (const post of getAllBlogPosts()) {
+    entries.push({
+      url: `${base}/blog/${post.slug}`,
+      lastModified: new Date(post.updatedAt),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    })
   }
 
   // Maintenance service pages come from the live catalogue, not a static list, so an inactive/renamed

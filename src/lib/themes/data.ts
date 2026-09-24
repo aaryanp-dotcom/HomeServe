@@ -11,6 +11,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=800&q=80','https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80','https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80'],
     category:'Nordic',tags:['minimal','nordic','cozy','functional','light','natural'],
     collections:['trending','editors-picks','compact-apartments','family-homes'],
+    colorFamilies:['white','grey','neutral','wood','green'],
+    roomCategories:['Living Room','Bedroom','Dining','Kitchen','Bathroom','Home Office'],
+    suitablePropertyTypes:['Apartment','Builder Floor','Independent House'],
     budget:{basic:'₹8–12 L',premium:'₹12–20 L',luxury:'₹20–35 L',ultraLuxury:'₹35 L+'},
     estimatedTimeline:'6–10 weeks',
     colors:[{name:'Arctic White',hex:'#F8F8F6',paint:'Asian Paints Brilliant White'},{name:'Birch Grey',hex:'#C8C5BC',paint:'Nippon Nordic Mist'},{name:'Pine Green',hex:'#4A6741',paint:'Dulux Forest Fern'},{name:'Warm Sand',hex:'#E8DDD0',paint:'Asian Paints Dune Sand'},{name:'Charcoal',hex:'#3A3A3A',paint:'Berger Suede Charcoal'}],
@@ -37,6 +40,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Fusion',tags:['japandi','japanese','minimal','wabi-sabi','serene','natural','neutral'],
     collections:['trending','editors-picks','most-saved','premium-homes'],
+    colorFamilies:["beige","cream","neutral","wood","green","black"],
+    roomCategories:["Living Room","Bedroom","Dining","Kitchen","Home Office"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Villa"],
     budget:{basic:'₹10–15 L',premium:'₹15–25 L',luxury:'₹25–40 L',ultraLuxury:'₹40 L+'},
     estimatedTimeline:'7–11 weeks',
     colors:[{name:'Warm Ivory',hex:'#F5F0E8',paint:'Asian Paints Ivory Silk'},{name:'Sable',hex:'#8B7355',paint:'Nippon Warm Taupe'},{name:'Forest Moss',hex:'#5C6B4A',paint:'Dulux Moss Green'},{name:'Charcoal Ink',hex:'#2C2C2C',paint:'Berger Deep Charcoal'},{name:'Blush Clay',hex:'#D4A79A',paint:'Asian Paints Blush'}],
@@ -62,6 +68,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=800&q=80','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80'],
     category:'Minimal',tags:['minimal','clean','white','simple','disciplined','serene'],
     collections:['trending','compact-apartments','small-spaces','rental-friendly'],
+    colorFamilies:["white","black","grey","neutral"],
+    roomCategories:["Living Room","Bedroom","Dining","Kitchen","Bathroom","Home Office"],
+    suitablePropertyTypes:["Apartment","Builder Floor"],
     budget:{basic:'₹7–10 L',premium:'₹10–18 L',luxury:'₹18–30 L',ultraLuxury:'₹30 L+'},
     estimatedTimeline:'5–8 weeks',
     colors:[{name:'Pure White',hex:'#FFFFFF',paint:'Asian Paints Brilliant White'},{name:'Off White',hex:'#F5F5F0',paint:'Dulux Whisper White'},{name:'Warm Grey',hex:'#9B9B9B',paint:'Nippon Stone Grey'},{name:'Black',hex:'#1A1A1A',paint:'Berger Jet Black'},{name:'Nude',hex:'#E8DDD0',paint:'Asian Paints Nude'}],
@@ -87,6 +96,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80','https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80','https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80'],
     category:'Modern',tags:['modern','geometric','clean','bold','architectural','open-plan'],
     collections:['trending','premium-homes','villas','editors-picks'],
+    colorFamilies:["white","grey","black","terracotta","green"],
+    roomCategories:["Living Room","Bedroom","Dining","Kitchen","Bathroom"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Villa","Penthouse"],
     budget:{basic:'₹10–15 L',premium:'₹15–28 L',luxury:'₹28–50 L',ultraLuxury:'₹50 L+'},
     estimatedTimeline:'8–12 weeks',
     colors:[{name:'Warm White',hex:'#F9F9F7',paint:'Asian Paints Premium White'},{name:'Steel Grey',hex:'#7A8A9A',paint:'Dulux Steel Blue'},{name:'Ebony',hex:'#1C1C1C',paint:'Berger Ebony'},{name:'Terracotta',hex:'#C4694A',paint:'Nippon Terracotta'},{name:'Sage',hex:'#87A07C',paint:'Asian Paints Sage Green'}],
@@ -112,6 +124,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80','https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80'],
     category:'Modern',tags:['contemporary','current','bold','mixed-materials','curves','dynamic'],
     collections:['trending','premium-homes','recently-added'],
+    colorFamilies:["white","grey","blue","beige","pink"],
+    roomCategories:["Living Room","Bedroom","Dining","Kitchen","Home Office"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Independent House"],
     budget:{basic:'₹9–14 L',premium:'₹14–24 L',luxury:'₹24–42 L',ultraLuxury:'₹42 L+'},
     estimatedTimeline:'7–11 weeks',
     colors:[{name:'Crisp White',hex:'#FAFAFA',paint:'Asian Paints Crisp White'},{name:'Graphite',hex:'#4A4A4A',paint:'Berger Graphite'},{name:'Teal',hex:'#3D8B8B',paint:'Dulux Deep Teal'},{name:'Warm Beige',hex:'#E8DDD0',paint:'Nippon Warm Beige'},{name:'Blush',hex:'#E8A89C',paint:'Asian Paints Blush Rose'}],
@@ -137,6 +152,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Urban',tags:['industrial','raw','urban','concrete','steel','brick','edgy'],
     collections:['trending','home-office','rental-friendly','recently-added'],
+    colorFamilies:["grey","black","brown","terracotta","orange"],
+    roomCategories:["Living Room","Bedroom","Dining","Kitchen","Home Office"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Penthouse"],
     budget:{basic:'₹7–12 L',premium:'₹12–22 L',luxury:'₹22–38 L',ultraLuxury:'₹38 L+'},
     estimatedTimeline:'6–9 weeks',
     colors:[{name:'Concrete Grey',hex:'#888888',paint:'Berger Concrete Tone'},{name:'Rust',hex:'#8B4513',paint:'Dulux Rust Red'},{name:'Off Black',hex:'#1A1A1A',paint:'Asian Paints Midnight'},{name:'Warm White',hex:'#F5F0E8',paint:'Nippon Warm White'},{name:'Copper',hex:'#B87333',paint:'Metallic Copper Paint'}],
@@ -162,6 +180,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80','https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80'],
     category:'Luxury',tags:['luxury','modern','marble','premium','bold','statement','upscale'],
     collections:['luxury-collection','editors-picks','villas','most-saved'],
+    colorFamilies:["white","black","yellow","grey","blue"],
+    roomCategories:["Living Room","Bedroom","Dining","Bathroom","Home Office"],
+    suitablePropertyTypes:["Apartment","Villa","Penthouse"],
     budget:{basic:'₹25–40 L',premium:'₹40–70 L',luxury:'₹70–120 L',ultraLuxury:'₹1.2 Cr+'},
     estimatedTimeline:'14–20 weeks',
     colors:[{name:'Calacatta White',hex:'#F8F5EE',paint:'Asian Paints Pure Calacatta'},{name:'Champagne Gold',hex:'#C8A96E',paint:'Metallic Champagne'},{name:'Onyx Black',hex:'#0D0D0D',paint:'Berger Onyx'},{name:'Warm Dove',hex:'#C4BAB0',paint:'Dulux Dove Grey'},{name:'Deep Teal',hex:'#1B4D4A',paint:'Nippon Deep Teal'}],
@@ -187,6 +208,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1522444195799-478538b28823?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80'],
     category:'Retro',tags:['mid-century','retro','walnut','organic','vintage','50s','60s'],
     collections:['editors-picks','most-saved','premium-homes'],
+    colorFamilies:["brown","green","yellow","orange","cream","wood"],
+    roomCategories:["Living Room","Bedroom","Dining","Home Office"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Independent House"],
     budget:{basic:'₹10–16 L',premium:'₹16–28 L',luxury:'₹28–48 L',ultraLuxury:'₹48 L+'},
     estimatedTimeline:'8–13 weeks',
     colors:[{name:'Avocado',hex:'#6B8F61',paint:'Asian Paints Avocado'},{name:'Warm Walnut',hex:'#7B5E3A',paint:'Dulux Walnut Brown'},{name:'Mustard',hex:'#D4A017',paint:'Nippon Mustard Yellow'},{name:'Rust Orange',hex:'#C44A2A',paint:'Berger Rust Orange'},{name:'Cream',hex:'#FDFBF5',paint:'Asian Paints Cream'}],
@@ -212,6 +236,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80','https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80'],
     category:'Organic',tags:['wabi-sabi','japanese','imperfect','natural','organic','handmade','earthy'],
     collections:['editors-picks','eco-friendly','most-saved'],
+    colorFamilies:["beige","earthy","brown","cream","neutral","grey"],
+    roomCategories:["Living Room","Bedroom","Dining","Bathroom"],
+    suitablePropertyTypes:["Apartment","Independent House","Villa"],
     budget:{basic:'₹8–13 L',premium:'₹13–22 L',luxury:'₹22–38 L',ultraLuxury:'₹38 L+'},
     estimatedTimeline:'7–10 weeks',
     colors:[{name:'Clay Earth',hex:'#B5926A',paint:'Asian Paints Clay'},{name:'Linen',hex:'#E8DFD0',paint:'Dulux Linen'},{name:'Ash Grey',hex:'#A8A29E',paint:'Nippon Ash Grey'},{name:'Moss',hex:'#5C6B4A',paint:'Berger Moss Green'},{name:'Natural',hex:'#F0E8DC',paint:'Asian Paints Natural Cream'}],
@@ -237,6 +264,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80','https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80','https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Organic',tags:['zen','meditation','serene','japanese','calm','spiritual','nature'],
     collections:['editors-picks','eco-friendly','premium-homes'],
+    colorFamilies:["white","green","wood","neutral","beige"],
+    roomCategories:["Living Room","Bedroom","Home Office","Pooja Room"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Independent House"],
     budget:{basic:'₹9–14 L',premium:'₹14–24 L',luxury:'₹24–40 L',ultraLuxury:'₹40 L+'},
     estimatedTimeline:'7–11 weeks',
     colors:[{name:'Stone White',hex:'#F0EDE8',paint:'Asian Paints Stone White'},{name:'Bamboo',hex:'#C8B560',paint:'Dulux Bamboo'},{name:'Slate',hex:'#6B7B8A',paint:'Nippon Slate Blue'},{name:'Pebble',hex:'#9E9E8C',paint:'Berger Pebble'},{name:'Moss Green',hex:'#4A6741',paint:'Asian Paints Moss'}],
@@ -262,6 +292,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1522444195799-478538b28823?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80'],
     category:'Natural',tags:['rustic','wood','stone','natural','earthy','warm','raw'],
     collections:['family-homes','eco-friendly','villas'],
+    colorFamilies:["brown","wood","earthy","terracotta","beige"],
+    roomCategories:["Living Room","Dining","Kitchen","Bedroom"],
+    suitablePropertyTypes:["Independent House","Villa","Builder Floor"],
     budget:{basic:'₹8–12 L',premium:'₹12–20 L',luxury:'₹20–35 L',ultraLuxury:'₹35 L+'},
     estimatedTimeline:'7–12 weeks',
     colors:[{name:'Timber Brown',hex:'#7B5A3C',paint:'Dulux Timber Brown'},{name:'Stone',hex:'#A89880',paint:'Asian Paints Stone'},{name:'Cream White',hex:'#F5F0E8',paint:'Nippon Cream'},{name:'Forest Green',hex:'#3D5A3C',paint:'Berger Forest Green'},{name:'Brick Red',hex:'#8B3A2A',paint:'Asian Paints Brick Red'}],
@@ -287,6 +320,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80','https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80','https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Country',tags:['farmhouse','shiplap','white','rustic','country','homey','warm'],
     collections:['family-homes','budget-friendly','rental-friendly'],
+    colorFamilies:["white","cream","wood","black","neutral"],
+    roomCategories:["Living Room","Dining","Kitchen","Home Office","Bedroom"],
+    suitablePropertyTypes:["Independent House","Villa","Builder Floor"],
     budget:{basic:'₹7–11 L',premium:'₹11–19 L',luxury:'₹19–32 L',ultraLuxury:'₹32 L+'},
     estimatedTimeline:'6–10 weeks',
     colors:[{name:'Farmhouse White',hex:'#F8F6F0',paint:'Asian Paints Farmhouse White'},{name:'Black Iron',hex:'#2A2A2A',paint:'Berger Black Iron'},{name:'Warm Linen',hex:'#E8DECE',paint:'Dulux Linen White'},{name:'Sage Green',hex:'#7A9B76',paint:'Nippon Sage Green'},{name:'Barn Red',hex:'#8B3232',paint:'Asian Paints Barn Red'}],
@@ -312,6 +348,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1591476582956-96aa0ed0e58d?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Eclectic',tags:['bohemian','boho','eclectic','colourful','layered','global','free-spirited'],
     collections:['trending','most-saved','budget-friendly','rental-friendly'],
+    colorFamilies:["orange","yellow","terracotta","red","pink","earthy"],
+    roomCategories:["Living Room","Bedroom","Balcony","Dining"],
+    suitablePropertyTypes:["Apartment","Builder Floor"],
     budget:{basic:'₹6–10 L',premium:'₹10–18 L',luxury:'₹18–30 L',ultraLuxury:'₹30 L+'},
     estimatedTimeline:'5–8 weeks',
     colors:[{name:'Terracotta',hex:'#C4694A',paint:'Asian Paints Terracotta'},{name:'Marigold',hex:'#F0A500',paint:'Dulux Marigold'},{name:'Deep Teal',hex:'#1B5B6B',paint:'Berger Deep Teal'},{name:'Blush Pink',hex:'#E8A898',paint:'Nippon Blush'},{name:'Sage',hex:'#87A07C',paint:'Asian Paints Sage'}],
@@ -338,6 +377,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1591476582956-96aa0ed0e58d?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1522444195799-478538b28823?w=800&q=80','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80'],
     category:'Mediterranean',tags:['mediterranean','coastal','warm','terracotta','arch','mosaic','outdoor'],
     collections:['villas','family-homes','premium-homes'],
+    colorFamilies:["white","blue","terracotta","yellow","earthy"],
+    roomCategories:["Living Room","Dining","Balcony","Kitchen"],
+    suitablePropertyTypes:["Villa","Independent House","Penthouse"],
     budget:{basic:'₹9–14 L',premium:'₹14–24 L',luxury:'₹24–42 L',ultraLuxury:'₹42 L+'},
     estimatedTimeline:'8–13 weeks',
     colors:[{name:'Terracotta',hex:'#C87941',paint:'Asian Paints Terracotta'},{name:'Azure Blue',hex:'#3D7AB5',paint:'Dulux Azure'},{name:'Cream',hex:'#F5EFE0',paint:'Nippon Warm Cream'},{name:'Olive',hex:'#6B7B4A',paint:'Berger Olive Green'},{name:'Sand',hex:'#D4C4A8',paint:'Asian Paints Sand'}],
@@ -363,6 +405,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80','https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=800&q=80'],
     category:'Coastal',tags:['coastal','beach','white','navy','linen','breezy','light'],
     collections:['family-homes','budget-friendly','compact-apartments'],
+    colorFamilies:["blue","white","beige","neutral"],
+    roomCategories:["Living Room","Bedroom","Dining","Balcony"],
+    suitablePropertyTypes:["Apartment","Villa","Penthouse"],
     budget:{basic:'₹7–11 L',premium:'₹11–18 L',luxury:'₹18–32 L',ultraLuxury:'₹32 L+'},
     estimatedTimeline:'6–9 weeks',
     colors:[{name:'Sea Salt White',hex:'#F5F8F5',paint:'Asian Paints Sea Salt'},{name:'Navy',hex:'#1B3A5C',paint:'Berger Deep Navy'},{name:'Sandy Beige',hex:'#D4C4A0',paint:'Dulux Sandy Beige'},{name:'Driftwood',hex:'#9E8E76',paint:'Nippon Driftwood'},{name:'Coral',hex:'#D4705A',paint:'Asian Paints Coral'}],
@@ -388,6 +433,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1591476582956-96aa0ed0e58d?w=800&q=80','https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80','https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80'],
     category:'Tropical',tags:['tropical','jungle','green','plants','rattan','island','lush'],
     collections:['trending','eco-friendly','villas','recently-added'],
+    colorFamilies:["green","wood","yellow","earthy","white"],
+    roomCategories:["Living Room","Bedroom","Balcony","Dining"],
+    suitablePropertyTypes:["Apartment","Villa","Independent House"],
     budget:{basic:'₹7–12 L',premium:'₹12–20 L',luxury:'₹20–36 L',ultraLuxury:'₹36 L+'},
     estimatedTimeline:'6–10 weeks',
     colors:[{name:'Jungle Green',hex:'#2D5A3D',paint:'Asian Paints Jungle'},{name:'Cream White',hex:'#F5F0E0',paint:'Dulux Tropical Cream'},{name:'Bamboo',hex:'#C4A860',paint:'Nippon Bamboo'},{name:'Terracotta',hex:'#C4694A',paint:'Berger Terracotta'},{name:'Midnight',hex:'#1A2A2A',paint:'Asian Paints Midnight Jungle'}],
@@ -413,6 +461,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1591476582956-96aa0ed0e58d?w=800&q=80','https://images.unsplash.com/photo-1522444195799-478538b28823?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80'],
     category:'Indian',tags:['traditional','indian','heritage','carved','brass','rajasthani','cultural'],
     collections:['most-saved','family-homes','villas'],
+    colorFamilies:["red","yellow","blue","cream","terracotta","earthy","wood"],
+    roomCategories:["Living Room","Bedroom","Pooja Room","Dining","Kitchen"],
+    suitablePropertyTypes:["Independent House","Villa","Builder Floor","Apartment"],
     budget:{basic:'₹10–16 L',premium:'₹16–28 L',luxury:'₹28–50 L',ultraLuxury:'₹50 L+'},
     estimatedTimeline:'10–16 weeks',
     colors:[{name:'Vermilion Red',hex:'#C0392B',paint:'Asian Paints Vermilion'},{name:'Turmeric Gold',hex:'#D4A017',paint:'Dulux Turmeric'},{name:'Peacock Blue',hex:'#1B6CA8',paint:'Berger Peacock Blue'},{name:'Ivory',hex:'#FFFFF0',paint:'Nippon Ivory'},{name:'Mango Yellow',hex:'#F0C040',paint:'Asian Paints Mango'}],
@@ -438,6 +489,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80','https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80'],
     category:'Classic',tags:['neo-classical','grand','columns','gilded','formal','european','opulent'],
     collections:['luxury-collection','villas','most-saved'],
+    colorFamilies:["cream","white","yellow","blue","green"],
+    roomCategories:["Living Room","Bedroom","Dining","Bathroom"],
+    suitablePropertyTypes:["Villa","Independent House","Penthouse"],
     budget:{basic:'₹20–35 L',premium:'₹35–60 L',luxury:'₹60–100 L',ultraLuxury:'₹1 Cr+'},
     estimatedTimeline:'14–22 weeks',
     colors:[{name:'Ivory White',hex:'#F5F0E0',paint:'Asian Paints Ivory'},{name:'Gold Leaf',hex:'#C8A951',paint:'Metallic Gold Leaf'},{name:'Royal Blue',hex:'#1A3A6B',paint:'Berger Royal Blue'},{name:'Sage Green',hex:'#7A9B76',paint:'Dulux Sage'},{name:'Marble Cream',hex:'#F0E8D8',paint:'Nippon Marble Cream'}],
@@ -463,6 +517,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80','https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80'],
     category:'Classic',tags:['art-deco','geometric','glamour','gold','black','mirrored','twenties'],
     collections:['luxury-collection','editors-picks','most-saved'],
+    colorFamilies:["black","yellow","green","red","cream"],
+    roomCategories:["Living Room","Bedroom","Dining","Kitchen"],
+    suitablePropertyTypes:["Apartment","Penthouse","Builder Floor"],
     budget:{basic:'₹14–22 L',premium:'₹22–38 L',luxury:'₹38–70 L',ultraLuxury:'₹70 L+'},
     estimatedTimeline:'10–16 weeks',
     colors:[{name:'Ebony Black',hex:'#0D0D0D',paint:'Berger Ebony'},{name:'Gold',hex:'#C8A520',paint:'Metallic Gold'},{name:'Emerald',hex:'#1A6B4A',paint:'Dulux Emerald'},{name:'Ivory',hex:'#FDFBF0',paint:'Asian Paints Ivory'},{name:'Deep Burgundy',hex:'#6B1A2A',paint:'Berger Burgundy'}],
@@ -488,6 +545,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80','https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80'],
     category:'Country',tags:['french','country','provence','toile','antique','romantic','lavender'],
     collections:['family-homes','villas','premium-homes'],
+    colorFamilies:["cream","blue","yellow","white","neutral"],
+    roomCategories:["Living Room","Dining","Kitchen","Bedroom"],
+    suitablePropertyTypes:["Villa","Independent House","Builder Floor"],
     budget:{basic:'₹10–16 L',premium:'₹16–28 L',luxury:'₹28–48 L',ultraLuxury:'₹48 L+'},
     estimatedTimeline:'9–14 weeks',
     colors:[{name:'Lavender',hex:'#A890B8',paint:'Asian Paints Lavender'},{name:'Sage Cream',hex:'#E8E0C8',paint:'Dulux Sage Cream'},{name:'Blue Grey',hex:'#8094A8',paint:'Nippon Blue Grey'},{name:'Antique White',hex:'#F0ECE0',paint:'Berger Antique White'},{name:'Rose Blush',hex:'#E8A8A0',paint:'Asian Paints Rose'}],
@@ -513,6 +573,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1522444195799-478538b28823?w=800&q=80','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Global',tags:['moroccan','zellige','lantern','jewel-tones','pattern','riad','medina'],
     collections:['trending','most-saved','editors-picks'],
+    colorFamilies:["terracotta","blue","orange","red","yellow","earthy"],
+    roomCategories:["Living Room","Bedroom","Dining","Balcony"],
+    suitablePropertyTypes:["Apartment","Villa","Independent House"],
     budget:{basic:'₹10–16 L',premium:'₹16–26 L',luxury:'₹26–46 L',ultraLuxury:'₹46 L+'},
     estimatedTimeline:'9–14 weeks',
     colors:[{name:'Terracotta',hex:'#C87941',paint:'Asian Paints Terracotta'},{name:'Jewel Blue',hex:'#1A5B8B',paint:'Berger Jewel Blue'},{name:'Saffron',hex:'#F0A500',paint:'Dulux Saffron'},{name:'Emerald',hex:'#1A6B4A',paint:'Nippon Emerald'},{name:'Plum',hex:'#6B1A4A',paint:'Asian Paints Plum'}],
@@ -538,6 +601,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Urban',tags:['urban','loft','industrial','concrete','open-plan','art','creative'],
     collections:['trending','home-office','rental-friendly','recently-added'],
+    colorFamilies:["grey","black","brown","terracotta","red"],
+    roomCategories:["Living Room","Kitchen","Dining","Home Office"],
+    suitablePropertyTypes:["Apartment","Penthouse","Builder Floor"],
     budget:{basic:'₹8–13 L',premium:'₹13–22 L',luxury:'₹22–40 L',ultraLuxury:'₹40 L+'},
     estimatedTimeline:'7–12 weeks',
     colors:[{name:'Concrete Grey',hex:'#8A8A8A',paint:'Berger Concrete'},{name:'Matte Black',hex:'#1A1A1A',paint:'Asian Paints Matte Black'},{name:'Warm White',hex:'#F5F0E8',paint:'Dulux Warm White'},{name:'Rust',hex:'#8B4513',paint:'Nippon Rust'},{name:'Forest Green',hex:'#2A4A2A',paint:'Asian Paints Forest'}],
@@ -563,6 +629,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80','https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80','https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80'],
     category:'Modern',tags:['california','modern','indoor-outdoor','warm','west-coast','open','sunny'],
     collections:['trending','premium-homes','villas','editors-picks'],
+    colorFamilies:["white","beige","wood","green","neutral"],
+    roomCategories:["Living Room","Dining","Bathroom","Kitchen"],
+    suitablePropertyTypes:["Villa","Independent House","Apartment"],
     budget:{basic:'₹12–18 L',premium:'₹18–32 L',luxury:'₹32–60 L',ultraLuxury:'₹60 L+'},
     estimatedTimeline:'9–14 weeks',
     colors:[{name:'Warm Sand',hex:'#E8D8C0',paint:'Asian Paints Warm Sand'},{name:'White Oak',hex:'#D4C4A8',paint:'Dulux White Oak'},{name:'Ocean Blue',hex:'#3D7A9B',paint:'Berger Ocean'},{name:'Terracotta',hex:'#C4694A',paint:'Nippon Terracotta'},{name:'Sage',hex:'#7A9B76',paint:'Asian Paints Sage'}],
@@ -588,6 +657,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80'],
     category:'Nordic',tags:['nordic','luxury','minimal','marble','cashmere','premium','serene'],
     collections:['luxury-collection','editors-picks','premium-homes','most-saved'],
+    colorFamilies:["white","grey","cream","wood","neutral"],
+    roomCategories:["Living Room","Bedroom","Dining","Bathroom"],
+    suitablePropertyTypes:["Apartment","Penthouse","Builder Floor"],
     budget:{basic:'₹20–32 L',premium:'₹32–55 L',luxury:'₹55–90 L',ultraLuxury:'₹90 L+'},
     estimatedTimeline:'12–18 weeks',
     colors:[{name:'Snow White',hex:'#FAFAF8',paint:'Asian Paints Snow White'},{name:'Warm Greige',hex:'#C8BEAE',paint:'Dulux Nordic Greige'},{name:'Charcoal',hex:'#3A3A3A',paint:'Berger Charcoal'},{name:'Dusty Rose',hex:'#C8A89E',paint:'Nippon Dusty Rose'},{name:'Forest',hex:'#4A6741',paint:'Asian Paints Forest'}],
@@ -613,6 +685,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80'],
     category:'Indian',tags:['indian','contemporary','modern','craft','block-print','brass','fusion'],
     collections:['trending','editors-picks','most-saved','recently-added'],
+    colorFamilies:["terracotta","white","blue","yellow","wood","earthy"],
+    roomCategories:["Living Room","Bedroom","Kitchen","Bathroom","Home Office","Pooja Room"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Independent House","Villa"],
     budget:{basic:'₹10–16 L',premium:'₹16–28 L',luxury:'₹28–50 L',ultraLuxury:'₹50 L+'},
     estimatedTimeline:'8–14 weeks',
     colors:[{name:'Warm White',hex:'#F5F2EC',paint:'Asian Paints Warm White'},{name:'Terracotta',hex:'#C87941',paint:'Dulux Terracotta'},{name:'Indigo',hex:'#1A3060',paint:'Berger Indigo'},{name:'Saffron',hex:'#E8A020',paint:'Nippon Saffron'},{name:'Sage',hex:'#7A9B76',paint:'Asian Paints Sage'}],
@@ -638,6 +713,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80','https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80'],
     category:'Eco',tags:['sustainable','eco','green','reclaimed','natural','responsible','low-carbon'],
     collections:['eco-friendly','recently-added','trending'],
+    colorFamilies:["green","earthy","brown","wood","neutral","white"],
+    roomCategories:["Living Room","Dining","Bedroom","Kitchen"],
+    suitablePropertyTypes:["Apartment","Independent House","Villa"],
     budget:{basic:'₹8–13 L',premium:'₹13–22 L',luxury:'₹22–40 L',ultraLuxury:'₹40 L+'},
     estimatedTimeline:'8–13 weeks',
     colors:[{name:'Natural White',hex:'#F5F2EE',paint:'Asian Paints Zero VOC White'},{name:'Earth Brown',hex:'#7B5A3C',paint:'Dulux Natural Earth'},{name:'Leaf Green',hex:'#4A7A4A',paint:'Nippon Leaf Green'},{name:'Clay',hex:'#B5926A',paint:'Berger Clay'},{name:'Sand',hex:'#D4C4A0',paint:'Asian Paints Natural Sand'}],
@@ -664,6 +742,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80','https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=800&q=80'],
     category:'Modern',tags:['smart','tech','automation','minimal','invisible','modern','future'],
     collections:['smart-homes','trending','premium-homes','recently-added'],
+    colorFamilies:["black","grey","white","blue","neutral"],
+    roomCategories:["Living Room","Kitchen","Bedroom","Home Office"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Penthouse","Villa"],
     budget:{basic:'₹15–25 L',premium:'₹25–45 L',luxury:'₹45–80 L',ultraLuxury:'₹80 L+'},
     estimatedTimeline:'12–18 weeks',
     colors:[{name:'Pure White',hex:'#FAFAFA',paint:'Asian Paints Pure White'},{name:'Light Grey',hex:'#D4D4D4',paint:'Dulux Light Grey'},{name:'Charcoal',hex:'#2A2A2A',paint:'Berger Charcoal'},{name:'Warm Beige',hex:'#E8DDD0',paint:'Nippon Warm Beige'},{name:'Steel Blue',hex:'#4A7A9B',paint:'Asian Paints Steel Blue'}],
@@ -689,6 +770,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=800&q=80','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80'],
     category:'Minimal',tags:['monochrome','black-white','minimal','graphic','bold','tonal','sophisticated'],
     collections:['luxury-collection','premium-homes','editors-picks'],
+    colorFamilies:["black","white","grey"],
+    roomCategories:["Living Room","Kitchen","Dining","Bedroom"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Penthouse"],
     budget:{basic:'₹10–16 L',premium:'₹16–28 L',luxury:'₹28–50 L',ultraLuxury:'₹50 L+'},
     estimatedTimeline:'8–13 weeks',
     colors:[{name:'Matte Black',hex:'#0A0A0A',paint:'Berger Matte Black'},{name:'Warm White',hex:'#F8F8F6',paint:'Asian Paints Brilliant White'},{name:'Mid Grey',hex:'#888888',paint:'Dulux Mid Grey'},{name:'Off White',hex:'#F0EDEA',paint:'Nippon Off White'},{name:'Graphite',hex:'#404040',paint:'Berger Graphite'}],
@@ -714,6 +798,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80','https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80'],
     category:'Organic',tags:['earthy','organic','natural','clay','stone','raw','tactile'],
     collections:['eco-friendly','trending','recently-added'],
+    colorFamilies:["earthy","brown","terracotta","beige","green","wood"],
+    roomCategories:["Living Room","Bedroom","Dining","Bathroom"],
+    suitablePropertyTypes:["Apartment","Independent House","Villa"],
     budget:{basic:'₹8–13 L',premium:'₹13–22 L',luxury:'₹22–38 L',ultraLuxury:'₹38 L+'},
     estimatedTimeline:'7–11 weeks',
     colors:[{name:'Raw Clay',hex:'#B5926A',paint:'Asian Paints Raw Clay'},{name:'Stone',hex:'#A89880',paint:'Dulux Natural Stone'},{name:'Moss',hex:'#5C6B4A',paint:'Berger Moss'},{name:'Ochre',hex:'#C8A020',paint:'Nippon Ochre'},{name:'Bark',hex:'#7B5A3C',paint:'Asian Paints Bark'}],
@@ -739,6 +826,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80'],
     category:'Minimal',tags:['warm','minimalism','travertine','oak','ivory','cozy','serene'],
     collections:['trending','editors-picks','most-saved','compact-apartments'],
+    colorFamilies:["beige","cream","neutral","wood","white","earthy"],
+    roomCategories:["Living Room","Bedroom","Dining","Kitchen"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Independent House"],
     budget:{basic:'₹10–16 L',premium:'₹16–28 L',luxury:'₹28–50 L',ultraLuxury:'₹50 L+'},
     estimatedTimeline:'7–11 weeks',
     colors:[{name:'Warm Ivory',hex:'#F5F0E8',paint:'Asian Paints Warm Ivory'},{name:'Travertine',hex:'#D4C4A8',paint:'Dulux Travertine'},{name:'Oak',hex:'#C8A870',paint:'Nippon Oak'},{name:'Warm Grey',hex:'#B8B0A8',paint:'Berger Warm Grey'},{name:'Clay',hex:'#B5926A',paint:'Asian Paints Clay'}],
@@ -764,6 +854,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80','https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80'],
     category:'Luxury',tags:['dark','luxury','moody','dramatic','jewel-tones','rich','bold'],
     collections:['luxury-collection','editors-picks','most-saved'],
+    colorFamilies:["black","grey","brown","yellow","purple"],
+    roomCategories:["Living Room","Bedroom","Home Office","Bathroom"],
+    suitablePropertyTypes:["Apartment","Penthouse","Villa"],
     budget:{basic:'₹16–25 L',premium:'₹25–42 L',luxury:'₹42–75 L',ultraLuxury:'₹75 L+'},
     estimatedTimeline:'10–16 weeks',
     colors:[{name:'Obsidian',hex:'#0A0A0A',paint:'Berger Obsidian'},{name:'Forest Night',hex:'#1A3A2A',paint:'Dulux Forest Night'},{name:'Midnight Navy',hex:'#0D1B2A',paint:'Asian Paints Midnight Navy'},{name:'Deep Burgundy',hex:'#4A0E2A',paint:'Nippon Burgundy'},{name:'Champagne',hex:'#C8A870',paint:'Metallic Champagne'}],
@@ -789,6 +882,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80','https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Luxury',tags:['soft','luxury','blush','bouclé','feminine','pink','plush'],
     collections:['luxury-collection','most-saved','trending','editors-picks'],
+    colorFamilies:["pink","cream","white","beige","neutral"],
+    roomCategories:["Living Room","Bedroom","Bathroom","Dining","Kitchen"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Villa"],
     budget:{basic:'₹14–22 L',premium:'₹22–38 L',luxury:'₹38–65 L',ultraLuxury:'₹65 L+'},
     estimatedTimeline:'9–14 weeks',
     colors:[{name:'Blush Marble',hex:'#F0D8D0',paint:'Asian Paints Blush'},{name:'Champagne',hex:'#E8D0A8',paint:'Dulux Champagne'},{name:'Ivory',hex:'#F8F4EE',paint:'Berger Ivory'},{name:'Dusty Rose',hex:'#D4A0A0',paint:'Nippon Dusty Rose'},{name:'Warm Grey',hex:'#C8C0B8',paint:'Asian Paints Warm Grey'}],
@@ -814,6 +910,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80','https://images.unsplash.com/photo-1591476582956-96aa0ed0e58d?w=800&q=80'],
     category:'Retro',tags:['vintage','antique','collected','retro','patina','curated','history'],
     collections:['most-saved','budget-friendly','rental-friendly'],
+    colorFamilies:["brown","green","yellow","red","cream","wood"],
+    roomCategories:["Living Room","Bedroom","Kitchen","Home Office"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Independent House"],
     budget:{basic:'₹5–9 L',premium:'₹9–16 L',luxury:'₹16–30 L',ultraLuxury:'₹30 L+'},
     estimatedTimeline:'5–9 weeks',
     colors:[{name:'Dusty Pink',hex:'#D4A8A0',paint:'Asian Paints Dusty Pink'},{name:'Avocado',hex:'#6B8F61',paint:'Dulux Avocado'},{name:'Mustard',hex:'#D4A017',paint:'Berger Mustard'},{name:'Powder Blue',hex:'#8AAABE',paint:'Nippon Powder Blue'},{name:'Cream',hex:'#FDFBF5',paint:'Asian Paints Cream'}],
@@ -839,6 +938,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80','https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80','https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80'],
     category:'Country',tags:['cottage','cosy','floral','romantic','english','country','fireplace'],
     collections:['family-homes','budget-friendly'],
+    colorFamilies:["white","pink","green","cream","yellow"],
+    roomCategories:["Living Room","Bedroom","Kitchen","Bathroom"],
+    suitablePropertyTypes:["Independent House","Villa","Builder Floor"],
     budget:{basic:'₹6–10 L',premium:'₹10–18 L',luxury:'₹18–30 L',ultraLuxury:'₹30 L+'},
     estimatedTimeline:'6–9 weeks',
     colors:[{name:'Sage Green',hex:'#7A9B76',paint:'Asian Paints Sage'},{name:'Floral Pink',hex:'#E8B0A8',paint:'Dulux Rose Pink'},{name:'Cream',hex:'#F5F0E0',paint:'Berger Cream'},{name:'Cornflower Blue',hex:'#6A8EB8',paint:'Nippon Cornflower'},{name:'Butter Yellow',hex:'#F0D880',paint:'Asian Paints Butter'}],
@@ -864,6 +966,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1591476582956-96aa0ed0e58d?w=800&q=80','https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80','https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80'],
     category:'Tropical',tags:['bali','tropical','spiritual','stone','bamboo','open-air','resort'],
     collections:['villas','eco-friendly','trending','most-saved'],
+    colorFamilies:["wood","green","earthy","brown","neutral","beige"],
+    roomCategories:["Living Room","Bedroom","Kitchen","Dining","Balcony"],
+    suitablePropertyTypes:["Villa","Independent House","Apartment"],
     budget:{basic:'₹10–16 L',premium:'₹16–28 L',luxury:'₹28–50 L',ultraLuxury:'₹50 L+'},
     estimatedTimeline:'9–14 weeks',
     colors:[{name:'Sandstone',hex:'#C8B087',paint:'Asian Paints Sandstone'},{name:'Jungle Green',hex:'#2D5A3D',paint:'Dulux Jungle'},{name:'Warm Brown',hex:'#7B5A3C',paint:'Berger Warm Brown'},{name:'Cream',hex:'#F5F0E0',paint:'Nippon Cream'},{name:'Stone Grey',hex:'#9A9080',paint:'Asian Paints Stone'}],
@@ -889,6 +994,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1522444195799-478538b28823?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80'],
     category:'Eclectic',tags:['eclectic','mixed','bold','personal','curated','global','unique'],
     collections:['editors-picks','most-saved','trending'],
+    colorFamilies:["yellow","blue","red","green","pink","orange"],
+    roomCategories:["Living Room","Bedroom","Dining"],
+    suitablePropertyTypes:["Apartment","Builder Floor"],
     budget:{basic:'₹8–14 L',premium:'₹14–24 L',luxury:'₹24–42 L',ultraLuxury:'₹42 L+'},
     estimatedTimeline:'7–12 weeks',
     colors:['Multiple harmonising colours across the space — typically a warm neutral base with 3–4 bold accent colours'].map(d=>({name:'Dynamic Palette',hex:'#C87941',paint:d})),
@@ -914,6 +1022,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80'],
     category:'Modern',tags:['transitional','classic','contemporary','balanced','neutral','timeless','universal'],
     collections:['family-homes','premium-homes','most-saved','villas'],
+    colorFamilies:["white","grey","beige","blue","wood","neutral"],
+    roomCategories:["Living Room","Bedroom","Kitchen","Dining"],
+    suitablePropertyTypes:["Apartment","Builder Floor","Independent House","Villa"],
     budget:{basic:'₹9–15 L',premium:'₹15–26 L',luxury:'₹26–45 L',ultraLuxury:'₹45 L+'},
     estimatedTimeline:'8–12 weeks',
     colors:[{name:'Warm White',hex:'#F5F2EC',paint:'Asian Paints Warm White'},{name:'Greige',hex:'#C8BEB0',paint:'Dulux Greige'},{name:'Navy',hex:'#1A3A5C',paint:'Berger Navy'},{name:'Warm Wood',hex:'#B8906A',paint:'Nippon Warm Wood'},{name:'Sage',hex:'#7A9B76',paint:'Asian Paints Sage'}],
@@ -939,6 +1050,9 @@ const RAW_THEMES: Theme[] = [
     galleryImages:['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800&q=80','https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80'],
     category:'Luxury',tags:['hotel','luxury','five-star','crisp','immaculate','premium','refined'],
     collections:['luxury-collection','editors-picks','most-saved','smart-homes'],
+    colorFamilies:["white","grey","beige","yellow","black","neutral"],
+    roomCategories:["Living Room","Bedroom","Bathroom","Home Office"],
+    suitablePropertyTypes:["Apartment","Penthouse","Villa"],
     budget:{basic:'₹15–24 L',premium:'₹24–40 L',luxury:'₹40–70 L',ultraLuxury:'₹70 L+'},
     estimatedTimeline:'11–17 weeks',
     colors:[{name:'Cloud White',hex:'#F8F8F6',paint:'Asian Paints Cloud White'},{name:'Warm Taupe',hex:'#C8BEB0',paint:'Dulux Warm Taupe'},{name:'Graphite',hex:'#3A3A3A',paint:'Berger Graphite'},{name:'Champagne',hex:'#D4C090',paint:'Nippon Champagne'},{name:'Slate',hex:'#6A7A8A',paint:'Asian Paints Slate'}],
@@ -955,6 +1069,903 @@ const RAW_THEMES: Theme[] = [
     maintenance:'High — hotel-level cleanliness standards mean daily making of beds, weekly linen rotation, monthly deep clean.',
     similarThemes:['luxury-modern','soft-luxury','dark-luxury','neo-classical'],
     roomCount:6,isEditorPick:true,isTrending:true,
+  },
+
+  // 39 ─ MODERN INDIAN LUXURY
+  {
+    "slug": "modern-indian-luxury",
+    "name": "Modern Indian Luxury",
+    "tagline": "Regal Indian materiality meets Italian minimalist proportions",
+    "description": "Modern Indian Luxury pairs fine Indian stone, fluted champagne brass, bespoke teak joinery, and rich jewel velvet tones with sleek contemporary silhouettes. Designed for discerning homeowners across Delhi NCR looking for refined opulence.",
+    "coverImage": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=80",
+    "galleryImages": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=80",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=900&q=80",
+      "https://images.unsplash.com/photo-1745301558339-44eb3217d5da?w=900&q=80",
+      "https://images.unsplash.com/photo-1745429523617-0d837856ca35?w=900&q=80"
+    ],
+    "category": "Indian",
+    "tags": [
+      "indian",
+      "luxury",
+      "brass",
+      "marble",
+      "teak",
+      "delhi-ncr",
+      "regal",
+      "contemporary"
+    ],
+    "collections": [
+      "luxury-collection",
+      "editors-picks",
+      "trending",
+      "villas",
+      "premium-homes"
+    ],
+    "colorFamilies": [
+      "yellow",
+      "cream",
+      "blue",
+      "terracotta",
+      "neutral",
+      "wood"
+    ],
+    "roomCategories": [
+      "Living Room",
+      "Bedroom",
+      "Dining",
+      "Pooja Room",
+      "Home Office"
+    ],
+    "suitablePropertyTypes": [
+      "Apartment",
+      "Villa",
+      "Builder Floor",
+      "Penthouse"
+    ],
+    "budget": {
+      "basic": "₹18–28 L",
+      "premium": "₹28–45 L",
+      "luxury": "₹45–80 L",
+      "ultraLuxury": "₹80 L+"
+    },
+    "estimatedTimeline": "10–16 weeks",
+    "colors": [
+      {
+        "name": "Imperial Champagne",
+        "hex": "#E5D3B3",
+        "paint": "Asian Paints Imperial Gold",
+        "family": "cream"
+      },
+      {
+        "name": "Royal Peacock",
+        "hex": "#1B4B66",
+        "paint": "Asian Paints Peacock Blue",
+        "family": "blue"
+      },
+      {
+        "name": "Sandalwood Ochre",
+        "hex": "#C68B45",
+        "paint": "Dulux Golden Ochre",
+        "family": "yellow"
+      },
+      {
+        "name": "Makrana Ivory",
+        "hex": "#F9F7F2",
+        "paint": "Berger Makrana Pearl",
+        "family": "white"
+      },
+      {
+        "name": "Deep Teak",
+        "hex": "#4A2E1B",
+        "paint": "Nippon Dark Walnut",
+        "family": "brown"
+      }
+    ],
+    "materials": [
+      "Indian statuario marble",
+      "Champagne fluted brass",
+      "Burma teak veneer",
+      "Silk-velvet upholstery",
+      "Hand-knotted Mirzapur rug",
+      "Smoked mirror glass"
+    ],
+    "furniture": [
+      "Curved jewel-tone sofa with brass plinth",
+      "Book-matched marble dining table with brass inlay",
+      "Bespoke pooja unit with backlit brass jali",
+      "Low-profile teak platform bed with fluted leather headboard",
+      "Minimalist brass console"
+    ],
+    "lighting": [
+      "Sculptural brass branch chandelier",
+      "Concealed 3000K warm LED cove profiles",
+      "Handmade brass wall sconces",
+      "Backlit onyx pooja panel"
+    ],
+    "rooms": [],
+    "philosophy": "True luxury in the modern Indian home is rooted in bespoke craftsmanship and authentic material depth rather than superfluous ornamentation. It honours our heritage while embracing clean international spatial flow.",
+    "history": "Rooted in the design evolution of contemporary metropolitan Indian architecture, where global luxury finishes harmonise with indigenous stone, woodcraft, and metallic accents.",
+    "keyCharacteristics": [
+      "Book-matched marble feature walls",
+      "Champagne brass profiles and inlay",
+      "Backlit modern jaali accents",
+      "Jewel-toned tactile fabrics",
+      "Integrated modern mandir/pooja alcove",
+      "Warm architectural lighting (3000K)"
+    ],
+    "bestFor": [
+      "Luxury 3BHK/4BHK apartments in Gurgaon & Noida",
+      "Builder floors in South Delhi",
+      "Independent villas",
+      "Homeowners seeking premium understated opulence"
+    ],
+    "pros": [
+      "High perceived visual value",
+      "Timeless cultural resonance",
+      "Seamless modern living",
+      "Strong appreciation & resale value"
+    ],
+    "cons": [
+      "Requires master craftsmen for brass & stone inlay",
+      "Higher material investment",
+      "Requires regular maintenance of natural stone"
+    ],
+    "maintenance": "Medium-High — marble surfaces require periodic pH-neutral sealing; brass accents need microfiber buffing.",
+    "similarThemes": [
+      "contemporary-indian",
+      "luxury-modern",
+      "traditional-indian",
+      "hotel-inspired"
+    ],
+    "roomCount": 6,
+    "isTrending": true,
+    "isEditorPick": true,
+    "isNew": true
+  },
+
+  // 40 ─ WARM INDIAN EARTH
+  {
+    "slug": "warm-indian-earth",
+    "name": "Warm Indian Earth",
+    "tagline": "Terracotta, handloom linens, natural wood, and sunlit courtyard warmth",
+    "description": "Warm Indian Earth draws inspiration from vernacular Indian homes with terracotta clay tones, unpolished stone, handwoven jute, cane weaves, and sun-drenched earth pigments for a deeply comforting sanctuary.",
+    "coverImage": "https://images.unsplash.com/photo-1712762139331-e29753380de3?w=900&q=80",
+    "galleryImages": [
+      "https://images.unsplash.com/photo-1712762139331-e29753380de3?w=900&q=80",
+      "https://images.unsplash.com/photo-1685257814432-9cdc23a1119c?w=900&q=80",
+      "https://images.unsplash.com/photo-1745429523617-0d837856ca35?w=900&q=80",
+      "https://images.unsplash.com/photo-1682662046426-f7589013d25e?w=900&q=80"
+    ],
+    "category": "Indian",
+    "tags": [
+      "indian",
+      "terracotta",
+      "earthy",
+      "handloom",
+      "natural",
+      "warm",
+      "cane"
+    ],
+    "collections": [
+      "eco-friendly",
+      "trending",
+      "family-homes",
+      "editors-picks"
+    ],
+    "colorFamilies": [
+      "terracotta",
+      "brown",
+      "earthy",
+      "beige",
+      "wood",
+      "green"
+    ],
+    "roomCategories": [
+      "Living Room",
+      "Bedroom",
+      "Balcony",
+      "Dining",
+      "Pooja Room"
+    ],
+    "suitablePropertyTypes": [
+      "Apartment",
+      "Builder Floor",
+      "Independent House",
+      "Villa"
+    ],
+    "budget": {
+      "basic": "₹8–14 L",
+      "premium": "₹14–22 L",
+      "luxury": "₹22–38 L",
+      "ultraLuxury": "₹38 L+"
+    },
+    "estimatedTimeline": "7–11 weeks",
+    "colors": [
+      {
+        "name": "Kutch Terracotta",
+        "hex": "#C25E3E",
+        "paint": "Asian Paints Terracotta Joy",
+        "family": "terracotta"
+      },
+      {
+        "name": "Raw Lime Plaster",
+        "hex": "#EFE7DA",
+        "paint": "Dulux Lime Wash",
+        "family": "cream"
+      },
+      {
+        "name": "Mustard Ochre",
+        "hex": "#D99B26",
+        "paint": "Berger Golden Clay",
+        "family": "yellow"
+      },
+      {
+        "name": "Deep Teak Brown",
+        "hex": "#5A3D28",
+        "paint": "Nippon Earth Bark",
+        "family": "brown"
+      },
+      {
+        "name": "Foliage Green",
+        "hex": "#587052",
+        "paint": "Asian Paints Betel Green",
+        "family": "green"
+      }
+    ],
+    "materials": [
+      "Handmade terracotta tiles",
+      "Lime plaster wall finishes",
+      "Reclaimed teak wood",
+      "Natural cane and wicker",
+      "Organic khadi and handloom cotton",
+      "Brass and clay planters"
+    ],
+    "furniture": [
+      "Cane-back low lounge chairs",
+      "Solid teak dining table with organic edge",
+      "Hand-knotted jute floor rugs",
+      "Carved wooden chest (peti) coffee table",
+      "Minimalist teak platform bed"
+    ],
+    "lighting": [
+      "Hand-thrown clay pendant fixtures",
+      "Warm ambient rattan floor lights",
+      "Soft cove lighting",
+      "Brass oil lamp (diya) niches"
+    ],
+    "rooms": [],
+    "philosophy": "Living close to the earth fosters peace and grounded well-being. By embracing raw textures, breathing lime plasters, and natural clay, the home becomes a tranquil retreat from urban chaos.",
+    "history": "Derived from ancient Indian courtyard architecture and vernacular design traditions across Gujarat, Rajasthan, and Kerala, reimagined for contemporary urban apartments.",
+    "keyCharacteristics": [
+      "Terracotta and burnt clay accents",
+      "Breathable lime plaster finishes",
+      "Natural cane and wicker cabinetry",
+      "Indoor ficus and areca greens",
+      "Handcrafted ceramic decor",
+      "Warm organic textures throughout"
+    ],
+    "bestFor": [
+      "Urban apartments seeking warmth",
+      "Eco-conscious homeowners",
+      "Families who appreciate natural materials",
+      "Compact and medium Delhi NCR flats"
+    ],
+    "pros": [
+      "Extremely calming and cozy",
+      "Sustainable natural materials",
+      "Ages with beautiful organic patina",
+      "Cost-effective material options"
+    ],
+    "cons": [
+      "Terracotta requires gentle cleaning",
+      "Natural cane needs care against direct monsoon moisture"
+    ],
+    "maintenance": "Low-Medium — dust cane elements regularly; wipe terracotta with mild natural soap solutions.",
+    "similarThemes": [
+      "earthy-organic",
+      "wabi-sabi",
+      "contemporary-indian",
+      "bali-inspired"
+    ],
+    "roomCount": 5,
+    "isTrending": true,
+    "isEditorPick": true,
+    "isNew": true
+  },
+
+  // 41 ─ HERITAGE COLONIAL INDIAN
+  {
+    "slug": "heritage-colonial-indian",
+    "name": "Heritage Colonial Indian",
+    "tagline": "High ceilings, louvered teak doors, vintage brass, and timeless Anglo-Indian grace",
+    "description": "Heritage Colonial Indian celebrates the historic charm of colonial bungalows and havelis. Louvered teak doors, checkered marble or terrazzo floors, four-poster beds, vintage brass hardware, and arched transitions create an atmosphere of storied elegance.",
+    "coverImage": "https://images.unsplash.com/photo-1787390629829-abb32b3025c5?w=900&q=80",
+    "galleryImages": [
+      "https://images.unsplash.com/photo-1787390629829-abb32b3025c5?w=900&q=80",
+      "https://images.unsplash.com/photo-1779019383502-8ef015ba0647?w=900&q=80",
+      "https://images.unsplash.com/photo-1740989488591-55648f155236?w=900&q=80",
+      "https://images.unsplash.com/photo-1654028132164-a2ff2d88ea3e?w=900&q=80"
+    ],
+    "category": "Indian",
+    "tags": [
+      "indian",
+      "heritage",
+      "colonial",
+      "vintage",
+      "four-poster",
+      "brass",
+      "classic"
+    ],
+    "collections": [
+      "luxury-collection",
+      "villas",
+      "most-saved",
+      "editors-picks"
+    ],
+    "colorFamilies": [
+      "white",
+      "black",
+      "green",
+      "wood",
+      "cream",
+      "brown"
+    ],
+    "roomCategories": [
+      "Living Room",
+      "Bedroom",
+      "Dining",
+      "Home Office",
+      "Balcony"
+    ],
+    "suitablePropertyTypes": [
+      "Independent House",
+      "Villa",
+      "Builder Floor"
+    ],
+    "budget": {
+      "basic": "₹14–22 L",
+      "premium": "₹22–36 L",
+      "luxury": "₹36–65 L",
+      "ultraLuxury": "₹65 L+"
+    },
+    "estimatedTimeline": "9–15 weeks",
+    "colors": [
+      {
+        "name": "Colonial Cream",
+        "hex": "#FAF6ED",
+        "paint": "Asian Paints Chiffon Cream",
+        "family": "cream"
+      },
+      {
+        "name": "Regal Dark Walnut",
+        "hex": "#3B271A",
+        "paint": "Dulux Rich Walnut",
+        "family": "brown"
+      },
+      {
+        "name": "Bottle Green",
+        "hex": "#1C3E2D",
+        "paint": "Berger British Racing Green",
+        "family": "green"
+      },
+      {
+        "name": "Antique Brass",
+        "hex": "#B89742",
+        "paint": "Asian Paints Brass Antique",
+        "family": "yellow"
+      },
+      {
+        "name": "Checkerboard Noir",
+        "hex": "#1C1C1C",
+        "paint": "Nippon Jet Black",
+        "family": "black"
+      }
+    ],
+    "materials": [
+      "Solid Sheesham and teak wood",
+      "Black and white checkerboard marble",
+      "Cane-woven bed panels",
+      "Antique brass handles and latches",
+      "Louvered window shutters",
+      "Hand-printed botanical textiles"
+    ],
+    "furniture": [
+      "Colonial four-poster teak bed",
+      "Planters easy chair with extendable armrests",
+      "Louvered wardrobe cabinets",
+      "Curved pedestal dining table with balloon-back chairs",
+      "Roll-top bureau desk"
+    ],
+    "lighting": [
+      "Pendant milk glass schoolhouse globes",
+      "Antique brass nautical sconces",
+      "Warm Edison multi-arm ceiling fans with lights",
+      "Fabric-shade table lamps"
+    ],
+    "rooms": [],
+    "philosophy": "Heritage design honors the narrative of architectural continuity. Every piece feels collected over generations, grounding the home in timeless poise and gracious hospitality.",
+    "history": "Developed during the late 19th and early 20th centuries in India, combining British neoclassical furniture proportions with indigenous tropical woods and artisanal Indian carpentry techniques.",
+    "keyCharacteristics": [
+      "Louvered doors and window shutters",
+      "Checkerboard or patterned floor borders",
+      "Carved four-poster beds",
+      "Antique brass hardware",
+      "Botanical artwork and framed heritage prints",
+      "Arched doorways and high skirtings"
+    ],
+    "bestFor": [
+      "Independent houses & bungalows in Delhi NCR",
+      "Spacious floorplans with high ceilings",
+      "Lovers of vintage, colonial, and antique aesthetics"
+    ],
+    "pros": [
+      "Distinctive architectural personality",
+      "High durability of solid hardwoods",
+      "Immense character and emotional depth",
+      "Never looks dated"
+    ],
+    "cons": [
+      "Requires dedicated carpenter craftsmanship",
+      "Darker woods need good natural lighting to balance space"
+    ],
+    "maintenance": "Medium — wood surfaces benefit from bi-annual beeswax polishing; brass hardware needs periodic dry wiping.",
+    "similarThemes": [
+      "traditional-indian",
+      "vintage",
+      "french-country",
+      "transitional"
+    ],
+    "roomCount": 5,
+    "isTrending": false,
+    "isEditorPick": true,
+    "isNew": true
+  },
+
+  // 42 ─ SOUTH INDIAN CONTEMPORARY
+  {
+    "slug": "south-indian-contemporary",
+    "name": "South Indian Contemporary",
+    "tagline": "Chettinad woodwork, brass thooku vilakku, oxide finishes, and airy verandas",
+    "description": "South Indian Contemporary harmoniously combines Chettinad architectural grandeur and Kerala courtyard serenity with contemporary uncluttered planning. Features rich rosewood accents, Athangudi-inspired tiles, soft oxide walls, and brass bell motifs.",
+    "coverImage": "https://images.unsplash.com/photo-1682662046457-74fd5b199b92?w=900&q=80",
+    "galleryImages": [
+      "https://images.unsplash.com/photo-1682662046457-74fd5b199b92?w=900&q=80",
+      "https://images.unsplash.com/photo-1745429523617-0d837856ca35?w=900&q=80",
+      "https://images.unsplash.com/photo-1787390629829-abb32b3025c5?w=900&q=80",
+      "https://images.unsplash.com/photo-1745301558339-44eb3217d5da?w=900&q=80"
+    ],
+    "category": "Indian",
+    "tags": [
+      "indian",
+      "south-indian",
+      "chettinad",
+      "kerala",
+      "brass",
+      "wood",
+      "oxide"
+    ],
+    "collections": [
+      "editors-picks",
+      "trending",
+      "villas",
+      "family-homes"
+    ],
+    "colorFamilies": [
+      "yellow",
+      "red",
+      "wood",
+      "cream",
+      "terracotta",
+      "green"
+    ],
+    "roomCategories": [
+      "Living Room",
+      "Dining",
+      "Pooja Room",
+      "Bedroom",
+      "Balcony"
+    ],
+    "suitablePropertyTypes": [
+      "Apartment",
+      "Builder Floor",
+      "Independent House",
+      "Villa"
+    ],
+    "budget": {
+      "basic": "₹12–18 L",
+      "premium": "₹18–30 L",
+      "luxury": "₹30–55 L",
+      "ultraLuxury": "₹55 L+"
+    },
+    "estimatedTimeline": "8–14 weeks",
+    "colors": [
+      {
+        "name": "Temple Ochre",
+        "hex": "#D2912B",
+        "paint": "Asian Paints Temple Bell",
+        "family": "yellow"
+      },
+      {
+        "name": "Chettinad Oxide Red",
+        "hex": "#8C2D19",
+        "paint": "Dulux Crimson Oxide",
+        "family": "red"
+      },
+      {
+        "name": "Coconut Shell Brown",
+        "hex": "#4B3320",
+        "paint": "Berger Coffee Bean",
+        "family": "brown"
+      },
+      {
+        "name": "Cardamom Green",
+        "hex": "#637956",
+        "paint": "Asian Paints Cardamom",
+        "family": "green"
+      },
+      {
+        "name": "Warm Jasmine White",
+        "hex": "#FDF9F0",
+        "paint": "Nippon Jasmine Soft",
+        "family": "white"
+      }
+    ],
+    "materials": [
+      "Polished red oxide or microtopping",
+      "Athangudi patterned tile inlays",
+      "Pillared rosewood or teak frames",
+      "Spun bell-metal brass fixtures",
+      "Tanjore art frames",
+      "Coir and cotton upholstery"
+    ],
+    "furniture": [
+      "Chettinad carved wooden pillar console",
+      "Low-height wooden swing (Oonjal) with brass chains",
+      "Solid wood diwan with bolsters",
+      "Minimalist brass pooja mandapam",
+      "Slatted wood dining bench"
+    ],
+    "lighting": [
+      "Hanging brass temple oil lamps (Thooku Vilakku) with LED inserts",
+      "Warm beam spotlights highlighting woodwork",
+      "Handmade brass wall sconces",
+      "Backlit wood jaali"
+    ],
+    "rooms": [],
+    "philosophy": "Rooted in the Dravidian tradition of proportion and spiritual harmony, this style invites natural ventilation, honest materials, and serene spaces meant for family togetherness.",
+    "history": "Draws from the maritime trading mansions of Chettinad and the timber-framed Nalukettu homes of Kerala, adapting their majestic wooden pillars and vibrant floor tiles into sleek modern apartments.",
+    "keyCharacteristics": [
+      "Brass hanging lamps with warm glows",
+      "Handcrafted Athangudi border tiles",
+      "Pillared wooden transitions or consoles",
+      "Traditional swing (Oonjal) integration",
+      "Custom brass pooja unit",
+      "Warm oxide and timber contrasts"
+    ],
+    "bestFor": [
+      "Homeowners wanting authentic regional Indian charm",
+      "Apartments and villas in Delhi NCR",
+      "Spacious living rooms and dedicated pooja spaces"
+    ],
+    "pros": [
+      "Immense cultural pride and character",
+      "Brass elements bring warmth and prosperity",
+      "Highly durable solid wood and oxide surfaces",
+      "Stunning conversation starter"
+    ],
+    "cons": [
+      "Athangudi tiles and brass require authentic sourcing",
+      "Wood requires protection from extreme dry heat in Delhi winters"
+    ],
+    "maintenance": "Medium — periodic brass polishing; wipe timber surfaces with conditioning oil every few months.",
+    "similarThemes": [
+      "contemporary-indian",
+      "traditional-indian",
+      "warm-indian-earth",
+      "rustic"
+    ],
+    "roomCount": 5,
+    "isTrending": true,
+    "isEditorPick": true,
+    "isNew": true
+  },
+
+  // 43 ─ RAJASTHANI HAVELI REVIVAL
+  {
+    "slug": "rajasthani-haveli-revival",
+    "name": "Rajasthani Haveli Revival",
+    "tagline": "Jharokha arches, Jodhpur blue accents, Thikri mirrorwork, and sand stone serenity",
+    "description": "Rajasthani Haveli Revival captures the royal romanticism of Jaipur and Jodhpur palaces in a fresh, contemporary format. Intricate Thikri glass inlay, sandstone wall panels, arched niches, and indigo pops blend with clean modern furnishings.",
+    "coverImage": "https://images.unsplash.com/photo-1745429523617-0d837856ca35?w=900&q=80",
+    "galleryImages": [
+      "https://images.unsplash.com/photo-1745429523617-0d837856ca35?w=900&q=80",
+      "https://images.unsplash.com/photo-1787390629829-abb32b3025c5?w=900&q=80",
+      "https://images.unsplash.com/photo-1682662046426-f7589013d25e?w=900&q=80",
+      "https://images.unsplash.com/photo-1745301558339-44eb3217d5da?w=900&q=80"
+    ],
+    "category": "Indian",
+    "tags": [
+      "indian",
+      "rajasthani",
+      "haveli",
+      "thikri",
+      "jharokha",
+      "stone",
+      "blue",
+      "jaipur"
+    ],
+    "collections": [
+      "luxury-collection",
+      "villas",
+      "most-saved",
+      "editors-picks"
+    ],
+    "colorFamilies": [
+      "blue",
+      "yellow",
+      "terracotta",
+      "cream",
+      "red",
+      "neutral"
+    ],
+    "roomCategories": [
+      "Living Room",
+      "Bedroom",
+      "Pooja Room",
+      "Dining",
+      "Balcony"
+    ],
+    "suitablePropertyTypes": [
+      "Apartment",
+      "Villa",
+      "Builder Floor",
+      "Penthouse"
+    ],
+    "budget": {
+      "basic": "₹15–24 L",
+      "premium": "₹24–38 L",
+      "luxury": "₹38–68 L",
+      "ultraLuxury": "₹68 L+"
+    },
+    "estimatedTimeline": "9–15 weeks",
+    "colors": [
+      {
+        "name": "Jodhpur Royal Indigo",
+        "hex": "#1C3B68",
+        "paint": "Asian Paints Royal Indigo",
+        "family": "blue"
+      },
+      {
+        "name": "Dholpur Sandstone",
+        "hex": "#D8C3A5",
+        "paint": "Dulux Desert Sand",
+        "family": "beige"
+      },
+      {
+        "name": "Jaipur Terracotta Pink",
+        "hex": "#C67462",
+        "paint": "Berger Jaipur Pink",
+        "family": "pink"
+      },
+      {
+        "name": "Marwar Marigold",
+        "hex": "#EAA32E",
+        "paint": "Asian Paints Marigold",
+        "family": "yellow"
+      },
+      {
+        "name": "Pristine Haveli White",
+        "hex": "#FAF7F0",
+        "paint": "Nippon Pearl Shell",
+        "family": "white"
+      }
+    ],
+    "materials": [
+      "Dholpur and Jaisalmer carved sandstone",
+      "Thikri hand-cut mirror glass art",
+      "Carved Sheesham wood",
+      "Block-printed cotton and silk drapes",
+      "Brass and bone inlay accents",
+      "Hand-knotted woolen carpet"
+    ],
+    "furniture": [
+      "Jharokha-inspired arched wall mirror",
+      "Carved Sheesham low diwan with zardozi cushions",
+      "Bone-inlay accent coffee table",
+      "Handcrafted pooja alcove with brass bells",
+      "Upholstered high-back bedroom headboard with Jaipur motif"
+    ],
+    "lighting": [
+      "Pierced brass Moroccan/Rajasthani filigree lanterns",
+      "Concealed LED uplights illuminating arched niches",
+      "Warm 2700K ambient chandelier",
+      "Fairy niches with warm accent diodes"
+    ],
+    "rooms": [],
+    "philosophy": "Palatial grandeur when balanced with clean lines creates a deeply hospitable, royal sanctuary that honors North India’s greatest architectural craftsmanship.",
+    "history": "Originating from the merchant havelis of Shekhawati and royal palaces of Jaipur, Marwar, and Mewar, adapted with lighter materials and clean contemporary spacing.",
+    "keyCharacteristics": [
+      "Arched niche architecture (Mehrab)",
+      "Subtle Thikri mirror art feature panels",
+      "Dholpur sandstone feature wall or cladding",
+      "Rich indigo and marigold textile accents",
+      "Hand-cut brass lanterns casting intricate shadow patterns"
+    ],
+    "bestFor": [
+      "Delhi NCR homes wanting rich cultural storytelling",
+      "Villa living rooms & grand entry foyers",
+      "Homeowners wanting high-impact accent spaces"
+    ],
+    "pros": [
+      "Magnificent artistic atmosphere",
+      "Handcrafted Thikri mirrorwork catches ambient light brilliantly",
+      "Deeply celebrated North Indian aesthetic"
+    ],
+    "cons": [
+      "Thikri and carved stone require authentic master artisans",
+      "Needs thoughtful color balancing to avoid visual heaviness"
+    ],
+    "maintenance": "Medium — dust glass mirrorwork with soft dry microfiber; stone surfaces are durable and need minimal upkeep.",
+    "similarThemes": [
+      "traditional-indian",
+      "contemporary-indian",
+      "moroccan",
+      "bohemian"
+    ],
+    "roomCount": 5,
+    "isTrending": true,
+    "isEditorPick": true,
+    "isNew": true
+  },
+
+  // 44 ─ MINIMAL INDIAN
+  {
+    "slug": "minimal-indian",
+    "name": "Minimal Indian",
+    "tagline": "Quiet Japandi simplicity infused with subtle Indian textures and brass serenity",
+    "description": "Minimal Indian strips away excess clutter while preserving the warmth of Indian domesticity. Smooth off-white lime walls, light teak joinery, discrete brass accents, simple handloom fabrics, and an integrated minimal pooja niche create uncluttered calm.",
+    "coverImage": "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=900&q=80",
+    "galleryImages": [
+      "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=900&q=80",
+      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=80",
+      "https://images.unsplash.com/photo-1567016376408-0226e4d0c1ea?w=900&q=80",
+      "https://images.unsplash.com/photo-1745301558339-44eb3217d5da?w=900&q=80"
+    ],
+    "category": "Indian",
+    "tags": [
+      "indian",
+      "minimal",
+      "zen",
+      "neutral",
+      "brass",
+      "clean",
+      "modern",
+      "delhi-ncr"
+    ],
+    "collections": [
+      "compact-apartments",
+      "trending",
+      "editors-picks",
+      "small-spaces"
+    ],
+    "colorFamilies": [
+      "white",
+      "beige",
+      "cream",
+      "neutral",
+      "wood",
+      "grey"
+    ],
+    "roomCategories": [
+      "Living Room",
+      "Bedroom",
+      "Kitchen",
+      "Home Office",
+      "Pooja Room"
+    ],
+    "suitablePropertyTypes": [
+      "Apartment",
+      "Builder Floor",
+      "Independent House"
+    ],
+    "budget": {
+      "basic": "₹9–14 L",
+      "premium": "₹14–22 L",
+      "luxury": "₹22–36 L",
+      "ultraLuxury": "₹36 L+"
+    },
+    "estimatedTimeline": "6–10 weeks",
+    "colors": [
+      {
+        "name": "Kora Cotton White",
+        "hex": "#F7F5EE",
+        "paint": "Asian Paints Absolute White",
+        "family": "white"
+      },
+      {
+        "name": "Khadi Beige",
+        "hex": "#E2DAC8",
+        "paint": "Dulux Khadi Warmth",
+        "family": "beige"
+      },
+      {
+        "name": "Brushed Brass",
+        "hex": "#C29F47",
+        "paint": "Asian Paints Brushed Brass",
+        "family": "yellow"
+      },
+      {
+        "name": "Natural Sand",
+        "hex": "#D2C1A8",
+        "paint": "Berger Sand Dune",
+        "family": "neutral"
+      },
+      {
+        "name": "Charcoal Slag",
+        "hex": "#2E2E2E",
+        "paint": "Nippon Deep Charcoal",
+        "family": "black"
+      }
+    ],
+    "materials": [
+      "Natural light teak veneer",
+      "Seamless matte lime plaster",
+      "Raw khadi cotton and linen",
+      "Slender brushed brass handles",
+      "Hand-turned terracotta vases",
+      "Natural kota stone or matte porcelain"
+    ],
+    "furniture": [
+      "Low-profile beige sectional sofa",
+      "Floating light teak TV console with hidden storage",
+      "Minimalist timber platform bed with recessed side tables",
+      "Compact fluted pooja cabinet",
+      "Round solid wood coffee table"
+    ],
+    "lighting": [
+      "Linear magnetic track lighting",
+      "Subtle 3000K warm cove strips",
+      "Minimal spun brass pendant over dining",
+      "Recessed floor wash lights"
+    ],
+    "rooms": [],
+    "philosophy": "Clutter-free living does not have to mean sterile European coldness. By incorporating warm natural woods, breathable Indian weaves, and serene brass touches, minimalism becomes hospitable and soul-nourishing.",
+    "history": "Pioneered by modern Indian architects who fused Le Corbusier and Geoffrey Bawa architectural discipline with indigenous materials for contemporary urban homes.",
+    "keyCharacteristics": [
+      "Flush floor-to-ceiling concealed storage",
+      "Warm neutral monochromatic palette",
+      "Slender minimal brass hardware",
+      "Textural depth through raw handloom fabrics",
+      "Clean geometric lines with zero visual noise",
+      "Compact integrated modern pooja nook"
+    ],
+    "bestFor": [
+      "2BHK/3BHK apartments in Noida & Gurgaon",
+      "Young professionals and modern families",
+      "Those wanting an easy-to-clean, tranquil home"
+    ],
+    "pros": [
+      "Makes compact apartments feel 30% larger",
+      "Extremely easy to keep organized and clean",
+      "Timeless and peaceful atmosphere",
+      "Faster execution timeline"
+    ],
+    "cons": [
+      "Requires strict clutter discipline from homeowners",
+      "Storage must be designed and built flawlessly"
+    ],
+    "maintenance": "Very Low — smooth wipe-clean surfaces; low dust-collecting ornamental elements.",
+    "similarThemes": [
+      "japandi",
+      "warm-minimalism",
+      "contemporary-indian",
+      "minimalist"
+    ],
+    "roomCount": 5,
+    "isTrending": true,
+    "isEditorPick": true,
+    "isNew": true
   },
 ];
 
@@ -1008,6 +2019,53 @@ export function getThemesByCollection(collectionId: string): Theme[] {
   return THEMES.filter(t => t.collections.includes(collectionId));
 }
 
+export interface ColorFilterOption {
+  id: import('./types').ColorFamily;
+  label: string;
+  hex: string;
+  count: number;
+}
+
+export function getColorFilterOptions(): ColorFilterOption[] {
+  const colorDefs: { id: import('./types').ColorFamily; label: string; hex: string }[] = [
+    { id: 'white', label: 'White', hex: '#FFFFFF' },
+    { id: 'beige', label: 'Beige', hex: '#E8DCB8' },
+    { id: 'cream', label: 'Cream', hex: '#FFFDD0' },
+    { id: 'grey', label: 'Grey', hex: '#9E9E9E' },
+    { id: 'black', label: 'Black', hex: '#1A1A1A' },
+    { id: 'brown', label: 'Brown', hex: '#795548' },
+    { id: 'green', label: 'Green', hex: '#4CAF50' },
+    { id: 'blue', label: 'Blue', hex: '#2196F3' },
+    { id: 'yellow', label: 'Yellow / Gold', hex: '#FFC107' },
+    { id: 'orange', label: 'Orange', hex: '#FF9800' },
+    { id: 'red', label: 'Red', hex: '#E53935' },
+    { id: 'pink', label: 'Pink / Blush', hex: '#F48FB1' },
+    { id: 'purple', label: 'Purple', hex: '#9C27B0' },
+    { id: 'terracotta', label: 'Terracotta', hex: '#C25E3E' },
+    { id: 'wood', label: 'Wood / Natural', hex: '#8D6E63' },
+    { id: 'neutral', label: 'Neutral', hex: '#D7CCC8' },
+    { id: 'earthy', label: 'Earthy', hex: '#A1887F' },
+  ];
+
+  return colorDefs
+    .map(c => ({
+      ...c,
+      count: THEMES.filter(t => t.colorFamilies && t.colorFamilies.includes(c.id)).length,
+    }))
+    .filter(c => c.count > 0);
+}
+
+export function getThemesByColor(color: import('./types').ColorFamily): Theme[] {
+  return THEMES.filter(t => t.colorFamilies && t.colorFamilies.includes(color));
+}
+
+export function getThemesByRoom(room: string): Theme[] {
+  return THEMES.filter(t =>
+    (t.roomCategories && t.roomCategories.some(r => r.toLowerCase() === room.toLowerCase())) ||
+    t.rooms.some(r => r.room.toLowerCase() === room.toLowerCase())
+  );
+}
+
 export function searchThemes(query: string): Theme[] {
   if (!query.trim()) return THEMES;
   const q = query.toLowerCase();
@@ -1019,6 +2077,7 @@ export function searchThemes(query: string): Theme[] {
     t.materials.some(m => m.toLowerCase().includes(q)) ||
     t.furniture.some(f => f.toLowerCase().includes(q)) ||
     t.colors.some(c => c.name.toLowerCase().includes(q)) ||
+    t.colorFamilies?.some(cf => cf.toLowerCase().includes(q)) ||
     t.category.toLowerCase().includes(q)
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import ThemesGalleryClient from '@/components/themes/ThemesGalleryClient'
 import { THEMES } from '@/lib/themes/data'
 import { getThemeSaveCounts } from '@/lib/themes/saves'
@@ -16,5 +17,11 @@ export const revalidate = 60
 
 export default async function ThemesPage() {
   const saveCounts = await getThemeSaveCounts()
-  return <ThemesGalleryClient saveCounts={saveCounts} />
+  // Suspense is required because ThemesGalleryClient calls useSearchParams().
+  // The fallback renders nothing visible — the gallery paints itself once hydrated.
+  return (
+    <Suspense fallback={null}>
+      <ThemesGalleryClient saveCounts={saveCounts} />
+    </Suspense>
+  )
 }
