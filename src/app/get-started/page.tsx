@@ -2,6 +2,8 @@ import { MarketingNav } from '@/components/shared/Navigation'
 import RenovationRequestForm from './RenovationRequestForm'
 import { decodeSize } from '@/lib/size'
 import { THEMES } from '@/lib/themes/data'
+import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 type SP = Record<string, string | string[] | undefined>
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v)
@@ -25,8 +27,35 @@ function resolveInspirationTheme(sp: SP): string | undefined {
   return names.length > 0 ? names.join(', ') : undefined
 }
 
+/** Profile phone numbers are free-form (+91…, 0…, spaces); the form wants the bare 10 digits. */
+function toTenDigitMobile(phone: string | null | undefined): string {
+  const digits = (phone ?? '').replace(/\D/g, '')
+  if (digits.length === 12 && digits.startsWith('91')) return digits.slice(2)
+  if (digits.length === 11 && digits.startsWith('0')) return digits.slice(1)
+  return digits.length === 10 ? digits : ''
+}
+
+/** Signed-in visitors shouldn't retype details we already hold — prefill from their profile. */
+async function loadContact() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return undefined
+  const { data: profile } = await createAdminClient()
+    .from('user_profiles')
+    .select('full_name, phone, city')
+    .eq('user_id', user.id)
+    .maybeSingle()
+  return {
+    fullName: profile?.full_name ?? '',
+    mobile: toTenDigitMobile(profile?.phone),
+    email: user.email ?? '',
+    city: profile?.city ?? '',
+  }
+}
+
 export default async function GetStartedPage({ searchParams }: { searchParams: Promise<SP> }) {
   const sp = await searchParams
+  const contact = await loadContact()
   const lo = Number(one(sp.lo)), hi = Number(one(sp.hi))
   return (
     <>
@@ -34,6 +63,7 @@ export default async function GetStartedPage({ searchParams }: { searchParams: P
       <main>
       <RenovationRequestForm
         defaultTheme={resolveInspirationTheme(sp)}
+        contact={contact}
         initial={{
           size: decodeSize(sp),
           scope: one(sp.scope)?.split(',').filter(Boolean).slice(0, 8),

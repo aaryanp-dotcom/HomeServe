@@ -106,11 +106,13 @@ interface Props {
   defaultTheme?: string
   /** Prefill carried over from the estimator (size, scope, indicative range). */
   initial?: { size?: SizeValue | null; scope?: string[]; estimateLow?: number; estimateHigh?: number }
+  /** Signed-in visitor's details from their profile — prefilled so they don't retype them. */
+  contact?: { fullName: string; mobile: string; email: string; city: string }
 }
 
 const BHK_TO_PROPERTY: Record<string, string> = { '1BHK': '1BHK', '2BHK': '2BHK', '3BHK': '3BHK', '4BHK': '4BHK', Villa: 'Villa' }
 
-export default function RenovationRequestForm({ defaultTheme, initial }: Props) {
+export default function RenovationRequestForm({ defaultTheme, initial, contact }: Props) {
   const [step, setStep] = useState(0)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -122,7 +124,7 @@ export default function RenovationRequestForm({ defaultTheme, initial }: Props) 
   const sizeRes = computeSize(size)
 
   const [form, setForm] = useState<FormData>({
-    city: '',
+    city: contact?.city && NCR_CITIES.includes(contact.city) ? contact.city : '',
     locality: '',
     propertyType: initial?.size?.mode === 'bhk_preset' ? BHK_TO_PROPERTY[initial.size.bhk] ?? '' : '',
     bhk: '',
@@ -134,11 +136,16 @@ export default function RenovationRequestForm({ defaultTheme, initial }: Props) 
     timeline: '',
     inspirationTheme: defaultTheme ?? '',
     notes: '',
-    fullName: '',
-    mobile: '',
-    email: '',
+    fullName: contact?.fullName ?? '',
+    mobile: contact?.mobile ?? '',
+    email: contact?.email ?? '',
     preferredContactTime: '',
   })
+
+  // A signed-in visitor with a usable name + mobile on file sees them as a summary card
+  // rather than empty inputs; "Change" reveals the fields for a one-off override.
+  const contactComplete = Boolean(contact?.fullName.trim() && /^\d{10}$/.test(contact.mobile))
+  const [editingContact, setEditingContact] = useState(!contactComplete)
 
   const set = (key: keyof FormData, value: string | boolean | string[]) =>
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -440,45 +447,65 @@ export default function RenovationRequestForm({ defaultTheme, initial }: Props) 
             <div className="space-y-5">
               <h2 className="text-lg font-semibold text-stone-900">Your contact details</h2>
 
-              <div>
-                <label className="flex items-center gap-1.5 text-sm font-semibold text-stone-700 mb-1.5">
-                  <User size={13} /> Full name *
-                </label>
-                <input
-                  type="text"
-                  value={form.fullName}
-                  onChange={(e) => set('fullName', e.target.value)}
-                  placeholder="Your full name"
-                  className="field w-full"
-                />
-              </div>
+              {contact && !editingContact ? (
+                <div className="p-4 bg-stone-50 border border-ink-900/15">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1.5 min-w-0">
+                      <p className="panel-title mb-2">From your profile</p>
+                      <p className="flex items-center gap-2 text-sm text-stone-700"><User size={13} className="text-stone-400 shrink-0" /> {form.fullName}</p>
+                      <p className="flex items-center gap-2 text-sm text-stone-700"><Phone size={13} className="text-stone-400 shrink-0" /> {form.mobile}</p>
+                      {form.email && <p className="flex items-center gap-2 text-sm text-stone-700 break-all"><Mail size={13} className="text-stone-400 shrink-0" /> {form.email}</p>}
+                    </div>
+                    <button type="button" onClick={() => setEditingContact(true)}
+                      className="coarse:min-h-11 shrink-0 text-sm font-medium text-cobalt-600 hover:text-cobalt-700"
+                    >Change</button>
+                  </div>
+                  <p className="text-xs text-stone-400 mt-3">Our team will call you on this number to confirm the site visit.</p>
+                </div>
+              ) : (
+                <>
+                <div>
+                  <label className="flex items-center gap-1.5 text-sm font-semibold text-stone-700 mb-1.5">
+                    <User size={13} /> Full name *
+                  </label>
+                  <input
+                    type="text"
+                    value={form.fullName}
+                    onChange={(e) => set('fullName', e.target.value)}
+                    placeholder="Your full name"
+                    className="field w-full"
+                  />
+                </div>
 
-              <div>
-                <label className="flex items-center gap-1.5 text-sm font-semibold text-stone-700 mb-1.5">
-                  <Phone size={13} /> Mobile number *
-                </label>
-                <input
-                  type="tel"
-                  value={form.mobile}
-                  onChange={(e) => set('mobile', e.target.value)}
-                  placeholder="10-digit mobile number"
-                  className="field w-full"
-                />
-                <p className="text-xs text-stone-400 mt-1">Our team will call you on this number to confirm the site visit.</p>
-              </div>
+                <div>
+                  <label className="flex items-center gap-1.5 text-sm font-semibold text-stone-700 mb-1.5">
+                    <Phone size={13} /> Mobile number *
+                  </label>
+                  <input
+                    type="tel"
+                    value={form.mobile}
+                    onChange={(e) => set('mobile', e.target.value)}
+                    placeholder="10-digit mobile number"
+                    className="field w-full"
+                  />
+                  <p className="text-xs text-stone-400 mt-1">Our team will call you on this number to confirm the site visit.</p>
+                </div>
 
-              <div>
-                <label className="flex items-center gap-1.5 text-sm font-semibold text-stone-700 mb-1.5">
-                  <Mail size={13} /> Email address (optional)
-                </label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => set('email', e.target.value)}
-                  placeholder="your@email.com"
-                  className="field w-full"
-                />
-              </div>
+                <div>
+                  <label className="flex items-center gap-1.5 text-sm font-semibold text-stone-700 mb-1.5">
+                    <Mail size={13} /> Email address (optional)
+                  </label>
+                  <input
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => set('email', e.target.value)}
+                    placeholder="your@email.com"
+                    className="field w-full"
+                  />
+                </div>
+
+                </>
+              )}
 
               <div>
                 <label className="flex items-center gap-1.5 text-sm font-semibold text-stone-700 mb-2">
