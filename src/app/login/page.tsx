@@ -47,8 +47,14 @@ function LoginForm() {
   }
 
   async function resend() {
-    const { error: e } = await supabase.auth.resend({ type: 'signup', email: email.trim(), options: { emailRedirectTo: `${window.location.origin}/auth/callback` } })
-    if (!e) setResent(true)
+    // Same password-free resend endpoint the signup page uses, delivered via Resend
+    // rather than Supabase's own mailer.
+    const res = await fetch('/api/auth/signup/resend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.trim() }),
+    })
+    if (res.ok) setResent(true)
   }
 
   return (

@@ -3,6 +3,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { renovationRequestSchema } from '@/lib/validations'
+import { notifyLeadReceived } from '@/lib/renovation/notify'
 
 // POST /api/renovation-requests — public lead form.
 // Anonymous visitors have no RLS access to this table, so the row is written with
@@ -84,6 +85,17 @@ export async function POST(req: NextRequest) {
       // Log only the error code/hint — not the full row which may echo back PII fields.
       console.error('Supabase error creating renovation request:', error.code, error.hint)
       return NextResponse.json({ error: 'Failed to save request. Please try again.' }, { status: 500 })
+    }
+
+    // Confirmation email — non-blocking, and only when the visitor gave an email (optional field).
+    if (d.email) {
+      notifyLeadReceived({
+        fullName: d.fullName,
+        email: d.email,
+        requestNumber: data.request_number,
+        city: d.city,
+        locality: d.locality,
+      }).catch(console.error)
     }
 
     return NextResponse.json({

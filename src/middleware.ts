@@ -14,6 +14,9 @@ const ROLE_ROUTES: Record<string, string[]> = {
 // endpoints (bookings, payments, service requests) get more room since a real user may
 // legitimately retry a few times. See lib/rate-limit.ts for what this can and can't protect.
 const RATE_LIMITED_ROUTES: { prefix: string; exact?: boolean; limit: number; windowMs: number }[] = [
+  // Creates an account and sends an email per request — same tight limit as the other
+  // unauthenticated lead/contact forms.
+  { prefix: '/api/auth/signup',         limit: 5,  windowMs: 10 * 60_000 },
   { prefix: '/api/renovation-requests', limit: 5,  windowMs: 10 * 60_000 },
   { prefix: '/api/support/tickets',     limit: 8,  windowMs: 10 * 60_000 },
   { prefix: '/api/site-visits',         limit: 10, windowMs: 10 * 60_000 },

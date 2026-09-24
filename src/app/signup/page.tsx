@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { createBrowserClient } from '@supabase/ssr'
 import { Eye, EyeOff, MailCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,7 +15,6 @@ import { PrivacyNotice } from '@/components/privacy/PrivacyNotice'
  * sent from the browser.
  */
 export default function SignupPage() {
-  const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -28,8 +25,6 @@ export default function SignupPage() {
   const [sentTo, setSentTo] = useState<string | null>(null)
   const [resent, setResent] = useState(false)
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
-
-  const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
   const strength = password.length === 0 ? 0 : password.length < 8 ? 1 : password.length < 12 ? 2 : 3
   const strengthLabel = ['', 'Too short', 'Good', 'Strong'][strength]
@@ -44,13 +39,18 @@ export default function SignupPage() {
     if (!privacyAccepted) { setError('Please read and accept the Privacy Policy to continue.'); return }
     setLoading(true)
     try {
-      const { data, error: authError } = await supabase.auth.signUp({
-        email: email.trim(), password,
-        options: { data: { full_name: name.trim(), phone: phone || undefined }, emailRedirectTo: `${window.location.origin}/auth/callback` },
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName: name.trim(), email: email.trim(), phone: phone || undefined, password }),
       })
-      if (authError) { setError(/already/i.test(authError.message) ? 'An account with this email already exists. Try signing in.' : authError.message); return }
-      // Email confirmation is required: no session yet, so show the next step instead of a dashboard that would bounce to sign-in.
-      if (data.session) { router.push('/homeowner/dashboard'); router.refresh() } else setSentTo(email.trim())
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        setError(body.error ?? 'Sign up failed. Please try again.')
+        return
+      }
+      // Account is created but unconfirmed — always show the "check your email" step next.
+      setSentTo(email.trim())
     } catch {
       setError('Sign up failed. Please check your connection and try again.')
     } finally {
@@ -60,8 +60,12 @@ export default function SignupPage() {
 
   async function resend() {
     if (!sentTo) return
-    const { error: e } = await supabase.auth.resend({ type: 'signup', email: sentTo, options: { emailRedirectTo: `${window.location.origin}/auth/callback` } })
-    if (!e) setResent(true)
+    const res = await fetch('/api/auth/signup/resend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: sentTo }),
+    })
+    if (res.ok) setResent(true)
   }
 
   if (sentTo) {

@@ -12,10 +12,12 @@
  * the correct upgrade is a shared store — Upstash Redis via `@upstash/ratelimit` is the
  * standard choice on Vercel — swapped in behind this same `rateLimit()` signature.
  *
- * Separately: this can only limit requests that reach OUR Next.js server. Login, signup, and
- * password-reset call Supabase Auth directly from the browser (see app/login, app/signup,
+ * Separately: this can only limit requests that reach OUR Next.js server. Sign-in and
+ * password-reset call Supabase Auth directly from the browser (see app/login,
  * app/forgot-password) and never pass through this middleware — that traffic can only be
- * throttled in the Supabase dashboard (Authentication → Rate Limits).
+ * throttled in the Supabase dashboard (Authentication → Rate Limits). Signup is the
+ * exception: it posts to /api/auth/signup so the confirmation email can go out via Resend
+ * ourselves, which puts it through this same limiter — see RATE_LIMITED_ROUTES in middleware.ts.
  */
 
 interface Bucket {
