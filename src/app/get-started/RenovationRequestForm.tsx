@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { PrivacyNotice } from '@/components/privacy/PrivacyNotice'
 import { SizeInput } from '@/components/size/SizeInput'
@@ -105,12 +105,19 @@ const STEPS = [
 interface Props {
   defaultTheme?: string
   /** Prefill carried over from the estimator (size, scope, indicative range). */
-  initial?: { size?: SizeValue | null; scope?: string[]; estimateLow?: number; estimateHigh?: number }
+  initial?: { size?: SizeValue | null; scope?: string[]; estimateLow?: number; estimateHigh?: number; notes?: string }
   /** Signed-in visitor's details from their profile — prefilled so they don't retype them. */
   contact?: { fullName: string; mobile: string; email: string; city: string }
 }
 
 const BHK_TO_PROPERTY: Record<string, string> = { '1BHK': '1BHK', '2BHK': '2BHK', '3BHK': '3BHK', '4BHK': '4BHK', Villa: 'Villa' }
+
+// Draft persistence: this is HomeServe's single most important public conversion form, and it
+// used to lose everything a visitor typed on a browser Back-tap or an accidental refresh (the
+// 4 steps lived only in useState, with no URL or storage backing). sessionStorage survives a
+// refresh and clears itself when the tab closes — a reasonable "resume within this visit"
+// scope, not a permanent draft. Cleared on successful submit so a later visit starts fresh.
+const DRAFT_KEY = 'homeserve:get-started-draft'
 
 export default function RenovationRequestForm({ defaultTheme, initial, contact }: Props) {
   const [step, setStep] = useState(0)
@@ -135,7 +142,7 @@ export default function RenovationRequestForm({ defaultTheme, initial, contact }
     budget: '',
     timeline: '',
     inspirationTheme: defaultTheme ?? '',
-    notes: '',
+    notes: initial?.notes ?? '',
     fullName: contact?.fullName ?? '',
     mobile: contact?.mobile ?? '',
     email: contact?.email ?? '',
@@ -146,6 +153,56 @@ export default function RenovationRequestForm({ defaultTheme, initial, contact }
   // rather than empty inputs; "Change" reveals the fields for a one-off override.
   const contactComplete = Boolean(contact?.fullName.trim() && /^\d{10}$/.test(contact.mobile))
   const [editingContact, setEditingContact] = useState(!contactComplete)
+
+  // Restore an in-progress draft (refresh, or a browser Back that landed here again) — client-only,
+  // so it can't cause a server/client hydration mismatch; runs once after the fresh-form state above
+  // has already rendered.
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY)
+      if (!raw) return
+      const draft = JSON.parse(raw) as { step?: number; form?: Partial<FormData>; size?: SizeValue; editingContact?: boolean }
+      if (draft.form) setForm((prev) => ({ ...prev, ...draft.form }))
+      if (draft.size) setSize(draft.size)
+      if (typeof draft.step === 'number') setStep(draft.step)
+      if (typeof draft.editingContact === 'boolean') setEditingContact(draft.editingContact)
+    } catch {
+      // Corrupt or inaccessible storage (private browsing) — the fresh-form defaults already stand.
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Keep the draft current on every change, so a refresh or a Back-then-Forward within this tab
+  // recovers exactly where the visitor left off.
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ step, form, size, editingContact }))
+    } catch {
+      // Storage disabled — the form still works, it just won't survive a refresh.
+    }
+  }, [step, form, size, editingContact])
+
+  // Give each step its own browser-history entry, so the browser's own Back button steps
+  // backward through the wizard instead of leaving /get-started entirely (which it used to,
+  // since all 4 steps previously shared one history entry with no state of their own).
+  const restoringFromHistory = useRef(false)
+  useEffect(() => {
+    window.history.replaceState({ homeserveStep: step }, '')
+    const onPopState = (e: PopStateEvent) => {
+      const s = (e.state as { homeserveStep?: number } | null)?.homeserveStep
+      if (typeof s === 'number') {
+        restoringFromHistory.current = true
+        setStep(s)
+      }
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  useEffect(() => {
+    if (restoringFromHistory.current) { restoringFromHistory.current = false; return }
+    window.history.pushState({ homeserveStep: step }, '')
+  }, [step])
 
   const set = (key: keyof FormData, value: string | boolean | string[]) =>
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -184,6 +241,7 @@ export default function RenovationRequestForm({ defaultTheme, initial, contact }
         throw new Error(data.error ?? 'Submission failed')
       }
       setSubmitted(true)
+      try { sessionStorage.removeItem(DRAFT_KEY) } catch { /* nothing to clean up */ }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong. Please try again.')
     } finally {

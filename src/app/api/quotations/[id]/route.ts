@@ -71,11 +71,14 @@ export async function PATCH(
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid request' }, { status: 400 })
   const body = parsed.data
 
-  // Customers can only accept or reject — and only their own quotation.
+  // Customers can only reject or request a revision here — and only their own quotation.
+  // Deliberately NOT 'accepted': accepting has to also create the booking + milestones, which
+  // only POST /api/quotations/[id]/accept does. Letting this route set status:'accepted' would
+  // leave the quotation (and the lead) marked won with no project ever created behind it.
   const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', user.id).single()
   const isAdmin = profile?.role === 'admin'
   if (!isAdmin) {
-    const allowed = ['accepted', 'rejected', 'revision_requested']
+    const allowed = ['rejected', 'revision_requested']
     if (!allowed.includes(body.status)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }

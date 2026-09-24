@@ -47,7 +47,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Milestone not found' }, { status: 404 })
   }
 
-  if (milestone.status !== 'completed') {
+  // Milestone 1 is the advance — it's payable as soon as it exists, with no work-stage gate
+  // (that's the whole point of an advance: it's due on project confirmation, before any work
+  // starts). Milestones 2+ represent later work stages and correctly stay gated behind the
+  // team marking that stage's work 'completed' first.
+  if (milestone_number > 1 && milestone.status !== 'completed') {
     return NextResponse.json({ error: 'Milestone must be marked completed by the contractor before payment' }, { status: 400 })
   }
 

@@ -2,6 +2,7 @@ import { MarketingNav } from '@/components/shared/Navigation'
 import RenovationRequestForm from './RenovationRequestForm'
 import { decodeSize } from '@/lib/size'
 import { THEMES } from '@/lib/themes/data'
+import { QUALITY_TIERS } from '@/lib/estimate'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
@@ -57,6 +58,14 @@ export default async function GetStartedPage({ searchParams }: { searchParams: P
   const sp = await searchParams
   const contact = await loadContact()
   const lo = Number(one(sp.lo)), hi = Number(one(sp.hi))
+  // The estimator hands off the finish quality tier the visitor picked (it shaped the ₹lo–₹hi
+  // range they saw), but the request form has no dedicated field for it — fold it into the
+  // prefilled notes, same wording the estimator already uses for its own "save estimate" note,
+  // rather than silently dropping it like before.
+  const quality = one(sp.quality)
+  const qualityNote = (QUALITY_TIERS as readonly string[]).includes(quality ?? '')
+    ? `Estimated from the cost estimator (${quality} finish).`
+    : undefined
   return (
     <>
       <MarketingNav />
@@ -69,6 +78,7 @@ export default async function GetStartedPage({ searchParams }: { searchParams: P
           scope: one(sp.scope)?.split(',').filter(Boolean).slice(0, 8),
           estimateLow: Number.isFinite(lo) && lo > 0 ? lo : undefined,
           estimateHigh: Number.isFinite(hi) && hi > 0 ? hi : undefined,
+          notes: qualityNote,
         }}
       />
       </main>

@@ -32,7 +32,29 @@ interface Props {
   service: ServiceData
 }
 
+// Service catalogue slugs don't share a vocabulary with the renovation-request form's own
+// scope ids (RenovationRequestForm.tsx SCOPE_OPTIONS) — 'modular-kitchen' isn't 'kitchen', etc.
+// — so the "Start Your Renovation" CTA needs its own translation, same idea as the estimator's
+// ESTIMATOR_SCOPE_TO_LEAD map, or the visitor lands on a blank Get Started form and has to
+// reselect the very thing they were just reading about.
+const SERVICE_SLUG_TO_SCOPE: Record<string, string> = {
+  'full-home-renovation': 'full_home',
+  'kitchen-renovation': 'kitchen',
+  'modular-kitchen': 'kitchen',
+  'bathroom-renovation': 'bathroom',
+  'living-room': 'living_room',
+  bedroom: 'bedroom',
+  painting: 'painting',
+  flooring: 'flooring',
+  'false-ceiling': 'false_ceiling',
+  electrical: 'electrical',
+  plumbing: 'plumbing',
+  carpentry: 'carpentry',
+  'civil-work': 'civil_work',
+}
+
 export function ServicePage({ service }: Props) {
+  const getStartedHref = `/get-started?scope=${SERVICE_SLUG_TO_SCOPE[service.slug] ?? 'other'}`
   return (
     <>
       <JsonLd
@@ -62,7 +84,7 @@ export function ServicePage({ service }: Props) {
             {service.hero.subheadline}
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/get-started">
+            <Link href={getStartedHref}>
               <button className="coarse:min-h-11 flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-ink-900 text-white hover:bg-cobalt-600 transition-colors">
                 Start Your Renovation <ArrowRight size={16} />
               </button>
@@ -190,7 +212,7 @@ export function ServicePage({ service }: Props) {
                 Tell us about your project — we&apos;ll schedule a site visit and provide a detailed quotation.
               </p>
             </div>
-            <Link href="/get-started">
+            <Link href={getStartedHref}>
               <button className="flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-white text-cobalt-600 hover:bg-cobalt-50 shadow-lg transition-colors whitespace-nowrap">
                 Start Your Renovation <ArrowRight size={15} />
               </button>
