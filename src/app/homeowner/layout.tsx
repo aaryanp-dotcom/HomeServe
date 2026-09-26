@@ -67,6 +67,7 @@ export default async function HomeownerLayout({ children }: { children: React.Re
     <div className="flex min-h-screen bg-paper-100">
       <AppSidebar
         items={NAV}
+        primaryHrefs={['/homeowner/dashboard', '/homeowner/projects', '/homeowner/payments', '/homeowner/warranty']}
         user={{
           name: profile?.full_name ?? 'Homeowner',
           email: profile?.email,

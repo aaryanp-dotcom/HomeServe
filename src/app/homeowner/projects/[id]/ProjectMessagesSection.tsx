@@ -46,7 +46,7 @@ export default function ProjectMessagesSection({ bookingId }: { bookingId: strin
   }
 
   return (
-    <div className="p-5 bg-white border border-ink-900/15 ">
+    <div id="project-messages" className="p-5 bg-white border border-ink-900/15 scroll-mt-20">
       <div className="flex items-center gap-2 mb-4">
         <MessageCircle size={15} className="text-stone-400" />
         <h2 className="panel-title">Messages</h2>
@@ -54,8 +54,9 @@ export default function ProjectMessagesSection({ bookingId }: { bookingId: strin
 
       <div className="min-h-[160px] max-h-64 overflow-y-auto space-y-2 mb-4 bg-stone-50 p-3">
         {loading ? (
-          <div className="flex items-center justify-center h-16">
-            <Loader2 size={16} className="animate-spin text-stone-500" />
+          <div className="animate-pulse space-y-2 py-1">
+            <div className="ml-auto h-8 w-2/3 max-w-[220px] bg-stone-200" />
+            <div className="h-8 w-3/5 max-w-[200px] bg-white border border-stone-200" />
           </div>
         ) : messages.length === 0 ? (
           <p className="text-xs text-stone-400 text-center py-6">
@@ -83,6 +84,7 @@ export default function ProjectMessagesSection({ bookingId }: { bookingId: strin
 
       <form onSubmit={send} className="flex items-center gap-2">
         <input
+          id="project-message-input"
           type="text"
           value={input}
           onChange={e => setInput(e.target.value)}

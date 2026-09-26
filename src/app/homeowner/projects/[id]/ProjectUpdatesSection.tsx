@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Loader2, ImageIcon } from 'lucide-react'
+import { ImageIcon } from 'lucide-react'
+import { PhotoLightbox, type LightboxPhoto } from '@/components/ui/PhotoLightbox'
 
 interface ProjectUpdate {
   id: string
@@ -24,10 +25,32 @@ const CATEGORY_LABEL: Record<string, string> = {
   completion: 'Completion', general: 'Update',
 }
 
+function UpdatesSkeleton() {
+  return (
+    <div className="p-5 bg-white border border-ink-900/15 animate-pulse">
+      <div className="mb-4 h-3 w-28 bg-stone-150" />
+      {[0, 1].map((row) => (
+        <div key={row} className="mb-5 last:mb-0">
+          <div className="mb-2 flex items-center gap-2">
+            <div className="h-4 w-16 bg-stone-150" />
+            <div className="ml-auto h-3 w-20 bg-stone-100" />
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            {[0, 1, 2].map((cell) => (
+              <div key={cell} className="aspect-square bg-stone-100" />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function ProjectUpdatesSection({ bookingId }: { bookingId: string }) {
   const [updates, setUpdates] = useState<ProjectUpdate[]>([])
   const [photos, setPhotos] = useState<ProjectPhoto[]>([])
   const [loading, setLoading] = useState(true)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   useEffect(() => {
     Promise.all([
@@ -42,16 +65,15 @@ export default function ProjectUpdatesSection({ bookingId }: { bookingId: string
 
   const photosFor = (updateId: string) => photos.filter(p => p.update_id === updateId && p.signed_url)
 
-  if (loading) {
-    return (
-      <div className="p-5 bg-white border border-ink-900/15 ">
-        <h2 className="panel-title mb-4">Project Photos</h2>
-        <div className="flex items-center justify-center py-8">
-          <Loader2 size={18} className="animate-spin text-stone-500" />
-        </div>
-      </div>
-    )
-  }
+  // Flattened, ordered gallery across every update — lets the lightbox swipe through the
+  // whole project history in one continuous strip, not just one update's photos at a time.
+  const gallery: LightboxPhoto[] = updates.flatMap((u) => {
+    const linked = photosFor(u.id)
+    if (linked.length > 0) return linked.map((p) => ({ id: p.id, url: p.signed_url!, caption: u.title ?? CATEGORY_LABEL[u.category] }))
+    return u.photo_urls.map((url, i) => ({ id: `${u.id}-legacy-${i}`, url, caption: u.title ?? CATEGORY_LABEL[u.category] }))
+  })
+
+  if (loading) return <UpdatesSkeleton />
 
   if (updates.length === 0) {
     return (
@@ -71,6 +93,9 @@ export default function ProjectUpdatesSection({ bookingId }: { bookingId: string
       <div className="space-y-5">
         {updates.map(u => {
           const linked = photosFor(u.id)
+          const photosToShow = linked.length > 0
+            ? linked.map((p) => ({ url: p.signed_url!, key: p.id }))
+            : u.photo_urls.map((url, i) => ({ url, key: `${u.id}-legacy-${i}` }))
           return (
             <div key={u.id}>
               <div className="flex items-center gap-2 mb-2">
@@ -83,37 +108,40 @@ export default function ProjectUpdatesSection({ bookingId }: { bookingId: string
                 </span>
               </div>
               {u.description && <p className="text-xs text-stone-500 mb-2">{u.description}</p>}
-              {linked.length > 0 ? (
+              {photosToShow.length > 0 && (
                 <div className="grid grid-cols-3 gap-2">
-                  {linked.map((p) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={p.id}
-                      src={p.signed_url!}
-                      alt="Project photo"
-                      className="aspect-square object-cover border border-stone-100 w-full"
-                      onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
-                    />
-                  ))}
-                </div>
-              ) : u.photo_urls.length > 0 && (
-                <div className="grid grid-cols-3 gap-2">
-                  {u.photo_urls.map((url, i) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={i}
-                      src={url}
-                      alt={`Photo ${i + 1}`}
-                      className="aspect-square object-cover border border-stone-100 w-full"
-                      onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
-                    />
-                  ))}
+                  {photosToShow.map((p) => {
+                    const galleryIndex = gallery.findIndex((g) => g.url === p.url)
+                    return (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={p.key}
+                        src={p.url}
+                        alt="Project photo"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => galleryIndex >= 0 && setLightboxIndex(galleryIndex)}
+                        onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && galleryIndex >= 0) setLightboxIndex(galleryIndex) }}
+                        className="aspect-square cursor-zoom-in object-cover border border-stone-100 w-full transition-opacity hover:opacity-90"
+                        onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
+                      />
+                    )
+                  })}
                 </div>
               )}
             </div>
           )
         })}
       </div>
+
+      {lightboxIndex !== null && (
+        <PhotoLightbox
+          photos={gallery}
+          index={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onIndexChange={setLightboxIndex}
+        />
+      )}
     </div>
   )
 }

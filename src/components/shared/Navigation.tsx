@@ -535,9 +535,16 @@ interface AppSidebarProps {
   items: SidebarItem[]
   user: { name: string; email?: string; role?: string; avatar?: string }
   onSignOut?: () => void
+  /**
+   * Which items appear in the mobile bottom bar's first 4 slots, by href — lets the mobile
+   * shortcut row favour the most-used in-app actions without reordering the desktop sidebar
+   * (which lists everything anyway, so order matters less there). Defaults to the first 4
+   * items in `items`, same as before this prop existed.
+   */
+  primaryHrefs?: string[]
 }
 
-export function AppSidebar({ items, user, onSignOut }: AppSidebarProps) {
+export function AppSidebar({ items, user, onSignOut, primaryHrefs }: AppSidebarProps) {
   const pathname = usePathname()
   const [moreOpen, setMoreOpen] = useState(false)
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
@@ -564,9 +571,12 @@ export function AppSidebar({ items, user, onSignOut }: AppSidebarProps) {
     </form>
   )
 
-  // Mobile: first four destinations live in a bottom bar, the rest under "More".
-  const primary = items.slice(0, 4)
-  const overflow = items.slice(4)
+  // Mobile: four destinations live in a bottom bar, the rest under "More". Defaults to the
+  // first four items in list order; primaryHrefs lets a caller pick specific ones instead.
+  const primary = primaryHrefs
+    ? primaryHrefs.map((href) => items.find((i) => i.href === href)).filter((i): i is SidebarItem => Boolean(i))
+    : items.slice(0, 4)
+  const overflow = items.filter((i) => !primary.includes(i))
 
   return (
     <>

@@ -8,10 +8,12 @@ import {
   CreditCard, FileText, ShieldCheck, ChevronRight,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/shared'
+import { CircularProgress } from '@/components/ui/CircularProgress'
 import type { Milestone, Payment } from '@/types'
 import MilestonePaymentPanel from './MilestonePaymentPanel'
 import ProjectUpdatesSection from './ProjectUpdatesSection'
 import ProjectMessagesSection from './ProjectMessagesSection'
+import { MessageFab } from './MessageFab'
 import { ProjectCare } from '@/components/maintenance/ProjectCare'
 
 export const metadata: Metadata = { title: 'My Project' }
@@ -208,6 +210,18 @@ export default async function CustomerProjectPage({ params }: Props) {
           {/* Payment summary */}
           <div className="p-5 border border-ink-900/15 bg-white">
             <h2 className="panel-title mb-3">Payments</h2>
+            {Number(booking.total_amount) > 0 && (
+              <div className="mb-4 flex justify-center">
+                <CircularProgress
+                  percent={(Number(booking.paid_amount) / Number(booking.total_amount)) * 100}
+                  colorClassName={outstanding === 0 ? 'text-sage-500' : 'text-cobalt-500'}
+                >
+                  <span className="text-lg font-bold text-stone-900">
+                    {Math.round((Number(booking.paid_amount) / Number(booking.total_amount)) * 100)}%
+                  </span>
+                </CircularProgress>
+              </div>
+            )}
             <div className="space-y-2 text-sm">
               {booking.area_sqft && (
                 <div className="flex justify-between">
@@ -284,6 +298,8 @@ export default async function CustomerProjectPage({ params }: Props) {
           </div>
         </div>
       </div>
+
+      <MessageFab />
     </div>
   )
 }
