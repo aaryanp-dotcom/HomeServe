@@ -8,17 +8,23 @@ import { cn } from '@/lib/utils'
 import { Reveal } from '@/components/motion/Reveal'
 import { SectionHeading } from './SectionHeading'
 import { Hl } from './Hl'
+import { SERVICES_DATA } from '@/lib/services/data'
 
+// Preview images come from each service's own page (SERVICES_DATA[slug].hero.image) — the
+// single verified image per trade, already shown on /services/[slug] — rather than this
+// list's own separate, independently-picked photo IDs. Those had drifted from the real
+// service pages for 3 of 8 trades (Full Home Renovation, False Ceiling, Electrical all
+// showed an entirely different, unrelated photo here than on their own page).
 const SERVICES = [
-  { label: 'Full Home Renovation', tag: 'Turnkey', desc: 'End-to-end planning, design and execution under one roof.', href: '/services/full-home-renovation', img: 'photo-1682662046457-74fd5b199b92' },
-  { label: 'Kitchen', tag: 'Modular · Civil', desc: 'Modular kitchens, cabinetry and the civil work behind them.', href: '/services/kitchen-renovation', img: 'photo-1755771984341-546c2a04f236' },
-  { label: 'Bathroom', tag: 'Wet area', desc: 'Tiles, fittings and waterproofing done in the right order.', href: '/services/bathroom-renovation', img: 'photo-1789121274502-84fe89234993' },
-  { label: 'Painting', tag: 'Interior · Exterior', desc: 'Prep, primer and premium finishes, room by room.', href: '/services/painting', img: 'photo-1787383274118-19be2f542e2b' },
-  { label: 'Flooring', tag: 'Tile · Marble · Wood', desc: 'Vitrified, marble, hardwood and vinyl, laid to level.', href: '/services/flooring', img: 'photo-1787390629829-abb32b3025c5' },
-  { label: 'False Ceiling', tag: 'Gypsum · POP', desc: 'Gypsum, POP and wooden ceilings with concealed lighting.', href: '/services/false-ceiling', img: 'photo-1598928506311-c55ded91a20c' },
-  { label: 'Carpentry & Wardrobes', tag: 'Custom', desc: 'Wardrobes, TV units and storage built to measure.', href: '/services/carpentry', img: 'photo-1753185234794-e3b41b94a352' },
-  { label: 'Electrical', tag: 'Wiring · Panels', desc: 'Rewiring, panels, fixtures and safe upgrades.', href: '/services/electrical', img: 'photo-1621905252507-b35492cc74b4' },
-]
+  { label: 'Full Home Renovation', tag: 'Turnkey', desc: 'End-to-end planning, design and execution under one roof.', href: '/services/full-home-renovation' },
+  { label: 'Kitchen', tag: 'Modular · Civil', desc: 'Modular kitchens, cabinetry and the civil work behind them.', href: '/services/kitchen-renovation' },
+  { label: 'Bathroom', tag: 'Wet area', desc: 'Tiles, fittings and waterproofing done in the right order.', href: '/services/bathroom-renovation' },
+  { label: 'Painting', tag: 'Interior · Exterior', desc: 'Prep, primer and premium finishes, room by room.', href: '/services/painting' },
+  { label: 'Flooring', tag: 'Tile · Marble · Wood', desc: 'Vitrified, marble, hardwood and vinyl, laid to level.', href: '/services/flooring' },
+  { label: 'False Ceiling', tag: 'Gypsum · POP', desc: 'Gypsum, POP and wooden ceilings with concealed lighting.', href: '/services/false-ceiling' },
+  { label: 'Carpentry & Wardrobes', tag: 'Custom', desc: 'Wardrobes, TV units and storage built to measure.', href: '/services/carpentry' },
+  { label: 'Electrical', tag: 'Wiring · Panels', desc: 'Rewiring, panels, fixtures and safe upgrades.', href: '/services/electrical' },
+].map((s) => ({ ...s, img: SERVICES_DATA[s.href.replace('/services/', '')]?.hero.image ?? '' }))
 
 /** "Schedule of works": an index of trades; hovering a row previews it. */
 export function ServicesIndex() {
@@ -102,7 +108,7 @@ export function ServicesIndex() {
                     transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`https://images.unsplash.com/${a.img}?w=900&q=80`} alt={a.label} className="h-full w-full object-cover" />
+                    <img src={a.img} alt={a.label} className="h-full w-full object-cover" />
                   </motion.div>
                 </AnimatePresence>
                 <span className="absolute left-3 top-3 bg-cobalt-400 px-2 py-1 font-mono text-[0.6875rem] font-semibold uppercase tracking-wider text-ink-900">
