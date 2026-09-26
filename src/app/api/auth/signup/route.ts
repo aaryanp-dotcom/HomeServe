@@ -4,12 +4,18 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { sendRawEmail } from '@/lib/notifications'
 import { baseEmailLayout } from '@/lib/notifications/email-layout'
 
-// POST /api/auth/signup — creates the homeowner account and emails the confirmation link
-// ourselves via Resend, instead of Supabase's own (rate-limited, unbranded) mailer.
+// POST /api/auth/signup — creates the homeowner account and emails a 6-digit confirmation
+// code ourselves via Resend, instead of Supabase's own (rate-limited, unbranded) mailer.
 //
 // Uses the admin API's generateLink(type: 'signup'), which creates the user exactly like
 // supabase.auth.signUp() but — unlike signUp() — does not send an email itself; it just
-// returns the confirmation link for us to deliver.
+// returns a link AND a plain numeric `email_otp` for us to deliver however we choose. We
+// send the code (not the link): the client then confirms with supabase.auth.verifyOtp(),
+// which signs the user in directly with no redirect/callback route involved at all — link-
+// based confirmation depends on the email client not mangling the URL and on Supabase's
+// generated link matching this app's configured auth flow (PKCE vs implicit), neither of
+// which we could fully verify without a real end-to-end click-through; a 6-digit code typed
+// into our own page sidesteps both.
 //
 // This route is ONLY for the initial account-creation submit, never for "resend" (see
 // api/auth/signup/resend): generateLink(type:'signup') against an email that already has
@@ -46,7 +52,7 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     // Only a genuinely already-confirmed account reaches here as an error — generateLink
-    // regenerates the link (instead of erroring) for an existing-but-unconfirmed one, which
+    // regenerates the code (instead of erroring) for an existing-but-unconfirmed one, which
     // is fine: this route only ever runs for a fresh form submit, so re-applying the same
     // password the visitor just typed is a no-op, not a mutation of someone else's account.
     const isExisting = /already|registered|exists/i.test(error.message)
@@ -56,18 +62,19 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const link = data.properties?.action_link
-  if (!link) {
-    console.error('[auth/signup] generateLink returned no action_link')
+  const code = data.properties?.email_otp
+  if (!code) {
+    console.error('[auth/signup] generateLink returned no email_otp')
     return NextResponse.json({ error: 'Sign up failed. Please try again.' }, { status: 500 })
   }
 
-  await sendRawEmail(email, 'Confirm your HomeServe account', baseEmailLayout(`
+  await sendRawEmail(email, `${code} is your HomeServe confirmation code`, baseEmailLayout(`
     <h2 style="color:#111827;margin:0 0 16px;">Confirm your email to get started 👋</h2>
     <p style="color:#374151;margin:0 0 8px;">Hi <strong>${fullName}</strong>,</p>
-    <p style="color:#374151;margin:0 0 20px;">Click below to confirm your email and activate your HomeServe account.</p>
-    <a href="${link}" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">Confirm my email</a>
-    <p style="color:#9ca3af;font-size:12px;margin:20px 0 0;">If you didn't create a HomeServe account, you can safely ignore this email.</p>
+    <p style="color:#374151;margin:0 0 20px;">Enter this code to confirm your email and activate your HomeServe account:</p>
+    <p style="font-size:32px;font-weight:700;letter-spacing:8px;color:#111827;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px 0;text-align:center;margin:0 0 20px;">${code}</p>
+    <p style="color:#6b7280;font-size:13px;margin:0 0 20px;">This code expires shortly — if it's stopped working, request a new one from the sign-up page.</p>
+    <p style="color:#9ca3af;font-size:12px;margin:0;">If you didn't create a HomeServe account, you can safely ignore this email.</p>
   `, 'Confirm your account'))
 
   return NextResponse.json({ success: true })

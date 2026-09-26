@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createBrowserClient } from '@supabase/ssr'
 import { Eye, EyeOff, MailCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +17,7 @@ import { PrivacyNotice } from '@/components/privacy/PrivacyNotice'
  * sent from the browser.
  */
 export default function SignupPage() {
+  const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -23,8 +26,12 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sentTo, setSentTo] = useState<string | null>(null)
+  const [code, setCode] = useState('')
+  const [verifying, setVerifying] = useState(false)
   const [resent, setResent] = useState(false)
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
+
+  const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
   const strength = password.length === 0 ? 0 : password.length < 8 ? 1 : password.length < 12 ? 2 : 3
   const strengthLabel = ['', 'Too short', 'Good', 'Strong'][strength]
@@ -49,7 +56,7 @@ export default function SignupPage() {
         setError(body.error ?? 'Sign up failed. Please try again.')
         return
       }
-      // Account is created but unconfirmed — always show the "check your email" step next.
+      // Account is created but unconfirmed — always show the code-entry step next.
       setSentTo(email.trim())
     } catch {
       setError('Sign up failed. Please check your connection and try again.')
@@ -58,26 +65,52 @@ export default function SignupPage() {
     }
   }
 
+  async function verifyCode(e: React.FormEvent) {
+    e.preventDefault()
+    if (!sentTo) return
+    setError(null)
+    setVerifying(true)
+    try {
+      // 'email' covers a code from either the initial signup or a resend (both are plain
+      // email OTPs once generated) — the client doesn't need to track which produced it.
+      const { data, error: otpError } = await supabase.auth.verifyOtp({ email: sentTo, token: code.trim(), type: 'email' })
+      if (otpError) { setError(/expired/i.test(otpError.message) ? 'That code has expired. Request a new one below.' : 'Incorrect code. Please check and try again.'); return }
+      if (data.session) { router.push('/homeowner/dashboard'); router.refresh() }
+    } catch {
+      setError('Could not verify that code. Please check your connection and try again.')
+    } finally {
+      setVerifying(false)
+    }
+  }
+
   async function resend() {
     if (!sentTo) return
+    setError(null)
     const res = await fetch('/api/auth/signup/resend', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: sentTo }),
     })
-    if (res.ok) setResent(true)
+    if (res.ok) { setResent(true); setCode('') }
   }
 
   if (sentTo) {
     return (
-      <AuthShell eyebrow="One more step" title="Check your email."
-        subtitle={<>We sent a confirmation link to <strong className="text-ink-900">{sentTo}</strong>. Open it on this device to finish creating your account.</>}
-        footer={<>Wrong address? <button type="button" onClick={() => setSentTo(null)} className="font-semibold text-cobalt-600 underline-offset-4 hover:underline">Go back</button> · Already confirmed? <Link href="/login" className="font-semibold text-cobalt-600 underline-offset-4 hover:underline">Sign in</Link></>}>
-        <div className="space-y-4">
+      <AuthShell eyebrow="One more step" title="Enter your code."
+        subtitle={<>We sent a 6-digit code to <strong className="text-ink-900">{sentTo}</strong>.</>}
+        footer={<>Wrong address? <button type="button" onClick={() => { setSentTo(null); setCode(''); setError(null) }} className="font-semibold text-cobalt-600 underline-offset-4 hover:underline">Go back</button> · Already confirmed? <Link href="/login" className="font-semibold text-cobalt-600 underline-offset-4 hover:underline">Sign in</Link></>}>
+        <form onSubmit={verifyCode} className="space-y-4">
+          {error && <AuthAlert>{error}</AuthAlert>}
           <div className="flex h-14 w-14 items-center justify-center bg-ink-900 text-white"><MailCheck size={26} /></div>
-          <p className="text-sm text-stone-600">It can take a minute to arrive. Check your spam folder if you do not see it.</p>
-          {resent ? <AuthAlert tone="success">A new email is on its way.</AuthAlert> : <Button variant="secondary" onClick={resend}>Resend the email</Button>}
-        </div>
+          <Input
+            label="Confirmation code" name="code" inputMode="numeric" autoComplete="one-time-code" maxLength={6}
+            value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} placeholder="123456" required
+            className="text-center text-2xl font-mono tracking-[0.5em]"
+            hint="It can take a minute to arrive. Check your spam folder if you don't see it."
+          />
+          <Button type="submit" size="lg" fullWidth loading={verifying} disabled={code.length !== 6}>Verify &amp; continue</Button>
+          {resent ? <AuthAlert tone="success">A new code is on its way.</AuthAlert> : <Button type="button" variant="secondary" fullWidth onClick={resend}>Resend the code</Button>}
+        </form>
       </AuthShell>
     )
   }

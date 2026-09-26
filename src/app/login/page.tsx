@@ -21,6 +21,8 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(params.get('error') ? 'That sign-in link did not work. Please sign in again.' : null)
   const [unconfirmed, setUnconfirmed] = useState(false)
   const [resent, setResent] = useState(false)
+  const [code, setCode] = useState('')
+  const [verifying, setVerifying] = useState(false)
 
   const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
@@ -30,7 +32,7 @@ function LoginForm() {
     try {
       const { data, error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
       if (authError) {
-        if (/confirm/i.test(authError.message)) { setUnconfirmed(true); setError('Please confirm your email first. We sent you a link when you signed up.'); return }
+        if (/confirm/i.test(authError.message)) { setUnconfirmed(true); setError('Please confirm your email first. We sent you a code when you signed up.'); return }
         setError(/invalid login/i.test(authError.message) ? 'That email and password do not match.' : authError.message)
         return
       }
@@ -48,13 +50,32 @@ function LoginForm() {
 
   async function resend() {
     // Same password-free resend endpoint the signup page uses, delivered via Resend
-    // rather than Supabase's own mailer.
+    // rather than Supabase's own mailer, as a 6-digit code entered inline below.
     const res = await fetch('/api/auth/signup/resend', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email.trim() }),
     })
     if (res.ok) setResent(true)
+  }
+
+  async function verifyCode(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    setVerifying(true)
+    try {
+      const { data, error: otpError } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: 'email' })
+      if (otpError) { setError(/expired/i.test(otpError.message) ? 'That code has expired. Request a new one.' : 'Incorrect code. Please check and try again.'); return }
+      if (data.user) {
+        const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', data.user.id).single()
+        router.push(safeNext(params.get('redirect'), profile?.role ?? 'homeowner'))
+        router.refresh()
+      }
+    } catch {
+      setError('Could not verify that code. Please check your connection and try again.')
+    } finally {
+      setVerifying(false)
+    }
   }
 
   return (
@@ -65,7 +86,7 @@ function LoginForm() {
       footer={<>New to HomeServe? <Link href="/signup" className="font-semibold text-cobalt-600 underline-offset-4 hover:underline">Create an account</Link></>}
     >
       <form onSubmit={handleLogin} className="space-y-5" noValidate>
-        {error && <AuthAlert>{error}{unconfirmed && !resent && email && <> <button type="button" onClick={resend} className="font-semibold underline underline-offset-2">Resend the email</button></>}{resent && ' A new email is on its way.'}</AuthAlert>}
+        {error && <AuthAlert>{error}{unconfirmed && !resent && email && <> <button type="button" onClick={resend} className="font-semibold underline underline-offset-2">Resend the code</button></>}</AuthAlert>}
         <Input label="Email" type="email" name="email" autoComplete="username" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck={false}
           value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@example.com" />
         <div>
@@ -81,6 +102,19 @@ function LoginForm() {
         </div>
         <Button type="submit" size="lg" fullWidth loading={loading}>Sign in</Button>
       </form>
+
+      {resent && (
+        <form onSubmit={verifyCode} className="mt-5 space-y-3 border-t border-ink-900/10 pt-5">
+          <p className="text-sm text-stone-600">We sent a 6-digit code to <strong className="text-ink-900">{email}</strong>.</p>
+          <Input
+            label="Confirmation code" name="code" inputMode="numeric" autoComplete="one-time-code" maxLength={6}
+            value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} placeholder="123456" required
+            className="text-center text-2xl font-mono tracking-[0.5em]"
+          />
+          <Button type="submit" size="lg" fullWidth loading={verifying} disabled={code.length !== 6}>Verify &amp; sign in</Button>
+        </form>
+      )}
+
       <div className="mt-6 space-y-6">
         <AuthDivider />
         <GoogleSignInButton next={params.get('redirect')} />
