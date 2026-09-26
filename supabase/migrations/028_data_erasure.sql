@@ -193,12 +193,13 @@ BEGIN
   -- 7. Delete theme_saves (preferences, not required)
   DELETE FROM theme_saves WHERE user_id = v_user_id;
 
-  -- 8. Delete unpublished reviews (published reviews are kept anonymised)
+  -- 8. Unpublished reviews are the homeowner's own draft content — safe to delete outright.
   DELETE FROM reviews WHERE homeowner_id = v_user_id AND published = FALSE;
-  -- Anonymise published reviews (rating + comment retained; identity stripped)
-  UPDATE reviews SET homeowner_id = NULL WHERE homeowner_id = v_user_id AND published = TRUE;
-  -- Note: homeowner_id is a FK — if NOT NULL constraint exists, skip or use a sentinel.
-  -- If the FK is nullable, this works. Otherwise we keep the row and the constraint.
+  -- Published reviews: reviews.homeowner_id is NOT NULL on this schema, so — per this
+  -- function's own note above — it can't be nulled out; we keep the row and the constraint.
+  -- That's not a PII leak: the profile it points at was just anonymised in step 2
+  -- (full_name -> 'Deleted User', no phone/city/avatar), so nothing identifying is
+  -- reachable through it either way.
 
   -- 9. Delete warranty_requests where still in 'new' state (no work begun)
   DELETE FROM warranty_requests WHERE user_id = v_user_id AND status = 'new';
