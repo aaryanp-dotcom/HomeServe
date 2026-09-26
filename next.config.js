@@ -30,10 +30,18 @@ const nextConfig = {
   },
 
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: '*.supabase.co' },
-      { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
-    ],
+    // Security: the installed Next.js (14.2.35) has a known unauthenticated RCE in its
+    // Image Optimization API when AVIF files are processed (GHSA-2xp9-vwfh-vxw4, fixed in
+    // 15.5.24+). The app never imports next/image (every image is a plain <img> — grepped
+    // the whole codebase to confirm), but that doesn't remove the exposure: Next.js serves
+    // the /_next/image optimization route automatically whenever remotePatterns is
+    // non-empty, whether or not any page actually uses <Image>. remotePatterns included
+    // *.supabase.co — the same storage buckets homeowners/admins upload photos to — so an
+    // attacker could reach real RCE-vulnerable image processing by requesting
+    // /_next/image?url=<a supabase-hosted file they uploaded>. Since the endpoint has no
+    // legitimate caller in this app, disabling it entirely removes that surface with zero
+    // functional impact. Re-enable (and upgrade Next.js first) if next/image is ever adopted.
+    unoptimized: true,
   },
 
   // FIND-02: HTTP security headers applied to every response.
