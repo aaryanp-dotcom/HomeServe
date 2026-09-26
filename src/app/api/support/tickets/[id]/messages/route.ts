@@ -5,7 +5,8 @@ import { replyMessageSchema } from '@/lib/support/schemas'
 
 /** POST — a signed-in homeowner adding a follow-up message to their own ticket. Reopens it if it had
  *  been marked resolved/closed, since a new message means it isn't actually done. */
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -14,7 +15,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
   if (!parsed.success) return NextResponse.json({ error: 'Validation failed', issues: parsed.error.issues }, { status: 400 })
 
   const admin = createAdminClient()
-  const { data: ticket } = await admin.from('support_tickets').select('id, status').eq('id', params.id).eq('user_id', user.id).maybeSingle()
+  const { data: ticket } = await admin.from('support_tickets').select('id, status').eq('id', id).eq('user_id', user.id).maybeSingle()
   if (!ticket) return NextResponse.json({ error: 'Ticket not found' }, { status: 404 })
 
   const { error } = await admin.from('support_ticket_messages').insert({ ticket_id: ticket.id, sender_role: 'customer', body: parsed.data.body })

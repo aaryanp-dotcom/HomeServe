@@ -16,7 +16,8 @@ const schema = z.object({
  * (UPI to the office, cash, cheque). It goes through the same settlement function as an online
  * payment, so the request, the ledger and the customer's history all agree.
  */
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const a = await requireAdmin()
   if (!a.ok) return a.res
   const { admin, user } = a
@@ -25,7 +26,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid payment' }, { status: 400 })
 
   const { data: r } = await admin.from('maintenance_requests')
-    .select('id, user_id, request_number, status, amount_due, payment_status').eq('id', params.id).maybeSingle()
+    .select('id, user_id, request_number, status, amount_due, payment_status').eq('id', id).maybeSingle()
   if (!r) return NextResponse.json({ error: 'Request not found' }, { status: 404 })
   if (r.status === 'cancelled') return NextResponse.json({ error: 'A cancelled request has nothing to pay.' }, { status: 409 })
   if (r.payment_status !== 'pending' || Number(r.amount_due) <= 0) return NextResponse.json({ error: 'Nothing is due on this request.' }, { status: 409 })

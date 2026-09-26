@@ -19,7 +19,8 @@ const TABS: { key: string; label: string; statuses: RequestStatus[] }[] = [
   { key: 'cancelled', label: 'Cancelled', statuses: ['cancelled'] },
 ]
 
-export default async function AdminMaintenancePage({ searchParams }: { searchParams: { tab?: string; q?: string } }) {
+export default async function AdminMaintenancePage({ searchParams }: { searchParams: Promise<{ tab?: string; q?: string }> }) {
+  const sp = await searchParams
   const { supabase } = await adminPage('/admin/maintenance')
 
   const [{ data: all }, { data: expiring }] = await Promise.all([
@@ -29,7 +30,7 @@ export default async function AdminMaintenancePage({ searchParams }: { searchPar
   const requests = (all ?? []) as MaintenanceRequest[]
   // Land on the first queue that has something in it (New → Scheduled → Active), unless one was chosen.
   const firstWithWork = TABS.find((t) => requests.some((r) => t.statuses.includes(r.status as RequestStatus))) ?? TABS[0]
-  const tab = TABS.find((t) => t.key === searchParams.tab) ?? (requests.some((r) => TABS[0].statuses.includes(r.status as RequestStatus)) ? TABS[0] : firstWithWork)
+  const tab = TABS.find((t) => t.key === sp.tab) ?? (requests.some((r) => TABS[0].statuses.includes(r.status as RequestStatus)) ? TABS[0] : firstWithWork)
   const count = (t: (typeof TABS)[number]) => requests.filter((r) => t.statuses.includes(r.status as RequestStatus)).length
   const rows = requests.filter((r) => tab.statuses.includes(r.status as RequestStatus))
 
@@ -42,7 +43,7 @@ export default async function AdminMaintenancePage({ searchParams }: { searchPar
   ])
   const who = new Map((profiles ?? []).map((p) => [p.user_id, p]))
   const svc = new Map((svcs ?? []).map((s) => [s.id, s.name as string]))
-  const q = (searchParams.q ?? '').trim().toLowerCase()
+  const q = (sp.q ?? '').trim().toLowerCase()
   const shown = q ? rows.filter((r) => `${r.request_number} ${who.get(r.user_id)?.full_name ?? ''} ${r.address_snapshot}`.toLowerCase().includes(q)) : rows
 
   return (
@@ -69,7 +70,7 @@ export default async function AdminMaintenancePage({ searchParams }: { searchPar
           ))}
         </div>
         <form className="pb-2"><input type="hidden" name="tab" value={tab.key} />
-          <input name="q" defaultValue={searchParams.q} placeholder="Search number, customer, address" aria-label="Search requests" className="field w-64" />
+          <input name="q" defaultValue={sp.q} placeholder="Search number, customer, address" aria-label="Search requests" className="field w-64" />
         </form>
       </div>
 

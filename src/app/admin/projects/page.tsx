@@ -22,7 +22,7 @@ const STATUS_CFG: Record<string, { label: string; variant: 'success' | 'warning'
 const ACTIVE_STATUSES = ['payment_pending', 'confirmed', 'assigned', 'in_progress', 'milestone_1_done', 'milestone_2_done']
 
 export default async function AdminProjectsPage() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

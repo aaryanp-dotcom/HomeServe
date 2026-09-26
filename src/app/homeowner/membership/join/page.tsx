@@ -13,13 +13,14 @@ import type { Property } from '@/lib/maintenance/types'
 
 export const metadata: Metadata = { title: 'Start a Membership' }
 
-export default async function JoinPage({ searchParams }: { searchParams: { plan?: string } }) {
+export default async function JoinPage({ searchParams }: { searchParams: Promise<{ plan?: string }> }) {
+  const sp = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect(`/login?redirect=${encodeURIComponent(`/homeowner/membership/join?plan=${searchParams.plan ?? ''}`)}`)
+  if (!user) redirect(`/login?redirect=${encodeURIComponent(`/homeowner/membership/join?plan=${sp.plan ?? ''}`)}`)
 
   const plans = await getActivePlans()
-  const plan = plans.find((p) => p.code === searchParams.plan)
+  const plan = plans.find((p) => p.code === sp.plan)
 
   const [{ data: props }, { data: live }, { data: projects }] = await Promise.all([
     supabase.from('customer_properties').select('*').order('created_at'),

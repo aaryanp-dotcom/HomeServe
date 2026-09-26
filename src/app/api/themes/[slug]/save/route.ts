@@ -12,31 +12,33 @@ async function parseDeviceId(req: Request): Promise<string | null> {
 
 /** POST saves a theme, DELETE unsaves it — both for the browser's own device id (see lib/themes/device.ts).
  *  No login: this is the public design-inspiration gallery, so a "save" is anonymous and per-browser. */
-export async function POST(req: Request, { params }: { params: { slug: string } }) {
-  if (!getThemeBySlug(params.slug)) return NextResponse.json({ error: 'Unknown theme' }, { status: 404 })
+export async function POST(req: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  if (!getThemeBySlug(slug)) return NextResponse.json({ error: 'Unknown theme' }, { status: 404 })
   const deviceId = await parseDeviceId(req)
   if (!deviceId) return NextResponse.json({ error: 'Invalid device id' }, { status: 400 })
 
   const admin = createAdminClient()
   const { error } = await admin.from('theme_saves').upsert(
-    { theme_slug: params.slug, device_id: deviceId },
+    { theme_slug: slug, device_id: deviceId },
     { onConflict: 'theme_slug,device_id', ignoreDuplicates: true },
   )
   if (error) return NextResponse.json({ error: 'Could not save' }, { status: 500 })
 
-  const { data: count } = await admin.rpc('theme_save_count', { p_slug: params.slug })
+  const { data: count } = await admin.rpc('theme_save_count', { p_slug: slug })
   return NextResponse.json({ saved: true, count: Number(count ?? 0) })
 }
 
-export async function DELETE(req: Request, { params }: { params: { slug: string } }) {
-  if (!getThemeBySlug(params.slug)) return NextResponse.json({ error: 'Unknown theme' }, { status: 404 })
+export async function DELETE(req: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  if (!getThemeBySlug(slug)) return NextResponse.json({ error: 'Unknown theme' }, { status: 404 })
   const deviceId = await parseDeviceId(req)
   if (!deviceId) return NextResponse.json({ error: 'Invalid device id' }, { status: 400 })
 
   const admin = createAdminClient()
-  const { error } = await admin.from('theme_saves').delete().eq('theme_slug', params.slug).eq('device_id', deviceId)
+  const { error } = await admin.from('theme_saves').delete().eq('theme_slug', slug).eq('device_id', deviceId)
   if (error) return NextResponse.json({ error: 'Could not unsave' }, { status: 500 })
 
-  const { data: count } = await admin.rpc('theme_save_count', { p_slug: params.slug })
+  const { data: count } = await admin.rpc('theme_save_count', { p_slug: slug })
   return NextResponse.json({ saved: false, count: Number(count ?? 0) })
 }

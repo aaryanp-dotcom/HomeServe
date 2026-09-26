@@ -7,7 +7,8 @@ import { createMaintenanceOrder, PaymentsNotConfigured } from '@/lib/maintenance
  * Creates a Razorpay order for the request's outstanding amount. The amount is read from
  * the database (never from the client). Allowed once the work is marked complete.
  */
-export async function POST(_req: Request, { params }: { params: { id: string } }) {
+export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const a = await requireUser()
   if (!a.ok) return a.res
   const { admin, user } = a
@@ -15,7 +16,7 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
   const { data: r } = await admin
     .from('maintenance_requests')
     .select('id, request_number, status, amount_due, payment_status, user_id')
-    .eq('id', params.id).eq('user_id', user.id).maybeSingle()
+    .eq('id', id).eq('user_id', user.id).maybeSingle()
   if (!r) return NextResponse.json({ error: 'Request not found' }, { status: 404 })
   if (!['completed', 'customer_confirmed', 'closed'].includes(r.status)) {
     return NextResponse.json({ error: 'Payment opens once the work is marked complete.' }, { status: 409 })

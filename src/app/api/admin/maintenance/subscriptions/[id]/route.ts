@@ -9,7 +9,8 @@ const schema = z.discriminatedUnion('action', [
 ])
 
 /** POST /api/admin/maintenance/subscriptions/:id — record an included inspection, or cancel a membership. */
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const a = await requireAdmin()
   if (!a.ok) return a.res
   const { admin, user } = a
@@ -18,7 +19,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   if (!parsed.success) return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   const act = parsed.data
 
-  const { data: sub } = await admin.from('maintenance_subscriptions').select('id, status, plan_snapshot').eq('id', params.id).maybeSingle()
+  const { data: sub } = await admin.from('maintenance_subscriptions').select('id, status, plan_snapshot').eq('id', id).maybeSingle()
   if (!sub) return NextResponse.json({ error: 'Membership not found' }, { status: 404 })
 
   if (act.action === 'record_inspection') {

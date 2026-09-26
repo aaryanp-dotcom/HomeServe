@@ -9,7 +9,7 @@ import AdminServicesManager from '@/components/admin/ServicesManager'
 export const metadata: Metadata = { title: 'Services — Admin' }
 
 export default async function AdminServicesPage() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

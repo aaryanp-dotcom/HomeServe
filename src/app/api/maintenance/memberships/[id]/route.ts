@@ -12,7 +12,8 @@ import { MEMBERSHIP_BILLING } from '@/lib/maintenance/config'
  * A membership still in checkout is simply abandoned. Refunds are a business decision and
  * are not automated here. Renewal is a fresh one-time payment for a new term (no auto-debit).
  */
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const a = await requireUser()
   if (!a.ok) return a.res
   const { admin, user } = a
@@ -22,7 +23,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const act = parsed.data
 
   const { data: sub } = await admin.from('maintenance_subscriptions').select('*')
-    .eq('id', params.id).eq('user_id', user.id).maybeSingle()
+    .eq('id', id).eq('user_id', user.id).maybeSingle()
   if (!sub) return NextResponse.json({ error: 'Membership not found' }, { status: 404 })
 
   if (act.action === 'cancel') {

@@ -41,7 +41,7 @@ interface Props { params: Promise<{ id: string }> }
 export default async function AdminProjectDetailPage({ params }: Props) {
   const { id } = await params
 
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

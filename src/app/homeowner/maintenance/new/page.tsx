@@ -19,7 +19,8 @@ const asNcrCity = (c?: string | null) => {
   return CITY_ALIAS[k] ?? NCR_CITY_LIST.find((n) => n.toLowerCase() === k) ?? null
 }
 
-export default async function NewMaintenanceRequestPage({ searchParams }: { searchParams: Record<string, string | undefined> }) {
+export default async function NewMaintenanceRequestPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const sp = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?redirect=/homeowner/maintenance/new')
@@ -46,8 +47,8 @@ export default async function NewMaintenanceRequestPage({ searchParams }: { sear
     return city && b.address ? [{ label: b.project_title ?? b.booking_number, address_line: b.address, city, booking_id: b.id }] : []
   })
 
-  const initial = formServices.find((s) => s.slug === searchParams.service)
-    ?? formServices.find((s) => s.category === searchParams.category)
+  const initial = formServices.find((s) => s.slug === sp.service)
+    ?? formServices.find((s) => s.category === sp.category)
 
   return (
     <div className="mx-auto max-w-3xl p-5 sm:p-8">
@@ -56,7 +57,7 @@ export default async function NewMaintenanceRequestPage({ searchParams }: { sear
       <p className="mb-8 mt-1 text-sm text-stone-500">Booked directly with HomeServe. We confirm first — you only pay once the work is done.</p>
       {formServices.length === 0
         ? <p className="border border-ink-900/15 bg-white p-6 text-stone-600">Maintenance services are not available to book yet.</p>
-        : <RequestForm services={formServices} initialServiceId={initial?.id} properties={(props ?? []) as Property[]} members={members} suggestions={suggestions} projectId={(projects ?? []).some((b) => b.id === searchParams.project) ? searchParams.project : undefined} />}
+        : <RequestForm services={formServices} initialServiceId={initial?.id} properties={(props ?? []) as Property[]} members={members} suggestions={suggestions} projectId={(projects ?? []).some((b) => b.id === sp.project) ? sp.project : undefined} />}
     </div>
   )
 }

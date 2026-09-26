@@ -3,14 +3,15 @@ import { notFound } from 'next/navigation'
 import ThemeDetailClient from '@/components/themes/ThemeDetailClient'
 import { THEMES, getThemeBySlug } from '@/lib/themes/data'
 
-interface Props { params: { slug: string } }
+interface Props { params: Promise<{ slug: string }> }
 
 export function generateStaticParams() {
   return THEMES.map((t) => ({ slug: t.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const theme = getThemeBySlug(params.slug)
+  const { slug } = await params
+  const theme = getThemeBySlug(slug)
   if (!theme) return { title: 'Theme not found' }
   return {
     title: `${theme.name} interior design — ideas, colours & budget`,
@@ -20,7 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function ThemeDetailPage({ params }: Props) {
-  if (!getThemeBySlug(params.slug)) notFound()
-  return <ThemeDetailClient slug={params.slug} />
+export default async function ThemeDetailPage({ params }: Props) {
+  const { slug } = await params
+  if (!getThemeBySlug(slug)) notFound()
+  return <ThemeDetailClient slug={slug} />
 }

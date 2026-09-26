@@ -20,13 +20,14 @@ function looksLikeImage(buf: Buffer, type: string) {
  * Customers attach photos of the problem to their own request. Admin may add
  * before / after / completion photos to any request.
  */
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const a = await requireUser()
   if (!a.ok) return a.res
   const { admin, user, role } = a
   const isAdmin = role === 'admin'
 
-  const { data: r } = await admin.from('maintenance_requests').select('id, user_id, status').eq('id', params.id).maybeSingle()
+  const { data: r } = await admin.from('maintenance_requests').select('id, user_id, status').eq('id', id).maybeSingle()
   if (!r || (!isAdmin && r.user_id !== user.id)) return NextResponse.json({ error: 'Request not found' }, { status: 404 })
   if (!isAdmin && ['closed', 'cancelled'].includes(r.status)) {
     return NextResponse.json({ error: 'This request is closed' }, { status: 409 })

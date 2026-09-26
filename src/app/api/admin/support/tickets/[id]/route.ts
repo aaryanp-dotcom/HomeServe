@@ -4,7 +4,8 @@ import { adminTicketActionSchema } from '@/lib/support/schemas'
 import { notifyCustomerOfReply } from '@/lib/support/notify'
 import type { SupportTicket } from '@/lib/support/types'
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const auth = await requireAdminApi()
   if (!auth.ok) return auth.response
   const { admin } = auth
@@ -12,7 +13,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
   const parsed = adminTicketActionSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) return NextResponse.json({ error: 'Validation failed', issues: parsed.error.issues }, { status: 400 })
 
-  const { data: ticket } = await admin.from('support_tickets').select('*').eq('id', params.id).maybeSingle()
+  const { data: ticket } = await admin.from('support_tickets').select('*').eq('id', id).maybeSingle()
   if (!ticket) return NextResponse.json({ error: 'Ticket not found' }, { status: 404 })
   const act = parsed.data
 

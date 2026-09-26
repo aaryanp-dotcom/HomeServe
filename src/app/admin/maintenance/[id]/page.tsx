@@ -13,10 +13,11 @@ import type { MaintenanceRequest, RequestEvent, Visit } from '@/lib/maintenance/
 
 export const metadata: Metadata = { title: 'Maintenance Request — Admin' }
 
-export default async function AdminRequestPage({ params }: { params: { id: string } }) {
-  const { supabase } = await adminPage(`/admin/maintenance/${params.id}`)
+export default async function AdminRequestPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const { supabase } = await adminPage(`/admin/maintenance/${id}`)
 
-  const { data: row } = await supabase.from('maintenance_requests').select('*').eq('id', params.id).maybeSingle()
+  const { data: row } = await supabase.from('maintenance_requests').select('*').eq('id', id).maybeSingle()
   if (!row) notFound()
   const r = row as MaintenanceRequest
   const status = r.status as RequestStatus

@@ -19,9 +19,10 @@ const TABS = [
   { key: 'ended', label: 'Ended' },
 ]
 
-export default async function AdminMembershipsPage({ searchParams }: { searchParams: { tab?: string } }) {
+export default async function AdminMembershipsPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
+  const sp = await searchParams
   const { supabase } = await adminPage('/admin/maintenance/memberships')
-  const tab = searchParams.tab ?? 'active'
+  const tab = sp.tab ?? 'active'
 
   const { data } = await supabase.from('maintenance_subscriptions').select('*').order('end_date', { ascending: true }).limit(500)
   const all = (data ?? []) as Subscription[]

@@ -39,7 +39,7 @@ const BOOKING_STATUS: Record<string, { label: string; variant: 'success' | 'warn
 export default async function AdminCustomerDetailPage({ params }: Props) {
   const { userId } = await params
 
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

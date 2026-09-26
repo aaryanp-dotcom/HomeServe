@@ -10,15 +10,17 @@ import { indicativePrice } from '@/lib/maintenance/format'
 import { CATEGORY_META, INDICATIVE_PRICE_NOTE, WARRANTY_VS_MAINTENANCE } from '@/lib/maintenance/config'
 import { JsonLd, breadcrumbJsonLd, serviceJsonLd } from '@/lib/seo'
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const s = await getServiceBySlug(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const s = await getServiceBySlug(slug)
   return s
-    ? { title: `${s.name} in Delhi NCR`, description: s.summary, alternates: { canonical: `/maintenance/${params.slug}` }, openGraph: { title: `${s.name} — home maintenance in Delhi NCR`, description: s.summary, url: `/maintenance/${params.slug}` } }
+    ? { title: `${s.name} in Delhi NCR`, description: s.summary, alternates: { canonical: `/maintenance/${slug}` }, openGraph: { title: `${s.name} — home maintenance in Delhi NCR`, description: s.summary, url: `/maintenance/${slug}` } }
     : { title: 'Home maintenance' }
 }
 
-export default async function MaintenanceServicePage({ params }: { params: { slug: string } }) {
-  const [service, all, plans] = await Promise.all([getServiceBySlug(params.slug), getActiveServices(), getActivePlans()])
+export default async function MaintenanceServicePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const [service, all, plans] = await Promise.all([getServiceBySlug(slug), getActiveServices(), getActivePlans()])
   if (!service) notFound()
 
   const price = indicativePrice(service)

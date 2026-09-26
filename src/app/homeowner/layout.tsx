@@ -13,7 +13,7 @@ import { SheetStrip } from '@/components/arch/SheetStrip'
 import { dedupeFeed } from '@/lib/notifications/feed'
 
 async function getUser() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

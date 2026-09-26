@@ -3,7 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { propertySchema } from '@/lib/maintenance/schemas'
 
 /** PATCH /api/properties/:id — edit one of your homes. RLS limits this to the owner. */
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -18,7 +19,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (makeDefault) await supabase.from('customer_properties').update({ is_default: false }).eq('user_id', user.id)
   const { data, error } = await supabase
     .from('customer_properties').update({ ...v, ...(makeDefault ? { is_default: true } : {}) })
-    .eq('id', params.id).eq('user_id', user.id).select('*').maybeSingle()
+    .eq('id', id).eq('user_id', user.id).select('*').maybeSingle()
   if (error) return NextResponse.json({ error: 'Could not update the property' }, { status: 500 })
   if (!data) return NextResponse.json({ error: 'Property not found' }, { status: 404 })
   return NextResponse.json({ property: data })
@@ -28,22 +29,23 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
  * DELETE /api/properties/:id — remove a home. Homes that have service requests or a
  * membership are kept (the history depends on them) and the customer is told why.
  */
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data: own } = await supabase.from('customer_properties').select('id, is_default').eq('id', params.id).eq('user_id', user.id).maybeSingle()
+  const { data: own } = await supabase.from('customer_properties').select('id, is_default').eq('id', id).eq('user_id', user.id).maybeSingle()
   if (!own) return NextResponse.json({ error: 'Property not found' }, { status: 404 })
 
   const [{ count: reqs }, { count: subs }] = await Promise.all([
-    supabase.from('maintenance_requests').select('id', { count: 'exact', head: true }).eq('property_id', params.id),
-    supabase.from('maintenance_subscriptions').select('id', { count: 'exact', head: true }).eq('property_id', params.id),
+    supabase.from('maintenance_requests').select('id', { count: 'exact', head: true }).eq('property_id', id),
+    supabase.from('maintenance_subscriptions').select('id', { count: 'exact', head: true }).eq('property_id', id),
   ])
   if ((reqs ?? 0) > 0 || (subs ?? 0) > 0) {
     return NextResponse.json({ error: 'This home has service requests or a membership, so it is kept for your history. You can rename it instead.' }, { status: 409 })
   }
-  const { error } = await supabase.from('customer_properties').delete().eq('id', params.id).eq('user_id', user.id)
+  const { error } = await supabase.from('customer_properties').delete().eq('id', id).eq('user_id', user.id)
   if (error) return NextResponse.json({ error: 'Could not delete the property' }, { status: 500 })
 
   if (own.is_default) {

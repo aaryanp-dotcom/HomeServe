@@ -26,7 +26,8 @@ const KINDS: { key: Kind; label: string }[] = [
 ]
 const human = (s: string) => s.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())
 
-export default async function HistoryPage({ searchParams }: { searchParams: { type?: string } }) {
+export default async function HistoryPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
+  const sp = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?redirect=/homeowner/history')
@@ -71,7 +72,7 @@ export default async function HistoryPage({ searchParams }: { searchParams: { ty
   for (const p of mpays.data ?? []) if (p.status === 'captured' || p.status === 'refunded') items.push({ at: p.created_at, kind: 'payment', title: p.kind === 'membership' ? 'Membership payment' : 'Maintenance payment', detail: p.description ?? undefined, amount: Number(p.amount), badge: p.status === 'captured' ? 'Paid' : 'Refunded', href: p.kind === 'membership' ? '/homeowner/membership' : '/homeowner/maintenance' })
   for (const r of reviews.data ?? []) items.push({ at: r.created_at, kind: 'review', title: `You rated HomeServe ${r.rating}/5`, detail: r.subject_type === 'project' ? 'Renovation project' : 'Maintenance service', href: '/homeowner/reviews' })
 
-  const filter = KINDS.find((k) => k.key === searchParams.type)?.key
+  const filter = KINDS.find((k) => k.key === sp.type)?.key
   const shown = items.filter((i) => !filter || i.kind === filter).sort((a, b) => +new Date(b.at) - +new Date(a.at))
   const count = (k: Kind) => items.filter((i) => i.kind === k).length
 

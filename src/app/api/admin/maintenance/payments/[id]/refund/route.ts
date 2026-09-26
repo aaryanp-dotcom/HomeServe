@@ -11,12 +11,13 @@ import { rupees } from '@/lib/maintenance/format'
  *   offline  → the ledger is updated; returning the money is done by HomeServe outside the system
  * Refunding a membership cancels it; refunding a request charge re-opens the amount due.
  */
-export async function POST(_req: Request, { params }: { params: { id: string } }) {
+export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const a = await requireAdmin()
   if (!a.ok) return a.res
   const { admin, user } = a
 
-  const { data: p } = await admin.from('maintenance_payments').select('*').eq('id', params.id).maybeSingle()
+  const { data: p } = await admin.from('maintenance_payments').select('*').eq('id', id).maybeSingle()
   if (!p) return NextResponse.json({ error: 'Payment not found' }, { status: 404 })
   if (p.status !== 'captured') return NextResponse.json({ error: `Only a captured payment can be refunded (this one is ${p.status}).` }, { status: 409 })
 

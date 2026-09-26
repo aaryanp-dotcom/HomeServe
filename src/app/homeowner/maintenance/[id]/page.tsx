@@ -16,14 +16,16 @@ import type { MaintenanceRequest, RequestEvent, Visit } from '@/lib/maintenance/
 export const metadata: Metadata = { title: 'Service Request' }
 
 export default async function MaintenanceRequestPage({ params, searchParams }: {
-  params: { id: string }; searchParams: Record<string, string | undefined>
+  params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>>
 }) {
+  const { id } = await params
+  const sp = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect(`/login?redirect=/homeowner/maintenance/${params.id}`)
+  if (!user) redirect(`/login?redirect=/homeowner/maintenance/${id}`)
 
   // RLS returns the row only if it is this customer's.
-  const { data: reqRow } = await supabase.from('maintenance_requests').select('*').eq('id', params.id).maybeSingle()
+  const { data: reqRow } = await supabase.from('maintenance_requests').select('*').eq('id', id).maybeSingle()
   if (!reqRow) notFound()
   const r = reqRow as MaintenanceRequest
   const status = r.status as RequestStatus
@@ -58,11 +60,11 @@ export default async function MaintenanceRequestPage({ params, searchParams }: {
     <div className="mx-auto max-w-4xl space-y-8 p-5 sm:p-8">
       <Link href="/homeowner/maintenance" className="coarse:min-h-11 inline-flex items-center gap-1.5 text-sm text-stone-500 hover:text-ink-900"><ArrowLeft size={14} /> Home maintenance</Link>
 
-      {searchParams.created && (
+      {sp.created && (
         <div className="border-2 border-ink-900 bg-white p-4 text-sm">
           <p className="font-semibold text-ink-900">We have your request.</p>
           <p className="mt-1 text-stone-600">Our team will review it and confirm shortly. You can follow every step here.</p>
-          {searchParams.photos === 'failed' && <p className="mt-2 flex gap-2 text-amber-800"><AlertTriangle size={15} className="mt-0.5 shrink-0" />Your request was saved but the photos could not be uploaded. You can add them below.</p>}
+          {sp.photos === 'failed' && <p className="mt-2 flex gap-2 text-amber-800"><AlertTriangle size={15} className="mt-0.5 shrink-0" />Your request was saved but the photos could not be uploaded. You can add them below.</p>}
         </div>
       )}
 

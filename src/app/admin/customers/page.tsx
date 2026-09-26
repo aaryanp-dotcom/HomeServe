@@ -8,7 +8,7 @@ import { User, ArrowUpRight } from 'lucide-react'
 export const metadata: Metadata = { title: 'Customers — Admin' }
 
 export default async function AdminCustomersPage() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

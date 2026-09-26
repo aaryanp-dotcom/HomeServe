@@ -55,7 +55,7 @@ interface Props {
 export default async function AdminLeadsPage({ searchParams }: Props) {
   const { status } = await searchParams
 
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

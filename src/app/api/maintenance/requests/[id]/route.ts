@@ -10,7 +10,8 @@ import { CUSTOMER_CANCELLABLE } from '@/lib/maintenance/config'
  * Status changes are conditional updates (…WHERE status = <current>) so two racing clicks
  * cannot both succeed.
  */
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const a = await requireUser()
   if (!a.ok) return a.res
   const { admin, user } = a
@@ -20,7 +21,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const act = parsed.data
 
   const { data: r } = await admin
-    .from('maintenance_requests').select('id, status, user_id').eq('id', params.id).eq('user_id', user.id).maybeSingle()
+    .from('maintenance_requests').select('id, status, user_id').eq('id', id).eq('user_id', user.id).maybeSingle()
   if (!r) return NextResponse.json({ error: 'Request not found' }, { status: 404 })
 
   const now = new Date().toISOString()

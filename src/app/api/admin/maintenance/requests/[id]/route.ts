@@ -11,7 +11,8 @@ import { rupees, fmtDate } from '@/lib/maintenance/format'
  * charges (with the membership benefit engine), notes and customer messages.
  * The admin check is server-side; this route is safe even if the UI is bypassed.
  */
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const a = await requireAdmin()
   if (!a.ok) return a.res
   const { admin, user } = a
@@ -25,7 +26,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const { data: r } = await admin
     .from('maintenance_requests')
     .select('*, service:maintenance_services(name)')
-    .eq('id', params.id).maybeSingle()
+    .eq('id', id).maybeSingle()
   if (!r) return NextResponse.json({ error: 'Request not found' }, { status: 404 })
   const serviceName = (Array.isArray(r.service) ? r.service[0] : r.service)?.name ?? 'your service'
   const cur = r.status as RequestStatus
