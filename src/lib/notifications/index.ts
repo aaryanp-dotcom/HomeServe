@@ -182,7 +182,7 @@ export async function sendRawEmail(to: string | string[], subject: string, html:
     from: `${process.env.RESEND_FROM_NAME ?? 'HomeServe'} <${process.env.RESEND_FROM_EMAIL ?? 'noreply@homeserve.ai'}>`,
     to, subject, html,
   })
-  if (error) console.error('[notifications] sendRawEmail failed:', error.name ?? 'unknown')
+  if (error) console.error('[notifications] sendRawEmail failed:', error.name ?? 'unknown', '-', error.message ?? '')
 }
 
 async function sendSMS(to: string, message: string) {
