@@ -9,11 +9,11 @@ import { baseEmailLayout } from '@/lib/notifications/email-layout'
 // page shows after a sign-in fails because the account isn't confirmed yet.
 //
 // Uses the SAME generateLink(type: 'signup') as the initial signup route — deliberately not
-// 'magiclink'. HomeServe only ever verifies with verifyOtp({ type: 'signup' }); Supabase
-// tags each generated OTP with the type it was created under, and verifying checks that tag,
-// not just the code digits. Mixing types (generate as 'magiclink', verify as something else)
-// is what caused every resent code to fail with a generic "invalid/expired" error regardless
-// of freshness — see the signup page for the matching verifyOtp call.
+// 'magiclink', so an existing pending signup keeps behaving as a signup, not a separate
+// magic-link grant. This does NOT need to match the type passed to verifyOtp() on the client:
+// per Supabase's current docs, a 6-digit email OTP is always verified with type:'email',
+// whichever generateLink type produced it — 'signup'/'magiclink' are deprecated verifyOtp
+// types kept only for the old link-based flow.
 //
 // Deliberately omits `password`: the installed @supabase/auth-js types mark it required for
 // type:'signup', but generateLink() only forwards whatever fields it's given to Supabase's

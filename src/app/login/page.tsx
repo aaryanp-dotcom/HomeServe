@@ -57,9 +57,9 @@ function LoginForm() {
     setError(null)
     setResending(true)
     try {
-      // Same endpoint the signup page uses, generating a fresh type:'signup' OTP and
-      // delivering it via Resend — see api/auth/signup/resend for why 'signup', not
-      // 'magiclink': verifyCode below must use the same type it was generated with.
+      // Same endpoint the signup page uses — generates a fresh code via
+      // admin.generateLink(type:'signup') and delivers it via Resend. verifyCode below still
+      // verifies with type:'email' regardless (see its comment).
       const res = await fetch('/api/auth/signup/resend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -83,7 +83,9 @@ function LoginForm() {
     setError(null)
     setVerifying(true)
     try {
-      const { data, error: otpError } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: 'signup' })
+      // See signup/page.tsx: type:'email' is the current, correct verifyOtp type for a
+      // 6-digit code, whichever generateLink type produced it.
+      const { data, error: otpError } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: 'email' })
       if (otpError) { setError(otpVerifyErrorMessage(otpError.message)); return }
       if (data.user) {
         const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', data.user.id).single()

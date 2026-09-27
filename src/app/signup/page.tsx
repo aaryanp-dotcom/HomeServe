@@ -75,10 +75,11 @@ export default function SignupPage() {
     setError(null)
     setVerifying(true)
     try {
-      // Both the initial signup email and every resend are generated as type:'signup' (see
-      // api/auth/signup and api/auth/signup/resend) — verifying must use that same type,
-      // since Supabase checks the code against the type it was tagged with, not just its digits.
-      const { data, error: otpError } = await supabase.auth.verifyOtp({ email: sentTo, token: code.trim(), type: 'signup' })
+      // Per Supabase's current docs, a 6-digit email OTP is always verified with type:'email',
+      // regardless of whether it was generated as 'signup' or 'magiclink' — 'signup'/'magiclink'
+      // are deprecated verifyOtp types kept only for backwards compatibility with the old
+      // link-based flow.
+      const { data, error: otpError } = await supabase.auth.verifyOtp({ email: sentTo, token: code.trim(), type: 'email' })
       if (otpError) { setError(otpVerifyErrorMessage(otpError.message)); return }
       if (data.session) { router.push('/homeowner/dashboard'); router.refresh() }
     } catch {
