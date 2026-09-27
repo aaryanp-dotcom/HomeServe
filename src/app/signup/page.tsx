@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input'
 import { AuthShell, AuthAlert } from '@/components/auth/AuthShell'
 import { GoogleSignInButton, AuthDivider } from '@/components/auth/GoogleSignInButton'
 import { PrivacyNotice } from '@/components/privacy/PrivacyNotice'
+import { useResendCooldown } from '@/lib/auth/useResendCooldown'
+import { otpVerifyErrorMessage } from '@/lib/auth/otp-errors'
 
 /**
  * Public sign-up creates a homeowner account and nothing else. There is no role choice: HomeServe's
@@ -28,8 +30,9 @@ export default function SignupPage() {
   const [sentTo, setSentTo] = useState<string | null>(null)
   const [code, setCode] = useState('')
   const [verifying, setVerifying] = useState(false)
-  const [resent, setResent] = useState(false)
+  const [resending, setResending] = useState(false)
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
+  const { secondsLeft, canResend, start: startCooldown } = useResendCooldown()
 
   const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
@@ -58,6 +61,7 @@ export default function SignupPage() {
       }
       // Account is created but unconfirmed — always show the code-entry step next.
       setSentTo(email.trim())
+      startCooldown()
     } catch {
       setError('Sign up failed. Please check your connection and try again.')
     } finally {
@@ -67,14 +71,15 @@ export default function SignupPage() {
 
   async function verifyCode(e: React.FormEvent) {
     e.preventDefault()
-    if (!sentTo) return
+    if (!sentTo || verifying) return
     setError(null)
     setVerifying(true)
     try {
-      // 'email' covers a code from either the initial signup or a resend (both are plain
-      // email OTPs once generated) — the client doesn't need to track which produced it.
-      const { data, error: otpError } = await supabase.auth.verifyOtp({ email: sentTo, token: code.trim(), type: 'email' })
-      if (otpError) { setError(/expired/i.test(otpError.message) ? 'That code has expired. Request a new one below.' : 'Incorrect code. Please check and try again.'); return }
+      // Both the initial signup email and every resend are generated as type:'signup' (see
+      // api/auth/signup and api/auth/signup/resend) — verifying must use that same type,
+      // since Supabase checks the code against the type it was tagged with, not just its digits.
+      const { data, error: otpError } = await supabase.auth.verifyOtp({ email: sentTo, token: code.trim(), type: 'signup' })
+      if (otpError) { setError(otpVerifyErrorMessage(otpError.message)); return }
       if (data.session) { router.push('/homeowner/dashboard'); router.refresh() }
     } catch {
       setError('Could not verify that code. Please check your connection and try again.')
@@ -84,14 +89,24 @@ export default function SignupPage() {
   }
 
   async function resend() {
-    if (!sentTo) return
+    if (!sentTo || !canResend || resending) return
     setError(null)
-    const res = await fetch('/api/auth/signup/resend', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: sentTo }),
-    })
-    if (res.ok) { setResent(true); setCode('') }
+    setResending(true)
+    try {
+      const res = await fetch('/api/auth/signup/resend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: sentTo }),
+      })
+      const body = await res.json().catch(() => ({}))
+      if (!res.ok) { setError(body.error ?? 'Could not resend the code. Please try again.'); return }
+      setCode('')
+      startCooldown()
+    } catch {
+      setError('Could not resend the code. Please check your connection and try again.')
+    } finally {
+      setResending(false)
+    }
   }
 
   if (sentTo) {
@@ -109,7 +124,11 @@ export default function SignupPage() {
             hint="It can take a minute to arrive. Check your spam folder if you don't see it."
           />
           <Button type="submit" size="lg" fullWidth loading={verifying} disabled={code.length !== 6}>Verify &amp; continue</Button>
-          {resent ? <AuthAlert tone="success">A new code is on its way.</AuthAlert> : <Button type="button" variant="secondary" fullWidth onClick={resend}>Resend the code</Button>}
+          {canResend ? (
+            <Button type="button" variant="secondary" fullWidth loading={resending} onClick={resend}>Resend the code</Button>
+          ) : (
+            <p className="text-center text-sm text-stone-500">Resend available in {secondsLeft}s</p>
+          )}
         </form>
       </AuthShell>
     )

@@ -8,18 +8,26 @@ import { baseEmailLayout } from '@/lib/notifications/email-layout'
 // the "Resend the code" button on the signup page and the "Resend the code" link the login
 // page shows after a sign-in fails because the account isn't confirmed yet.
 //
-// Deliberately password-free: it uses a magiclink grant rather than /api/auth/signup's
-// signup-type one, so it never touches the account's stored password (see that route's
-// comment for why that matters). The magiclink grant's email_otp is verified the same way
-// as the signup one — supabase.auth.verifyOtp({ type: 'email' }) — since Supabase treats
-// both as plain email OTPs once generated (verifying with 'signup' one only accepted for a
-// still-pending signup; 'email' covers both cases uniformly, so the client doesn't need to
-// track which flow produced the currently-displayed code).
+// Uses the SAME generateLink(type: 'signup') as the initial signup route — deliberately not
+// 'magiclink'. HomeServe only ever verifies with verifyOtp({ type: 'signup' }); Supabase
+// tags each generated OTP with the type it was created under, and verifying checks that tag,
+// not just the code digits. Mixing types (generate as 'magiclink', verify as something else)
+// is what caused every resent code to fail with a generic "invalid/expired" error regardless
+// of freshness — see the signup page for the matching verifyOtp call.
+//
+// Deliberately omits `password`: the installed @supabase/auth-js types mark it required for
+// type:'signup', but generateLink() only forwards whatever fields it's given to Supabase's
+// API (no client-side check) — leaving it out sends no password field at all, rather than a
+// fabricated one that would silently overwrite the account's real password. Resend must
+// never be able to change the password of an account it doesn't prove ownership of; only
+// the initial /api/auth/signup submit (which collects the real password from the form) may
+// do that.
 //
 // It's public and unauthenticated by design, same as "forgot password" elsewhere in the
 // app — the code is only ever usable by whoever controls that inbox, regardless of who
-// triggered the request — and always answers success either way so the response shape
-// can't be used to enumerate which emails have an account.
+// triggered the request — and always answers success either way (except a rate limit, which
+// applies uniformly and reveals nothing about whether the account exists) so the response
+// shape can't be used to enumerate which emails have an account.
 const bodySchema = z.object({ email: z.string().trim().email().max(200) })
 
 export async function POST(req: NextRequest) {
@@ -30,10 +38,14 @@ export async function POST(req: NextRequest) {
 
   const admin = createAdminClient()
   const { data, error } = await admin.auth.admin.generateLink({
-    type: 'magiclink',
+    type: 'signup',
     email,
-    options: { redirectTo: `${req.nextUrl.origin}/auth/callback` },
-  })
+    // See the file comment: intentionally no `password` field, hence the cast.
+  } as unknown as Parameters<typeof admin.auth.admin.generateLink>[0])
+
+  if (error && /security purposes|rate limit|too many requests/i.test(error.message)) {
+    return NextResponse.json({ error: 'Please wait a moment before requesting another code.' }, { status: 429 })
+  }
 
   const code = data?.properties?.email_otp
   if (!error && code) {

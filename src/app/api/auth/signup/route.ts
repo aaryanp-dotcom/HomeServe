@@ -9,13 +9,10 @@ import { baseEmailLayout } from '@/lib/notifications/email-layout'
 //
 // Uses the admin API's generateLink(type: 'signup'), which creates the user exactly like
 // supabase.auth.signUp() but — unlike signUp() — does not send an email itself; it just
-// returns a link AND a plain numeric `email_otp` for us to deliver however we choose. We
-// send the code (not the link): the client then confirms with supabase.auth.verifyOtp(),
-// which signs the user in directly with no redirect/callback route involved at all — link-
-// based confirmation depends on the email client not mangling the URL and on Supabase's
-// generated link matching this app's configured auth flow (PKCE vs implicit), neither of
-// which we could fully verify without a real end-to-end click-through; a 6-digit code typed
-// into our own page sidesteps both.
+// returns a plain numeric `email_otp` for us to deliver however we choose. We send the code,
+// which the client confirms with supabase.auth.verifyOtp({ type: 'signup' }) — no redirect
+// link or callback route is involved. There's no `redirectTo` here: nothing ever follows the
+// link this call also generates, only its `email_otp`.
 //
 // This route is ONLY for the initial account-creation submit, never for "resend" (see
 // api/auth/signup/resend): generateLink(type:'signup') against an email that already has
@@ -46,7 +43,6 @@ export async function POST(req: NextRequest) {
     password,
     options: {
       data: { full_name: fullName, phone: phone ?? undefined },
-      redirectTo: `${req.nextUrl.origin}/auth/callback`,
     },
   })
 
