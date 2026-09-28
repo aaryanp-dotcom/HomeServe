@@ -22,17 +22,41 @@ export default function ResetPasswordPage() {
 
   const [supabase] = useState(() => createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!))
 
-  // The emailed link carries a one-time code that the browser client exchanges for a recovery session on load.
+  // The emailed link carries a one-time code that must be exchanged for a recovery session.
+  // Supabase's password-reset email can deliver that code in any of three shapes depending
+  // on how the "Reset password" template and auth flow are configured on the project:
+  //   • token_hash + type=recovery (current default template) — verifyOtp() exchanges it
+  //   • code=... (PKCE flow, e.g. when redirected through a custom domain)  — exchangeCodeForSession()
+  //   • access_token/refresh_token in the URL hash (legacy implicit flow) — consumed
+  //     automatically by the client during initialization; getSession() just needs to await it.
+  // Handling only one of these (as this page previously did, hash-only) makes every link from
+  // the other flows look "expired" even seconds after being sent, which is what was happening.
   useEffect(() => {
     let cancelled = false
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) setReady(true)
-    })
-    const t = setTimeout(async () => {
+
+    async function establishSession() {
+      const params = new URLSearchParams(window.location.search)
+      const tokenHash = params.get('token_hash')
+      const code = params.get('code')
+
+      if (tokenHash) {
+        const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' })
+        if (!cancelled) setReady(!error)
+        return
+      }
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+        if (!cancelled) setReady(!error)
+        return
+      }
+
       const { data } = await supabase.auth.getSession()
-      if (!cancelled) setReady((r) => r ?? !!data.session)
-    }, 1200)
-    return () => { cancelled = true; clearTimeout(t); subscription.unsubscribe() }
+      if (!cancelled) setReady(!!data.session)
+    }
+
+    establishSession()
+    return () => { cancelled = true }
   }, [supabase])
 
   async function handleSubmit(e: React.FormEvent) {
