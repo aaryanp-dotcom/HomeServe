@@ -97,7 +97,7 @@ export default async function AdminSiteVisitsPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <Badge variant={cfg.variant} dot size="sm">{cfg.label}</Badge>
-                    <Link href={`/admin/site-visits/${visit.id}`} className="coarse:min-h-11 inline-flex items-center text-xs text-cobalt-500 hover:text-cobalt-700 font-medium">
+                    <Link href={`/admin/leads/${visit.request_id}`} className="coarse:min-h-11 inline-flex items-center text-xs text-cobalt-500 hover:text-cobalt-700 font-medium">
                       Details <ChevronRight size={12} className="inline" />
                     </Link>
                   </div>
@@ -135,7 +135,7 @@ export default async function AdminSiteVisitsPage() {
                         {visit.scheduled_date ? new Date(visit.scheduled_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
                       </td>
                       <td className="px-4 py-3.5 text-right">
-                        <Link href={`/admin/site-visits/${visit.id}`} className="coarse:min-h-11 inline-flex items-center text-xs text-cobalt-500 hover:text-cobalt-700 font-medium">
+                        <Link href={`/admin/leads/${visit.request_id}`} className="coarse:min-h-11 inline-flex items-center text-xs text-cobalt-500 hover:text-cobalt-700 font-medium">
                           View
                         </Link>
                       </td>

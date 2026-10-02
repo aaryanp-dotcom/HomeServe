@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { LifeBuoy, Plus, ChevronRight } from 'lucide-react'
-import { Badge, Button, EmptyState } from '@/components/ui/shared'
+import { Badge, ButtonLink, EmptyState } from '@/components/ui/shared'
 import { PageHeader } from '@/components/ui/layout'
 import { STATUS_LABEL, CATEGORY_LABEL, type SupportTicket, type TicketStatus } from '@/lib/support/types'
 import { formatDate } from '@/lib/utils'
@@ -28,13 +28,13 @@ export default async function SupportPage() {
         eyebrow="Support"
         title="My tickets"
         description="Raise a ticket for anything that doesn't fit a project or a maintenance request — billing questions, account issues, general help."
-        actions={<Link href="/homeowner/support/new"><Button icon={<Plus size={16} />}>Raise a ticket</Button></Link>}
+        actions={<ButtonLink href="/homeowner/support/new" icon={<Plus size={16} />}>Raise a ticket</ButtonLink>}
       />
 
       {tickets.length === 0 ? (
         <EmptyState tone="warm" icon={<LifeBuoy size={22} />} title="No tickets yet"
           description="Something not working, or a question about your account or a payment? Raise a ticket and we'll get back to you."
-          action={<Link href="/homeowner/support/new"><Button size="sm" icon={<Plus size={14} />}>Raise a ticket</Button></Link>} />
+          action={<ButtonLink href="/homeowner/support/new" size="sm" icon={<Plus size={14} />}>Raise a ticket</ButtonLink>} />
       ) : (
         <ul className="panel divide-y divide-ink-900/10">
           {tickets.map((t) => (

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Plus, ChevronRight, Hammer, TrendingUp, CheckCircle } from 'lucide-react'
-import { Badge, Button, EmptyState } from '@/components/ui/shared'
+import { Badge, ButtonLink, EmptyState } from '@/components/ui/shared'
 
 export const metadata: Metadata = { title: 'My Projects' }
 
@@ -47,9 +47,7 @@ export default async function HomeownerProjectsPage() {
               : `${list.length} project${list.length !== 1 ? 's' : ''} · ${active} active`}
           </p>
         </div>
-        <Link href="/get-started">
-          <Button icon={<Plus size={16} />}>New Request</Button>
-        </Link>
+        <ButtonLink href="/get-started" icon={<Plus size={16} />}>New Request</ButtonLink>
       </div>
 
       {list.length === 0 ? (
@@ -58,9 +56,7 @@ export default async function HomeownerProjectsPage() {
           title="No projects yet"
           description="Once you accept a quotation, your project will appear here with milestones, payment tracking and progress updates."
           action={
-            <Link href="/homeowner/requests">
-              <Button size="sm">View My Requests</Button>
-            </Link>
+            <ButtonLink href="/homeowner/requests" size="sm">View My Requests</ButtonLink>
           }
         />
       ) : (

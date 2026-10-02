@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Link from 'next/link'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
@@ -75,4 +76,24 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = 'Button'
 
-export { Button, buttonVariants }
+/** A link styled as a Button. Use this instead of wrapping a Button in a Link, which nests a <button> in an <a>. */
+interface ButtonLinkProps
+  extends Omit<React.ComponentProps<typeof Link>, 'className'>,
+    VariantProps<typeof buttonVariants> {
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
+  fullWidth?: boolean
+  className?: string
+}
+
+function ButtonLink({ className, variant, size, leftIcon, rightIcon, fullWidth, children, ...props }: ButtonLinkProps) {
+  return (
+    <Link className={cn(buttonVariants({ variant, size }), fullWidth && 'w-full', className)} {...props}>
+      {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
+      {children}
+      {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+    </Link>
+  )
+}
+
+export { Button, ButtonLink, buttonVariants }

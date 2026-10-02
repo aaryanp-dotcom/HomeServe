@@ -98,7 +98,8 @@ export async function middleware(request: NextRequest) {
   // Not logged in → redirect to login
   if (!user) {
     const loginUrl = new URL('/login', request.url)
-    loginUrl.searchParams.set('redirect', pathname)
+    // Keep the query string so deep links like /homeowner/maintenance/new?category=plumbing survive login.
+    loginUrl.searchParams.set('redirect', pathname + request.nextUrl.search)
     return NextResponse.redirect(loginUrl)
   }
 

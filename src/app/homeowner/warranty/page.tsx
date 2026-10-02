@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Plus, ShieldCheck, CheckCircle, Clock } from 'lucide-react'
-import { Badge, Button, EmptyState } from '@/components/ui/shared'
+import { Badge, ButtonLink, EmptyState } from '@/components/ui/shared'
 import { fmtDate, warrantyStatus } from '@/lib/maintenance/format'
 import { WARRANTY_VS_MAINTENANCE } from '@/lib/maintenance/config'
 
@@ -50,9 +50,7 @@ export default async function WarrantyPage() {
             {list.length === 0 ? 'No service requests yet' : `${list.length} request${list.length !== 1 ? 's' : ''} · ${open} open`}
           </p>
         </div>
-        <Link href="/homeowner/warranty/new">
-          <Button icon={<Plus size={16} />}>Raise Request</Button>
-        </Link>
+        <ButtonLink href="/homeowner/warranty/new" icon={<Plus size={16} />}>Raise Request</ButtonLink>
       </div>
 
       {/* Info card */}
@@ -111,9 +109,7 @@ export default async function WarrantyPage() {
           title="No service requests"
           description="Completed a HomeServe project and have an issue to report? Raise a warranty or support request and our team will respond promptly."
           action={
-            <Link href="/homeowner/warranty/new">
-              <Button icon={<Plus size={14} />}>Raise a Request</Button>
-            </Link>
+            <ButtonLink href="/homeowner/warranty/new" icon={<Plus size={14} />}>Raise a Request</ButtonLink>
           }
         />
       ) : (

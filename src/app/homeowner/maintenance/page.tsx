@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { Plus, BadgeCheck, ChevronRight, Wrench } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { Button, EmptyState } from '@/components/ui/shared'
+import { ButtonLink, EmptyState } from '@/components/ui/shared'
 import { RequestStatusBadge } from '@/components/maintenance/StatusTrack'
 import { HomesManager } from '@/components/maintenance/HomesManager'
 import { CategoryIcon } from '@/components/maintenance/CategoryIcon'
@@ -57,7 +57,7 @@ export default async function HomeownerMaintenancePage() {
           <h1 className="page-title">Home maintenance</h1>
           <p className="mt-1 text-sm text-stone-500">Request a service, follow its progress and see what you have booked before.</p>
         </div>
-        <Link href="/homeowner/maintenance/new"><Button icon={<Plus size={16} />}>Request a service</Button></Link>
+        <ButtonLink href="/homeowner/maintenance/new" icon={<Plus size={16} />}>Request a service</ButtonLink>
       </div>
 
       {members.length > 0 && (
@@ -73,7 +73,7 @@ export default async function HomeownerMaintenancePage() {
       {requests.length === 0 ? (
         <EmptyState tone="warm" icon={<Wrench size={22} />} title="No maintenance requests yet"
           description="Need a repair, a service or a check-up? Tell us what your home needs and HomeServe will take it from there."
-          action={<Link href="/homeowner/maintenance/new"><Button icon={<Plus size={14} />}>Request a service</Button></Link>} />
+          action={<ButtonLink href="/homeowner/maintenance/new" icon={<Plus size={14} />}>Request a service</ButtonLink>} />
       ) : (
         <>
           <section>

@@ -93,10 +93,8 @@ export default function ServicesPage() {
               Not sure which service you need?
             </h2>
             <p className="text-white/90 mb-6">Tell us about your home and we will advise on the best approach.</p>
-            <Link href="/get-started">
-              <button className="flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-white text-cobalt-600 hover:bg-cobalt-50 shadow-lg transition-colors mx-auto">
-                Start Your Renovation <ArrowRight size={15} />
-              </button>
+            <Link href="/get-started" className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-white text-cobalt-600 hover:bg-cobalt-50 shadow-lg transition-colors mx-auto">
+              Start Your Renovation <ArrowRight size={15} />
             </Link>
           </div>
         </section>

@@ -6,7 +6,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/shared'
-import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui/button'
 import { formatCurrency, formatDate, bookingStatusLabel, bookingStatusColor } from '@/lib/utils'
 import { Plus, CalendarDays, Zap, ArrowRight } from 'lucide-react'
 
@@ -37,11 +37,9 @@ export default async function HomeownerBookingsPage() {
             {allBookings.length} booking{allBookings.length !== 1 ? 's' : ''} total
           </p>
         </div>
-        <Link href="/maintenance">
-          <Button size="sm" variant="primary" leftIcon={<Plus className="h-3.5 w-3.5" />}>
-            New Booking
-          </Button>
-        </Link>
+        <ButtonLink href="/maintenance" size="sm" variant="primary" leftIcon={<Plus className="h-3.5 w-3.5" />}>
+          New Booking
+        </ButtonLink>
       </div>
 
       {allBookings.length === 0 ? (
@@ -50,9 +48,7 @@ export default async function HomeownerBookingsPage() {
           title="No bookings yet"
           description="Browse our 22 service categories and book your first home service."
           action={
-            <Link href="/maintenance">
-              <Button variant="outline">Browse Services</Button>
-            </Link>
+            <ButtonLink href="/maintenance" variant="outline">Browse Services</ButtonLink>
           }
         />
       ) : (

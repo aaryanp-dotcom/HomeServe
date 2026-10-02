@@ -44,7 +44,7 @@ function MilestoneVisual() {
             className={cn(
               'flex items-center justify-center border-r-2 border-ink-900 font-mono text-sm font-bold last:border-r-0 transition-opacity duration-300',
               s.bg,
-              hover === i ? 'opacity-100' : 'opacity-75',
+              hover === i ? 'opacity-100' : 'opacity-90',
             )}
           >
             {s.pct}%
