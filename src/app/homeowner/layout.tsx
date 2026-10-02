@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient, getAuthUser, getAuthProfile } from '@/lib/supabase/server'
 import { noIndex } from '@/lib/seo'
 import {
   LayoutDashboard, CalendarDays, CreditCard, Bell,
@@ -13,32 +12,21 @@ import { SheetStrip } from '@/components/arch/SheetStrip'
 import { dedupeFeed } from '@/lib/notifications/feed'
 
 async function getUser() {
-  const cookieStore = cookies()
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return cookieStore.getAll() },
-        setAll(cs: { name: string; value: string; options?: Record<string, unknown> }[]) { cs.forEach(({ name, value, options }) => cookieStore.set(name, value, options)) },
-      },
-    },
-  )
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/dashboard')
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('full_name, email, role, avatar_url')
-    .eq('user_id', user.id)
-    .single()
-  // One unread item per event, not one per channel / delivery attempt.
-  const { data: unreadRows } = await supabase
-    .from('notification_logs')
-    .select('id, event, created_at, read_at, booking_id, reference_id')
-    .eq('user_id', user.id)
-    .is('read_at', null)
-    .order('created_at', { ascending: false })
-    .limit(100)
+  const supabase = await createClient()
+  // Profile and unread count are independent, so they go out together.
+  const [profile, { data: unreadRows }] = await Promise.all([
+    getAuthProfile(user.id),
+    // One unread item per event, not one per channel / delivery attempt.
+    supabase
+      .from('notification_logs')
+      .select('id, event, created_at, read_at, booking_id, reference_id')
+      .eq('user_id', user.id)
+      .is('read_at', null)
+      .order('created_at', { ascending: false })
+      .limit(100),
+  ])
   return { user, profile, unread: dedupeFeed(unreadRows ?? []).length }
 }
 

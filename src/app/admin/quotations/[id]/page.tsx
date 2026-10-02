@@ -6,6 +6,7 @@ import { cookies } from 'next/headers'
 import { ArrowLeft } from 'lucide-react'
 import { Badge } from '@/components/ui/shared'
 import QuotationActions from './QuotationActions'
+import { getAuthUser } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Quotation — Admin' }
 
@@ -43,7 +44,7 @@ export default async function QuotationDetailPage({ params }: { params: Promise<
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const { data: q } = await supabase.from('quotations').select('*').eq('id', id).single()

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ChevronRight, Plus } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Badge } from '@/components/ui/shared'
 import { CATEGORY_META, REQUEST_STATUS, type MaintenanceCategory, type RequestStatus } from '@/lib/maintenance/config'
@@ -28,7 +28,7 @@ const human = (s: string) => s.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUppe
 
 export default async function HistoryPage({ searchParams }: { searchParams: { type?: string } }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/history')
 
   // Everything below is read with the customer's own session, so RLS decides what they can see.

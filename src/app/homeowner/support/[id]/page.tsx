@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
 import { ChevronLeft, CheckCircle } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/shared'
 import { PageHeader } from '@/components/ui/layout'
 import { TicketReplyBox } from '@/components/support/TicketReplyBox'
@@ -18,7 +18,7 @@ export default async function TicketDetailPage({ params, searchParams }: { param
   const { id } = await params
   const { new: justCreated } = await searchParams
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect(`/login?redirect=/homeowner/support/${id}`)
 
   const { data: ticket } = await supabase.from('support_tickets').select('*').eq('id', id).eq('user_id', user.id).maybeSingle()

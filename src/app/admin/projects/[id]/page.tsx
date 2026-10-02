@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/shared'
 import AdminProjectUpdates from './AdminProjectUpdates'
 import AdminProjectMessages from './AdminProjectMessages'
 import { AdminWarrantyForm } from '@/components/maintenance/AdminWarrantyForm'
+import { getAuthUser } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Project Detail — Admin' }
 
@@ -55,7 +56,7 @@ export default async function AdminProjectDetailPage({ params }: Props) {
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const { data: profile } = await supabase

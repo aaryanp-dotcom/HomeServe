@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { EmptyState, StarRating } from '@/components/ui/shared'
 import { formatDate } from '@/lib/utils'
@@ -25,7 +25,7 @@ interface ReviewRow {
  */
 export default async function HomeownerReviewsPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/reviews')
 
   const [{ data: rows }, { data: doneProjects }, { data: doneServices }] = await Promise.all([

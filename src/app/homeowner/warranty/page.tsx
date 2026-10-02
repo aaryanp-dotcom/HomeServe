@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { Plus, ShieldCheck, CheckCircle, Clock } from 'lucide-react'
 import { Badge, Button, EmptyState } from '@/components/ui/shared'
 import { fmtDate, warrantyStatus } from '@/lib/maintenance/format'
@@ -20,7 +20,7 @@ const STATUS_CONFIG: Record<string, { label: string; variant: 'success' | 'warni
 
 export default async function WarrantyPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/warranty')
 
   const { data: requests } = await supabase

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { HardHat } from 'lucide-react'
 import { StatCard } from '@/components/ui/shared'
@@ -9,8 +9,7 @@ import { Badge } from '@/components/ui/badge'
 export const metadata: Metadata = { title: 'Site Team — Admin' }
 
 export default async function AdminTeamPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const admin = createAdminClient()

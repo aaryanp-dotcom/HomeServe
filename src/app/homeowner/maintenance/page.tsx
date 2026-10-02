@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { Plus, BadgeCheck, ChevronRight, Wrench } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Button, EmptyState } from '@/components/ui/shared'
 import { RequestStatusBadge } from '@/components/maintenance/StatusTrack'
@@ -16,7 +16,7 @@ export const metadata: Metadata = { title: 'Home Maintenance' }
 
 export default async function HomeownerMaintenancePage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/maintenance')
 
   const [{ data: reqs }, { data: subs }, { data: homes }] = await Promise.all([

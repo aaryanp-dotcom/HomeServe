@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { ArrowLeft, CheckCircle } from 'lucide-react'
 import type { Milestone } from '@/types'
@@ -17,8 +17,7 @@ export default async function AdvancePaymentPage({ searchParams }: Props) {
   const { booking: bookingId } = await searchParams
   if (!bookingId) redirect('/homeowner/requests')
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect(`/login?redirect=/homeowner/projects/advance-payment?booking=${bookingId}`)
 
   const admin = createAdminClient()

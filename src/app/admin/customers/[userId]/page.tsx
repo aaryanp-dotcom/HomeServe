@@ -7,6 +7,7 @@ import { ArrowLeft, User } from 'lucide-react'
 import { Badge } from '@/components/ui/shared'
 import { CATEGORY_META, REQUEST_STATUS, type MaintenanceCategory, type RequestStatus } from '@/lib/maintenance/config'
 import { fmtDate } from '@/lib/maintenance/format'
+import { getAuthUser } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Customer Detail — Admin' }
 
@@ -53,7 +54,7 @@ export default async function AdminCustomerDetailPage({ params }: Props) {
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const { data: adminProfile } = await supabase

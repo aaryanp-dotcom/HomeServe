@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { Plus, ChevronRight, ClipboardList, Clock, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react'
 import { Badge, Button, EmptyState } from '@/components/ui/shared'
 
@@ -94,7 +94,7 @@ function JourneyProgress({ status }: { status: string }) {
 
 export default async function MyRequestsPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/requests')
 
   const { data: requests } = await supabase

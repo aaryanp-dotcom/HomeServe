@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { Badge, EmptyState } from '@/components/ui/shared'
 import { PageHeader } from '@/components/ui/layout'
 import { formatDate } from '@/lib/utils'
@@ -12,8 +12,7 @@ import { Briefcase, ChevronRight, Wrench, Hammer } from 'lucide-react'
 export const metadata: Metadata = { title: 'My jobs' }
 
 export default async function ContractorJobsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/contractor/jobs')
 
   const jobs = await getContractorJobs(user.id)

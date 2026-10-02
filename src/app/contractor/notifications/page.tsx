@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { Bell, CheckCircle, Clock, Wrench, Hammer } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { EmptyState } from '@/components/ui/shared'
 import { MarkRead } from './MarkRead'
@@ -42,8 +42,7 @@ function relative(dateStr: string): string {
 }
 
 export default async function ContractorNotificationsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/contractor/notifications')
 
   const { data: logs } = await createAdminClient()

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { ArrowLeft, CalendarClock, MapPin, BadgeCheck, MessageSquare, Camera, AlertTriangle } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { RequestStatusBadge, StatusTrack } from '@/components/maintenance/StatusTrack'
 import { RequestActions } from '@/components/maintenance/RequestActions'
@@ -19,7 +19,7 @@ export default async function MaintenanceRequestPage({ params, searchParams }: {
   params: { id: string }; searchParams: Record<string, string | undefined>
 }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect(`/login?redirect=/homeowner/maintenance/${params.id}`)
 
   // RLS returns the row only if it is this customer's.

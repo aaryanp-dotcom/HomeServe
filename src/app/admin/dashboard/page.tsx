@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/shared'
 import { CATEGORY_META, type MaintenanceCategory } from '@/lib/maintenance/config'
+import { getAuthUser } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Admin Dashboard' }
 
@@ -58,7 +59,7 @@ async function getAdminData() {
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const { data: profile } = await supabase

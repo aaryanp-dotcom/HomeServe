@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ChevronLeft, LifeBuoy } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { PageHeader } from '@/components/ui/layout'
 import { hasServiceHistory } from '@/lib/support/eligibility'
 import { NewTicketClient } from './NewTicketClient'
@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: 'Raise a ticket' }
 
 export default async function NewTicketPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/support/new')
 
   const eligible = await hasServiceHistory(user.id)

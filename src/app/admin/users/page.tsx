@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { StatCard, EmptyState } from '@/components/ui/shared'
 import { Badge } from '@/components/ui/badge'
@@ -10,8 +10,7 @@ import { Users, CalendarDays, MapPin } from 'lucide-react'
 export const metadata: Metadata = { title: 'Users — Admin' }
 
 export default async function AdminUsersPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const adminSupabase = createAdminClient()

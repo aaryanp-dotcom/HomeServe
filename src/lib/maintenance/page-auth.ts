@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser, getAuthProfile } from '@/lib/supabase/server'
 
 /** Page-level admin gate (defence in depth; the API routes and RLS enforce it independently). */
 export async function adminPage(path: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect(`/login?redirect=${path}`)
-  const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', user.id).single()
+  // Same cached profile the admin layout already fetched for this request.
+  const profile = await getAuthProfile(user.id)
   if (profile?.role !== 'admin') redirect('/homeowner/dashboard')
   return { supabase, user }
 }

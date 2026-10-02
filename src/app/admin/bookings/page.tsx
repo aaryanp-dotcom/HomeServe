@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Badge } from '@/components/ui/badge'
 import { formatCurrency, formatDate, bookingStatusLabel, bookingStatusColor } from '@/lib/utils'
@@ -10,8 +10,7 @@ import { AlertCircle, ArrowRight } from 'lucide-react'
 export const metadata: Metadata = { title: 'All Bookings — Admin' }
 
 export default async function AdminBookingsListPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const adminSupabase = createAdminClient()

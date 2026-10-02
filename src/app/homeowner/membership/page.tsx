@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { BadgeCheck, Check, Minus, ChevronRight } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Badge, EmptyState } from '@/components/ui/shared'
 import { MembershipActions } from '@/components/maintenance/MembershipActions'
@@ -26,7 +26,7 @@ const STATUS_BADGE: Record<string, { label: string; variant: 'success' | 'accent
 
 export default async function MembershipPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/membership')
 
   const [{ data: subRows }, { data: propRows }, plans] = await Promise.all([

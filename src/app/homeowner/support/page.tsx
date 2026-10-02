@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { LifeBuoy, Plus, ChevronRight } from 'lucide-react'
 import { Badge, Button, EmptyState } from '@/components/ui/shared'
 import { PageHeader } from '@/components/ui/layout'
@@ -16,7 +16,7 @@ const STATUS_VARIANT: Record<TicketStatus, 'success' | 'warning' | 'danger' | 'a
 
 export default async function SupportPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/support')
 
   const { data } = await supabase.from('support_tickets').select('*').order('created_at', { ascending: false })

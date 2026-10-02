@@ -9,6 +9,7 @@ import LeadStatusForm from './LeadStatusForm'
 import { SizeSummary } from '@/components/size/SizeSummary'
 import MeasurementsForm from './MeasurementsForm'
 import type { RoomDetail } from '@/lib/size'
+import { getAuthUser } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Lead Detail — Admin' }
 
@@ -59,7 +60,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
   const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', user.id).single()
   if (profile?.role !== 'admin') redirect('/homeowner/dashboard')

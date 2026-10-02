@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import {
   Plus, CheckCircle, Clock, ChevronRight, CalendarDays,
   TrendingUp, Home, CreditCard, FileText, ArrowUpRight, Layers, Wrench,
@@ -79,7 +79,7 @@ const hrefOf = (b: BookingRow) =>
 
 export default async function HomeownerDashboard() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const [bookingsRes, profileRes, quotationsRes, maintReq, reviewedRes, activeSubRes] = await Promise.all([

@@ -5,6 +5,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { ChevronRight } from 'lucide-react'
 import { Badge } from '@/components/ui/shared'
+import { getAuthUser } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Leads — Admin' }
 
@@ -69,7 +70,7 @@ export default async function AdminLeadsPage({ searchParams }: Props) {
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
   const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', user.id).single()
   if (profile?.role !== 'admin') redirect('/homeowner/dashboard')

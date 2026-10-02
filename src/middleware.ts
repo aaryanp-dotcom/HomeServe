@@ -80,8 +80,13 @@ export async function middleware(request: NextRequest) {
     },
   )
 
-  // Refresh session — do not remove this
-  const { data: { user } } = await supabase.auth.getUser()
+  // Refresh session — do not remove this. getClaims() refreshes an expired access token like
+  // getUser() did, but verifies the JWT signature locally (cached JWKS) instead of calling
+  // Supabase Auth on every request, when the project uses asymmetric signing keys. With a legacy
+  // symmetric secret it falls back to a getUser() round trip, so it is never weaker than before.
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const claims = claimsData?.claims
+  const user = claims?.sub ? { id: claims.sub } : null
 
   const pathname = request.nextUrl.pathname
 
@@ -130,22 +135,35 @@ export async function middleware(request: NextRequest) {
   // has the real pathname, so it can exclude the MFA pages from the check while
   // still gating every other /admin/* route.
   if (profile.role === 'admin' && !pathname.startsWith('/admin/mfa')) {
-    const { data: mfaData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
-    const { data: factors } = await supabase.auth.mfa.listFactors()
-    const hasVerifiedFactor = (factors?.totp ?? []).length > 0
-    if (!hasVerifiedFactor) {
-      return NextResponse.redirect(new URL('/admin/mfa/setup', request.url))
-    }
-    if (mfaData?.currentLevel !== 'aal2') {
-      return NextResponse.redirect(new URL('/admin/mfa/verify', request.url))
+    // The session's assurance level is a claim in the (already verified) JWT, so the common case —
+    // an admin who has passed the TOTP challenge — needs no extra Supabase calls. Only an admin
+    // who is being redirected pays for listFactors(), to pick setup vs. verify.
+    if (claims?.aal !== 'aal2') {
+      const { data: factors } = await supabase.auth.mfa.listFactors()
+      const hasVerifiedFactor = (factors?.totp ?? []).length > 0
+      return NextResponse.redirect(
+        new URL(hasVerifiedFactor ? '/admin/mfa/verify' : '/admin/mfa/setup', request.url),
+      )
     }
   }
 
   return supabaseResponse
 }
 
+// Only run where it does something: the three role portals (auth gate + session refresh), /api
+// (rate limiting + session refresh for cookie-authenticated routes) and /maintenance (a public
+// catalogue, but it reads Supabase through the cookie-based server client, which would refresh an
+// expired token mid-render with no way to write the new cookie back).
+// Every other page never touches the session on the server — the header's signed-in state comes
+// from the browser client, which refreshes its own token — so a logged-in visitor no longer pays
+// an auth round trip on every public page view and link prefetch.
+// If you add a public page that uses lib/supabase/server, add its prefix here.
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/homeowner/:path*',
+    '/admin/:path*',
+    '/contractor/:path*',
+    '/maintenance/:path*',
+    '/api/:path*',
   ],
 }

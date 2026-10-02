@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { getAuthUser, getAuthProfile } from '@/lib/supabase/server'
 import { noIndex } from '@/lib/seo'
 import {
   LayoutDashboard, Users, CreditCard,
@@ -12,24 +11,9 @@ import { PageEnter } from '@/components/motion/PageEnter'
 import { SheetStrip } from '@/components/arch/SheetStrip'
 
 async function getUser() {
-  const cookieStore = await cookies()
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return cookieStore.getAll() },
-        setAll(cs: { name: string; value: string; options?: Record<string, unknown> }[]) { cs.forEach(({ name, value, options }) => cookieStore.set(name, value, options)) },
-      },
-    },
-  )
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/admin/dashboard')
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('full_name, email, role, avatar_url')
-    .eq('user_id', user.id)
-    .single()
+  const profile = await getAuthProfile(user.id)
   if (profile?.role !== 'admin') redirect('/homeowner/dashboard')
 
   // MFA enforcement lives in middleware.ts, not here. This layout wraps every

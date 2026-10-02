@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import {
   ArrowLeft, CheckCircle, TrendingUp,
@@ -53,8 +53,7 @@ interface Props { params: Promise<{ id: string }> }
 export default async function CustomerProjectPage({ params }: Props) {
   const { id } = await params
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect(`/login?redirect=/homeowner/projects/${id}`)
 
   const admin = createAdminClient()

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ArrowLeft, Check, Minus } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { JoinMembership } from '@/components/maintenance/JoinMembership'
 import type { AddressSuggestion } from '@/components/maintenance/PropertyPicker'
 import { getActivePlans } from '@/lib/maintenance/data'
@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: 'Start a Membership' }
 
 export default async function JoinPage({ searchParams }: { searchParams: { plan?: string } }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect(`/login?redirect=${encodeURIComponent(`/homeowner/membership/join?plan=${searchParams.plan ?? ''}`)}`)
 
   const plans = await getActivePlans()

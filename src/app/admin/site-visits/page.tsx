@@ -5,6 +5,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { Plus, ChevronRight } from 'lucide-react'
 import { Badge } from '@/components/ui/shared'
+import { getAuthUser } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Site Visits — Admin' }
 
@@ -31,7 +32,7 @@ export default async function AdminSiteVisitsPage() {
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
   const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', user.id).single()
   if (profile?.role !== 'admin') redirect('/homeowner/dashboard')

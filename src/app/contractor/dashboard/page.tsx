@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { Briefcase, CheckCircle, TrendingUp, ChevronRight, Wrench, Hammer } from 'lucide-react'
 import { StatCard, Badge, EmptyState } from '@/components/ui/shared'
 import { PageHeader, Panel } from '@/components/ui/layout'
@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: 'Site dashboard' }
 
 export default async function ContractorDashboard() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const [jobs, profileRes] = await Promise.all([

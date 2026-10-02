@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Badge } from '@/components/ui/badge'
 import { StatCard } from '@/components/ui/shared'
@@ -8,8 +8,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { TrendingUp, Clock, XCircle } from 'lucide-react'
 
 export default async function AdminPaymentsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const adminSupabase = createAdminClient()

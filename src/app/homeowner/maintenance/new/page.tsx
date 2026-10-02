@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { getActiveServices } from '@/lib/maintenance/data'
 import { indicativePrice } from '@/lib/maintenance/format'
 import { RequestForm, type FormService, type MemberMap } from '@/components/maintenance/RequestForm'
@@ -21,7 +21,7 @@ const asNcrCity = (c?: string | null) => {
 
 export default async function NewMaintenanceRequestPage({ searchParams }: { searchParams: Record<string, string | undefined> }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/homeowner/maintenance/new')
 
   const [services, { data: props }, { data: subs }, { data: projects }] = await Promise.all([

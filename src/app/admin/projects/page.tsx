@@ -5,6 +5,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { ArrowUpRight, FolderOpen } from 'lucide-react'
 import { Badge } from '@/components/ui/shared'
+import { getAuthUser } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'Projects — Admin' }
 
@@ -36,7 +37,7 @@ export default async function AdminProjectsPage() {
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const { data: profile } = await supabase

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Button } from '@/components/ui/button'
 import { PageHeader, Panel } from '@/components/ui/layout'
@@ -10,8 +10,7 @@ import { ChangePasswordForm } from '@/components/account/ChangePasswordForm'
 export const metadata: Metadata = { title: 'My profile — Admin' }
 
 export default async function AdminProfilePage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login?redirect=/admin/profile')
 
   const admin = createAdminClient()

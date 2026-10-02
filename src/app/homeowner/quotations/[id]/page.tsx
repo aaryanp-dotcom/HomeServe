@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAuthUser } from '@/lib/supabase/server'
 import { ArrowLeft } from 'lucide-react'
 import { Badge } from '@/components/ui/shared'
 import QuotationAccept from './QuotationAccept'
@@ -43,7 +43,7 @@ export default async function CustomerQuotationPage({
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect(`/login?redirect=/homeowner/quotations/${id}`)
 
   // Fetch quotation — RLS ensures customer can only see their own
