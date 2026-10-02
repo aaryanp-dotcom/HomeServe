@@ -126,7 +126,7 @@ function LoginForm() {
 
       {resent && (
         <form onSubmit={verifyCode} className="mt-5 space-y-3 border-t border-ink-900/10 pt-5">
-          <p className="text-sm text-stone-600">We sent a 6-digit code to <strong className="text-ink-900">{email}</strong>.</p>
+          <p className="text-sm text-stone-600">We sent a 6-digit code to <strong className="text-ink-900">{email}</strong>. It&apos;s valid for 5 minutes.</p>
           <Input
             label="Confirmation code" name="code" inputMode="numeric" autoComplete="one-time-code" maxLength={6}
             value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} placeholder="123456" required

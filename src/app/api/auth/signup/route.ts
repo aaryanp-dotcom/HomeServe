@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     <p style="color:#374151;margin:0 0 8px;">Hi <strong>${fullName}</strong>,</p>
     <p style="color:#374151;margin:0 0 20px;">Enter this code to confirm your email and activate your HomeServe account:</p>
     <p style="font-size:32px;font-weight:700;letter-spacing:8px;color:#111827;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px 0;text-align:center;margin:0 0 20px;">${code}</p>
-    <p style="color:#6b7280;font-size:13px;margin:0 0 20px;">This code expires shortly — if it's stopped working, request a new one from the sign-up page.</p>
+    <p style="color:#6b7280;font-size:13px;margin:0 0 20px;">This code is valid for 5 minutes. If it's stopped working, request a new one from the sign-up page.</p>
     <p style="color:#9ca3af;font-size:12px;margin:0;">If you didn't create a HomeServe account, you can safely ignore this email.</p>
   `, 'Confirm your account'))
 

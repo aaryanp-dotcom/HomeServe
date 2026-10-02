@@ -113,7 +113,7 @@ export default function SignupPage() {
   if (sentTo) {
     return (
       <AuthShell eyebrow="One more step" title="Enter your code."
-        subtitle={<>We sent a 6-digit code to <strong className="text-ink-900">{sentTo}</strong>.</>}
+        subtitle={<>We sent a 6-digit code to <strong className="text-ink-900">{sentTo}</strong>. It&apos;s valid for 5 minutes.</>}
         footer={<>Wrong address? <button type="button" onClick={() => { setSentTo(null); setCode(''); setError(null) }} className="font-semibold text-cobalt-600 underline-offset-4 hover:underline">Go back</button> · Already confirmed? <Link href="/login" className="font-semibold text-cobalt-600 underline-offset-4 hover:underline">Sign in</Link></>}>
         <form onSubmit={verifyCode} className="space-y-4">
           {error && <AuthAlert>{error}</AuthAlert>}
