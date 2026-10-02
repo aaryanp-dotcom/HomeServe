@@ -10,7 +10,7 @@ import {
   TreePine, Sofa, Layers, ArrowRight,
   LogOut, User as UserIcon,
 } from 'lucide-react'
-import { Button, Avatar } from '@/components/ui/shared'
+import { Button, ButtonLink, Avatar } from '@/components/ui/shared'
 import { AnimatePresence, motion } from 'framer-motion'
 import { TitleBlock } from '@/components/arch/TitleBlock'
 import { useSessionUser } from '@/lib/supabase/useSessionUser'
@@ -406,19 +406,18 @@ export function MarketingNav({ user: userProp }: { user?: { name?: string; email
                 >
                   Sign in
                 </Link>
-                <Link href="/get-started" className="hidden lg:block">
-                  <Button
-                    size="sm"
-                    className={cn(
-                      'inline-flex whitespace-nowrap',
-                      !solid && 'bg-white text-stone-900 hover:bg-stone-100',
-                    )}
-                    variant={solid ? 'primary' : 'secondary'}
-                  >
-                    <span className="xl:hidden">Start renovation</span>
-                    <span className="hidden xl:inline">Start Your Renovation</span>
-                  </Button>
-                </Link>
+                <ButtonLink
+                  href="/get-started"
+                  size="sm"
+                  className={cn(
+                    'hidden lg:inline-flex whitespace-nowrap',
+                    !solid && 'bg-white text-stone-900 hover:bg-stone-100',
+                  )}
+                  variant={solid ? 'primary' : 'secondary'}
+                >
+                  <span className="xl:hidden">Start renovation</span>
+                  <span className="hidden xl:inline">Start Your Renovation</span>
+                </ButtonLink>
               </>
             )}
 
@@ -480,24 +479,18 @@ export function MarketingNav({ user: userProp }: { user?: { name?: string; email
             <div className="pt-3 border-t border-stone-100 flex flex-col gap-2">
               {user ? (
                 <>
-                  <Link href={dashboardHref}>
-                    <Button variant="outline" fullWidth className="justify-start gap-2.5">
-                      <Avatar name={user.name ?? 'User'} src={user.avatar} size="sm" />
-                      {user.name ?? 'Dashboard'}
-                    </Button>
-                  </Link>
+                  <ButtonLink href={dashboardHref} variant="outline" fullWidth className="justify-start gap-2.5">
+                    <Avatar name={user.name ?? 'User'} src={user.avatar} size="sm" />
+                    {user.name ?? 'Dashboard'}
+                  </ButtonLink>
                   {notificationsHref && (
-                    <Link href={notificationsHref}>
-                      <Button variant="outline" fullWidth className="justify-start gap-2.5">
-                        <Bell size={15} /> Notifications
-                      </Button>
-                    </Link>
+                    <ButtonLink href={notificationsHref} variant="outline" fullWidth className="justify-start gap-2.5">
+                      <Bell size={15} /> Notifications
+                    </ButtonLink>
                   )}
-                  <Link href={profileHref}>
-                    <Button variant="outline" fullWidth className="justify-start gap-2.5">
-                      <UserIcon size={15} /> My profile
-                    </Button>
-                  </Link>
+                  <ButtonLink href={profileHref} variant="outline" fullWidth className="justify-start gap-2.5">
+                    <UserIcon size={15} /> My profile
+                  </ButtonLink>
                   <form action="/api/auth/signout" method="post">
                     <Button type="submit" variant="outline" fullWidth className="justify-start gap-2.5 text-rose-700 border-rose-200 hover:bg-rose-50">
                       <LogOut size={15} /> Sign out
@@ -506,12 +499,8 @@ export function MarketingNav({ user: userProp }: { user?: { name?: string; email
                 </>
               ) : (
                 <>
-                  <Link href="/login">
-                    <Button variant="outline" fullWidth>Sign in</Button>
-                  </Link>
-                  <Link href="/get-started">
-                    <Button fullWidth>Start Your Renovation</Button>
-                  </Link>
+                  <ButtonLink href="/login" variant="outline" fullWidth>Sign in</ButtonLink>
+                  <ButtonLink href="/get-started" fullWidth>Start Your Renovation</ButtonLink>
                 </>
               )}
             </div>

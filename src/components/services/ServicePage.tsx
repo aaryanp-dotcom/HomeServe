@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, CheckCircle, Phone, MapPin } from 'lucide-react'
 import { MarketingNav, Footer } from '@/components/shared/Navigation'
-import { JsonLd, breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from '@/lib/seo'
+import { BUSINESS_PHONE, JsonLd, breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from '@/lib/seo'
 
 // ── Delhi NCR Service Page Template ──────────────────────────────────────────
 // Used for /services/[slug] — each service gets its own data entry
@@ -62,12 +62,10 @@ export function ServicePage({ service }: Props) {
             {service.hero.subheadline}
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/get-started">
-              <button className="coarse:min-h-11 flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-ink-900 text-white hover:bg-cobalt-600 transition-colors">
-                Start Your Renovation <ArrowRight size={16} />
-              </button>
+            <Link href="/get-started" className="coarse:min-h-11 inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-ink-900 text-white hover:bg-cobalt-600 transition-colors">
+              Start Your Renovation <ArrowRight size={16} />
             </Link>
-            <a href="tel:+911234567890" className="flex items-center gap-2 px-5 py-3 text-sm font-medium text-white/80 border border-white/20 hover:border-white/40 transition-colors">
+            <a href={`tel:${BUSINESS_PHONE}`} className="flex items-center gap-2 px-5 py-3 text-sm font-medium text-white/80 border border-white/20 hover:border-white/40 transition-colors">
               <Phone size={15} /> Call Us
             </a>
           </div>
@@ -190,10 +188,8 @@ export function ServicePage({ service }: Props) {
                 Tell us about your project — we&apos;ll schedule a site visit and provide a detailed quotation.
               </p>
             </div>
-            <Link href="/get-started">
-              <button className="flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-white text-cobalt-600 hover:bg-cobalt-50 shadow-lg transition-colors whitespace-nowrap">
-                Start Your Renovation <ArrowRight size={15} />
-              </button>
+            <Link href="/get-started" className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-white text-cobalt-600 hover:bg-cobalt-50 shadow-lg transition-colors whitespace-nowrap">
+              Start Your Renovation <ArrowRight size={15} />
             </Link>
           </div>
         </div>

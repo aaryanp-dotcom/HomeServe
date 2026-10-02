@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Plus, ChevronRight, ClipboardList, Clock, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react'
-import { Badge, Button, EmptyState } from '@/components/ui/shared'
+import { Badge, ButtonLink, EmptyState } from '@/components/ui/shared'
 
 export const metadata: Metadata = { title: 'My Requests' }
 
@@ -121,9 +121,7 @@ export default async function MyRequestsPage() {
               : `${list.length} request${list.length !== 1 ? 's' : ''} · ${active} active · ${projects} project${projects !== 1 ? 's' : ''}`}
           </p>
         </div>
-        <Link href="/get-started">
-          <Button icon={<Plus size={16} />}>New Request</Button>
-        </Link>
+        <ButtonLink href="/get-started" icon={<Plus size={16} />}>New Request</ButtonLink>
       </div>
 
       {/* Stats */}
@@ -152,9 +150,7 @@ export default async function MyRequestsPage() {
           title="No renovation requests yet"
           description="Tell us about your renovation needs. Our team will get in touch to schedule a consultation and site visit."
           action={
-            <Link href="/get-started">
-              <Button icon={<Plus size={14} />}>Start Your Renovation</Button>
-            </Link>
+            <ButtonLink href="/get-started" icon={<Plus size={14} />}>Start Your Renovation</ButtonLink>
           }
         />
       ) : (

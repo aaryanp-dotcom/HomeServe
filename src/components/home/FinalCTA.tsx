@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, Phone } from 'lucide-react'
 import { Reveal } from '@/components/motion/Reveal'
 import { Elevation } from '@/components/arch/Elevation'
+import { BUSINESS_PHONE } from '@/lib/seo'
 
 export function FinalCTA() {
   return (
@@ -27,7 +28,7 @@ export function FinalCTA() {
               </span>
             </Link>
             <a
-              href="tel:+911234567890"
+              href={`tel:${BUSINESS_PHONE}`}
               className="inline-flex items-center gap-2 border-2 border-ink-900 px-7 py-[0.95rem] text-base font-semibold text-ink-900 transition-colors hover:bg-ink-900 hover:text-white"
             >
               <Phone size={17} /> Call us

@@ -7,7 +7,7 @@ import {
   TrendingUp, Home, CreditCard, FileText, ArrowUpRight, Layers, Wrench,
   FileSignature, Star, ShieldCheck, AlertCircle, LifeBuoy,
 } from 'lucide-react'
-import { StatCard, Badge, Button, EmptyState } from '@/components/ui/shared'
+import { StatCard, Badge, ButtonLink, EmptyState } from '@/components/ui/shared'
 import { ProgressFill } from '@/components/ui/ProgressFill'
 import { Reveal } from '@/components/motion/Reveal'
 import { cn } from '@/lib/utils'
@@ -166,9 +166,7 @@ export default async function HomeownerDashboard() {
             {firstName}&apos;s home
           </h1>
         </div>
-        <Link href="/get-started">
-          <Button icon={<Plus size={16} />}>Start renovation</Button>
-        </Link>
+        <ButtonLink href="/get-started" icon={<Plus size={16} />}>Start renovation</ButtonLink>
       </div>
 
       {/* ── Stats ── */}
@@ -298,9 +296,7 @@ export default async function HomeownerDashboard() {
                   title="No projects yet"
                   description="Tell us about your home and we'll schedule a free site visit."
                   action={
-                    <Link href="/get-started">
-                      <Button size="sm" icon={<Plus size={14} />}>Start a renovation</Button>
-                    </Link>
+                    <ButtonLink href="/get-started" size="sm" icon={<Plus size={14} />}>Start a renovation</ButtonLink>
                   }
                 />
               ) : (

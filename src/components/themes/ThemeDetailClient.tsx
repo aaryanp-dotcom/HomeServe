@@ -593,7 +593,7 @@ export default function ThemeDetailClient({ slug }: { slug: string }) {
         <div className="container-wide flex items-center justify-between gap-4">
           <div className="hidden sm:block">
             <p className="text-sm font-semibold text-white">{theme.name} Interior Renovation</p>
-            <p className="text-xs text-stone-400">Indicative range: {theme.budget.basic} – {theme.budget.luxury} • {theme.estimatedTimeline}</p>
+            <p className="text-xs text-stone-300">Indicative range: {theme.budget.basic} – {theme.budget.luxury} • {theme.estimatedTimeline}</p>
           </div>
 
           <div className="flex items-center gap-3 ml-auto">

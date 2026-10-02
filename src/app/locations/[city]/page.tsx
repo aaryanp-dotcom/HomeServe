@@ -58,10 +58,19 @@ const CITY_DATA: Record<string, {
   },
 }
 
+// Explicit slugs: deriving them from the label sent "Carpentry & Wardrobes" to a 404.
 const SERVICES = [
-  'Full Home Renovation', 'Kitchen Renovation', 'Bathroom Renovation',
-  'Painting', 'Flooring', 'False Ceiling', 'Electrical', 'Plumbing',
-  'Carpentry & Wardrobes', 'Modular Kitchen', 'Civil Work',
+  { label: 'Full Home Renovation', slug: 'full-home-renovation' },
+  { label: 'Kitchen Renovation', slug: 'kitchen-renovation' },
+  { label: 'Bathroom Renovation', slug: 'bathroom-renovation' },
+  { label: 'Painting', slug: 'painting' },
+  { label: 'Flooring', slug: 'flooring' },
+  { label: 'False Ceiling', slug: 'false-ceiling' },
+  { label: 'Electrical', slug: 'electrical' },
+  { label: 'Plumbing', slug: 'plumbing' },
+  { label: 'Carpentry & Wardrobes', slug: 'carpentry' },
+  { label: 'Modular Kitchen', slug: 'modular-kitchen' },
+  { label: 'Civil Work', slug: 'civil-work' },
 ]
 
 interface Props {
@@ -115,10 +124,8 @@ export default async function LocationPage({ params }: Props) {
             </h1>
             <p className="text-lg text-stone-500 leading-relaxed mb-8">{data.description}</p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/get-started">
-                <button className="coarse:min-h-11 flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-ink-900 text-white hover:bg-cobalt-600 transition-colors">
-                  Start Your Renovation <ArrowRight size={16} />
-                </button>
+              <Link href="/get-started" className="coarse:min-h-11 inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-ink-900 text-white hover:bg-cobalt-600 transition-colors">
+                Start Your Renovation <ArrowRight size={16} />
               </Link>
             </div>
           </div>
@@ -133,12 +140,12 @@ export default async function LocationPage({ params }: Props) {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {SERVICES.map((s) => (
                 <Link
-                  key={s}
-                  href={`/services/${s.toLowerCase().replace(/[&\s]+/g, '-').replace(/-+/g, '-')}`}
+                  key={s.slug}
+                  href={`/services/${s.slug}`}
                   className="flex items-center gap-2.5 p-4 border border-ink-900/15 hover:border-cobalt-300 hover:bg-cobalt-50 transition-all group"
                 >
                   <CheckCircle size={14} className="text-cobalt-400 group-hover:text-cobalt-600 shrink-0" />
-                  <span className="text-sm font-medium text-stone-700 group-hover:text-cobalt-700">{s}</span>
+                  <span className="text-sm font-medium text-stone-700 group-hover:text-cobalt-700">{s.label}</span>
                 </Link>
               ))}
             </div>
@@ -177,10 +184,8 @@ export default async function LocationPage({ params }: Props) {
                   Submit your requirement and our team will contact you to schedule a site visit.
                 </p>
               </div>
-              <Link href="/get-started">
-                <button className="flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-white text-cobalt-600 hover:bg-cobalt-50 shadow-lg transition-colors whitespace-nowrap">
-                  Start Your Renovation <ArrowRight size={15} />
-                </button>
+              <Link href="/get-started" className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-white text-cobalt-600 hover:bg-cobalt-50 shadow-lg transition-colors whitespace-nowrap">
+                Start Your Renovation <ArrowRight size={15} />
               </Link>
             </div>
           </div>

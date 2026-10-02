@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, Phone } from 'lucide-react'
+import { BUSINESS_PHONE } from '@/lib/seo'
 
 /** Mobile-only bottom bar that appears once the hero has scrolled away. */
 export function StickyCTA() {
@@ -29,7 +30,7 @@ export function StickyCTA() {
           <Link href="/get-started" className="flex h-12 flex-1 items-center justify-center gap-2 text-sm font-semibold text-white">
             Free site visit <ArrowRight size={15} />
           </Link>
-          <a href="tel:+911234567890" aria-label="Call HomeServe" className="flex h-12 w-12 items-center justify-center bg-cobalt-400 text-white">
+          <a href={`tel:${BUSINESS_PHONE}`} aria-label="Call HomeServe" className="flex h-12 w-12 items-center justify-center bg-cobalt-400 text-white">
             <Phone size={17} />
           </a>
         </motion.div>

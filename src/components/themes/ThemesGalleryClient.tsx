@@ -532,7 +532,7 @@ export default function ThemesGalleryClient({ saveCounts = {} }: { saveCounts?: 
             <p className="text-white text-sm font-semibold hidden md:block">
               Found a theme you love? Bring it to life with HomeServe.
             </p>
-            <p className="text-stone-400 text-xs hidden md:block">
+            <p className="text-stone-300 text-xs hidden md:block">
               Fixed-price quotation, verified materials &amp; milestone-based turnkey delivery across Delhi NCR.
             </p>
           </div>

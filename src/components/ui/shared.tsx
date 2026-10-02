@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 
@@ -74,6 +75,26 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   },
 )
 Button.displayName = 'Button'
+
+/** A link styled as a Button. Use this instead of wrapping a Button in a Link, which nests a <button> in an <a>. */
+export interface ButtonLinkProps extends Omit<React.ComponentProps<typeof Link>, 'className'> {
+  variant?: ButtonProps['variant']
+  size?: ButtonProps['size']
+  icon?: React.ReactNode
+  iconRight?: React.ReactNode
+  fullWidth?: boolean
+  className?: string
+}
+
+export function ButtonLink({ className, variant = 'primary', size = 'md', icon, iconRight, fullWidth = false, children, ...props }: ButtonLinkProps) {
+  return (
+    <Link className={cn(buttonBase, buttonVariants[variant], buttonSizes[size], fullWidth && 'w-full', className)} {...props}>
+      {icon && <span className="shrink-0">{icon}</span>}
+      {children}
+      {iconRight && <span className="shrink-0">{iconRight}</span>}
+    </Link>
+  )
+}
 
 // ── Spinner ───────────────────────────────────────────────────────────────────
 
