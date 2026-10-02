@@ -11,7 +11,7 @@ const NCR_CITY_SLUGS = ['delhi', 'noida', 'greater-noida', 'ghaziabad', 'gurugra
 // /api or /auth is excluded here and blocked in robots.ts — it's either behind a login or transactional.
 const STATIC_ROUTES = [
   '', '/get-started', '/estimate', '/projects', '/services', '/themes', '/blog', '/how-it-works',
-  '/about', '/contact', '/faqs', '/maintenance', '/maintenance/plans', '/login', '/signup',
+  '/about', '/contact', '/faqs', '/careers', '/maintenance', '/maintenance/plans', '/login', '/signup',
 ]
 
 // Low-priority, rarely-changing legal pages — listed separately so they don't skew priority/frequency

@@ -18,7 +18,7 @@
 
 import Link from 'next/link'
 
-type NoticeContext = 'signup' | 'lead_form' | 'contact_form'
+type NoticeContext = 'signup' | 'lead_form' | 'contact_form' | 'contractor_application'
 
 const CONTEXT_COPY: Record<NoticeContext, string> = {
   signup:
@@ -27,6 +27,8 @@ const CONTEXT_COPY: Record<NoticeContext, string> = {
     'HomeServe will use the name, mobile number, and property details you provide to contact you about your renovation request, schedule a consultation, and prepare a quotation. Email, if provided, is used for follow-up.',
   contact_form:
     'HomeServe will use your name, email address, and message to respond to your enquiry and keep a record of the conversation.',
+  contractor_application:
+    'HomeServe will use your name, contact details, experience, and the message you provide to review your application to join our site team. This is a review process, not a registration — your details are not used for anything else and no account is created unless we follow up with you.',
 }
 
 interface PrivacyNoticeProps {

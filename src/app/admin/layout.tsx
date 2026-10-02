@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 import { noIndex } from '@/lib/seo'
 import {
   LayoutDashboard, Users, CreditCard,
-  Package, Flag, PhoneCall, MapPin, FileText, Hammer, LifeBuoy, HardHat, User,
+  Package, Flag, PhoneCall, MapPin, FileText, Hammer, LifeBuoy, HardHat, User, UserPlus,
 } from 'lucide-react'
 import { AppSidebar, AppTopBar } from '@/components/shared/Navigation'
 import { PageEnter } from '@/components/motion/PageEnter'
@@ -54,6 +54,7 @@ const NAV = [
   { label: 'Maintenance',  href: '/admin/maintenance',   icon: <Hammer size={17} /> },
   { label: 'Customers',    href: '/admin/customers',     icon: <Users size={17} /> },
   { label: 'Site Team',    href: '/admin/team',          icon: <HardHat size={17} /> },
+  { label: 'Applications', href: '/admin/contractor-applications', icon: <UserPlus size={17} /> },
   { label: 'Services',     href: '/admin/services',      icon: <Flag size={17} /> },
   { label: 'Tickets',      href: '/admin/tickets',       icon: <LifeBuoy size={17} /> },
   { label: 'My Profile',   href: '/admin/profile',       icon: <User size={17} /> },

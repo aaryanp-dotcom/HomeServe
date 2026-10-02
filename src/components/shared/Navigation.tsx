@@ -810,6 +810,7 @@ export function Footer({ showCta = true }: { showCta?: boolean }) {
         { label: 'How It Works', href: '/how-it-works' },
         { label: 'Contact Us', href: '/contact' },
         { label: 'FAQs', href: '/faqs' },
+        { label: 'Careers', href: '/careers' },
       ],
     },
     {

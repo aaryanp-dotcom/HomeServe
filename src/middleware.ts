@@ -16,6 +16,7 @@ const ROLE_ROUTES: Record<string, string[]> = {
 const RATE_LIMITED_ROUTES: { prefix: string; exact?: boolean; limit: number; windowMs: number }[] = [
   { prefix: '/api/renovation-requests', limit: 5,  windowMs: 10 * 60_000 },
   { prefix: '/api/support/tickets',     limit: 8,  windowMs: 10 * 60_000 },
+  { prefix: '/api/contractor-applications', exact: true, limit: 5, windowMs: 10 * 60_000 },
   { prefix: '/api/site-visits',         limit: 10, windowMs: 10 * 60_000 },
   { prefix: '/api/bookings',            limit: 15, windowMs: 10 * 60_000 },
   // Deliberately NOT '/api/payments' as a prefix — that would also throttle
